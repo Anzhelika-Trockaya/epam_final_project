@@ -16,7 +16,7 @@ import java.io.IOException;
 public class Controller extends HttpServlet {
     @Override
     public void init() {
-
+        ConnectionPool.getInstance();
     }
 
     @Override

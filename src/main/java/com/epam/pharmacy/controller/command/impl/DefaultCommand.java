@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class DefaultCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
-        return new Router(PagePath.INDEX);
+        return new Router(PagePath.HOME);
     }
 }
 

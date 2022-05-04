@@ -4,16 +4,19 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class User extends AbstractEntity implements Serializable {
+public class User extends CustomEntity implements Serializable {
+    private static final long DEFAULT_ID = 0L;
     private final long id;
     private final String login;
     private final UserRole role;
     private String password;
-    private String lastName;
+    private String lastname;
     private String name;
     private String patronymic;
     private LocalDate birthdayDate;
     private Sex sex;
+    private String phone;
+    private String address;
 
     public enum Sex {
         MALE,
@@ -28,6 +31,18 @@ public class User extends AbstractEntity implements Serializable {
 
     public User(long id, String login, UserRole role) {
         this.id = id;
+        this.login = login;
+        this.role = role;
+    }
+
+    public User(String login) {
+        id = DEFAULT_ID;
+        this.login = login;
+        this.role = UserRole.CUSTOMER;
+    }
+
+    public User(String login, UserRole role) {
+        id = DEFAULT_ID;
         this.login = login;
         this.role = role;
     }
@@ -52,12 +67,12 @@ public class User extends AbstractEntity implements Serializable {
         this.password = password;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getLastname() {
+        return lastname;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     public String getName() {
@@ -92,43 +107,77 @@ public class User extends AbstractEntity implements Serializable {
         this.sex = sex;
     }
 
-    public static class UserBuilder {
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public static class Builder {
         private final User user;
 
-        public UserBuilder(long id, String login) {
+        public Builder(long id, String login) {
             user = new User(id, login);
         }
 
-        public UserBuilder(long id, String login, UserRole role) {
+        public Builder(long id, String login, UserRole role) {
             user = new User(id, login, role);
         }
 
-        public UserBuilder buildLastName(String lastName) {
-            user.setLastName(lastName);
+        public Builder(String login) {
+            user = new User(login);
+        }
+
+        public Builder(String login, UserRole role) {
+            user = new User(login, role);
+        }
+
+        public Builder buildLastname(String lastname) {
+            user.setLastname(lastname);
             return this;
         }
 
-        public UserBuilder buildName(String name) {
+        public Builder buildName(String name) {
             user.setName(name);
             return this;
         }
 
-        public UserBuilder buildPatronymic(String patronymic) {
+        public Builder buildPatronymic(String patronymic) {
             user.setPatronymic(patronymic);
             return this;
         }
 
-        public UserBuilder buildSex(User.Sex sex) {
+        public Builder buildSex(User.Sex sex) {
             user.setSex(sex);
             return this;
         }
 
-        public UserBuilder buildPassword(String password) {
+        public Builder buildPassword(String password) {
             user.setPassword(password);
             return this;
         }
 
-        public UserBuilder buildBirthdayDate(LocalDate birthdayDate) {
+        public Builder buildPhone(String phone) {
+            user.setPhone(phone);
+            return this;
+        }
+
+        public Builder buildAddress(String address) {
+            user.setAddress(address);
+            return this;
+        }
+
+        public Builder buildBirthdayDate(LocalDate birthdayDate) {
             user.setBirthdayDate(birthdayDate);
             return this;
         }
@@ -151,7 +200,7 @@ public class User extends AbstractEntity implements Serializable {
                 Objects.equals(login, user.login) &&
                 role == user.role &&
                 Objects.equals(password, user.password) &&
-                Objects.equals(lastName, user.lastName) &&
+                Objects.equals(lastname, user.lastname) &&
                 Objects.equals(name, user.name) &&
                 Objects.equals(patronymic, user.patronymic) &&
                 Objects.equals(birthdayDate, user.birthdayDate) &&
@@ -160,7 +209,7 @@ public class User extends AbstractEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, role, password, lastName, name, patronymic, birthdayDate, sex);
+        return Objects.hash(id, login, role, password, lastname, name, patronymic, birthdayDate, sex);
     }
 
     @Override
@@ -170,7 +219,7 @@ public class User extends AbstractEntity implements Serializable {
                 ", login='" + login + '\'' +
                 ", role=" + role +
                 ", password='" + password + '\'' +
-                ", lastName='" + lastName + '\'' +
+                ", lastName='" + lastname + '\'' +
                 ", name='" + name + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", birthdayDate=" + birthdayDate +

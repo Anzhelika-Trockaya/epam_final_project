@@ -1,0 +1,23 @@
+package com.epam.pharmacy.validator;
+
+import java.util.Map;
+
+public interface Validator {
+    boolean isCorrectLogin(String login);
+
+    boolean isCorrectPassword(String password);
+
+    boolean isCorrectName(String name);
+
+    boolean isCorrectBirthdayDate(String birthdayDate);
+
+    boolean isCorrectSex(String sex);
+
+    boolean isCorrectPhone(String phone);
+
+    boolean isCorrectAddress(String address);
+
+    boolean isCorrectUserRole(String user_role);
+
+    boolean isCorrectRegisterData(Map<String, String> userData);
+}

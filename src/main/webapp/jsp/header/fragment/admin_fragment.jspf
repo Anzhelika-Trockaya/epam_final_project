@@ -1,0 +1,4 @@
+<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=change_users"  >USERS</a></li>
+<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=change_medicines"  >MEDICINES</a></li>
+<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=change_orders"  >ORDERS</a></li>
+<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=change_prescriptions"  >PRESCRIPTIONS</a></li>

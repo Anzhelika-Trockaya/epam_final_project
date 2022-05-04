@@ -1,4 +1,4 @@
-package com.epam.pharmacy.controller.command.impl;
+package com.epam.pharmacy.controller.command.impl.admin;
 
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.Router;
