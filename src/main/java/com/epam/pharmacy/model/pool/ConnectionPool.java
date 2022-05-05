@@ -17,10 +17,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ConnectionPool {
-    public static final Logger LOGGER = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
     private static ConnectionPool instance;
     private static final String PROPERTY_FILE_NAME = "connectionPoolProperties.properties";
-    public static final String DEFAULT_POOL_SIZE_KEY = "defaultPoolSize";
+    private static final String DEFAULT_POOL_SIZE_KEY = "defaultPoolSize";
     private static final int DEFAULT_POOL_SIZE;
     private static final ReentrantLock createLocker = new ReentrantLock(true);
     private static final AtomicBoolean isCreated = new AtomicBoolean(false);
@@ -34,14 +34,14 @@ public class ConnectionPool {
             properties.load(inputStream);
         } catch (IOException exception) {
             LOGGER.fatal("ConnectionPool properties not loaded. " + exception);
-            throw new ExceptionInInitializerError(exception);
+            throw new ExceptionInInitializerError("ConnectionPool properties not loaded. " + exception.getMessage());
         }
         DEFAULT_POOL_SIZE = Integer.parseInt(properties.getProperty(DEFAULT_POOL_SIZE_KEY));
         try {
             DriverManager.registerDriver(new Driver());
         } catch (SQLException exception) {
             LOGGER.fatal("Driver not registered. " + exception);
-            throw new ExceptionInInitializerError(exception.getMessage());
+            throw new ExceptionInInitializerError("Driver not registered. " + exception.getMessage());
         }
     }
 
@@ -66,7 +66,7 @@ public class ConnectionPool {
                     LOGGER.info("Connection created. " + connection);
                 } catch (SQLException e) {
                     LOGGER.fatal("Connection was not created!" + e);
-                    throw new ExceptionInInitializerError("Connection was not created!");
+                    throw new ExceptionInInitializerError("Connection was not created!" + e.getMessage());
                 }
             }
         }
@@ -103,6 +103,7 @@ public class ConnectionPool {
         boolean released;
         if (!busyConnections.contains(connection)) {
             LOGGER.warn("Illegal connection. " + connection);
+            return false;
         }
         released = busyConnections.remove(connection);
         try {

@@ -2,19 +2,21 @@ package com.epam.pharmacy.validator.impl;
 
 import com.epam.pharmacy.validator.Validator;
 
-import static com.epam.pharmacy.controller.Parameter.*;
+import static com.epam.pharmacy.controller.ParameterName.*;
+import static com.epam.pharmacy.controller.PropertyKey.*;
 
 import java.util.Map;
 
 public class ValidatorImpl implements Validator {
-    private static final String SEX_REGEX = "(MALE|FEMALE)";//fixme correct user_role
-    private static final String USER_ROLE_REGEX = "(ADMIN|PHARMACIST|DOCTOR|CUSTOMER)";
     private static ValidatorImpl instance;
-    private static final String USER_NAME_REGEX = "[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}";
-    private static final String USER_LOGIN_REGEX = "[a-zA-Zа-яА-ЯёЁ0-9._-]{4,45}";
-    private static final String USER_PASSWORD_REGEX = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}";
+    private static final String SEX_REGEX = "(MALE|FEMALE)";
+    private static final String USER_ROLE_REGEX = "(ADMIN|PHARMACIST|DOCTOR|CUSTOMER)";
+    private static final String USER_NAME_REGEX = "[\\p{Alpha}][\\p{Alpha}-]{0,44}";
+    private static final String USER_LOGIN_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}";
+    private static final String USER_PASSWORD_REGEX = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])[A-ZА-ЯЁa-zа-яё0-9!@#$%^&*]{6,45}";
     private static final String DATE_REGEX = "[1-2]\\d{3}-[0-1]\\d-[0-3]\\d";
     private static final String PHONE_REGEX = "\\+375(33|29|25|44)\\d{7}";
+    private static final String LANGUAGE_REGEX="(be_BY|en_US)";
 
     private ValidatorImpl() {
     }
@@ -67,6 +69,11 @@ public class ValidatorImpl implements Validator {
     }
 
     @Override
+    public boolean isCorrectLanguage(String language) {
+        return language != null && language.matches(LANGUAGE_REGEX);
+    }
+
+    @Override
     public boolean isCorrectRegisterData(Map<String, String> userData) {
         if (userData == null || userData.isEmpty()) {
             return false;
@@ -84,34 +91,43 @@ public class ValidatorImpl implements Validator {
         String role = userData.get(USER_ROLE);
         if (!isCorrectLogin(login)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect login");//fixme magic value
-        } else if (!isCorrectPassword(password)) {
+            userData.put(USER_LOGIN, REGISTRATION_INCORRECT_LOGIN);//fixme on client
+        }
+        if (!isCorrectPassword(password)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect password");
-        } else if (!isCorrectName(lastname)) {
+            userData.put(USER_PASSWORD, REGISTRATION_INCORRECT_PASSWORD);
+        }
+        if (!isCorrectName(lastname)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect lastname");
-        } else if (!isCorrectName(name)) {
+            userData.put(USER_LASTNAME, REGISTRATION_INCORRECT_LASTNAME);
+        }
+        if (!isCorrectName(name)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect name");
-        } else if (!isCorrectName(patronymic)) {
+            userData.put(USER_NAME, REGISTRATION_INCORRECT_NAME);
+        }
+        if (!isCorrectName(patronymic)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect patronymic");
-        } else if (!isCorrectBirthdayDate(birthdayDate)) {
+            userData.put(USER_PATRONYMIC, REGISTRATION_INCORRECT_PATRONYMIC);
+        }
+        if (!isCorrectBirthdayDate(birthdayDate)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect birthday date");
-        } else if (!isCorrectSex(sex)) {
+            userData.put(USER_BIRTHDAY_DATE, REGISTRATION_INCORRECT_BIRTHDAY_DATE);
+        }
+        if (!isCorrectSex(sex)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect sex");
-        }else if (!isCorrectPhone(phone)) {
+            userData.put(USER_SEX, REGISTRATION_INCORRECT_SEX);
+        }
+        if (!isCorrectPhone(phone)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect phone");
-        } else if (!isCorrectAddress(address)) {
+            userData.put(USER_PHONE, REGISTRATION_INCORRECT_PHONE);
+        }
+        if (!isCorrectAddress(address)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect address");
-        } else if (!isCorrectUserRole(role)) {
+            userData.put(USER_ADDRESS, REGISTRATION_INCORRECT_ADDRESS);
+        }
+        if (!isCorrectUserRole(role)) {
             result = false;
-            userData.put(INCORRECT_DATA_INFO, "incorrect role");
+            userData.put(USER_ROLE, REGISTRATION_INCORRECT_ROLE);
         }
         return result;
     }

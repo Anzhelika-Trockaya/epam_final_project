@@ -19,5 +19,7 @@ public interface Validator {
 
     boolean isCorrectUserRole(String user_role);
 
+    boolean isCorrectLanguage(String language);
+
     boolean isCorrectRegisterData(Map<String, String> userData);
 }

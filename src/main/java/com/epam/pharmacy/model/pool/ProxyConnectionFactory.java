@@ -14,7 +14,7 @@ class ProxyConnectionFactory {
     private static final Logger LOGGER = LogManager.getLogger();
     private static ProxyConnectionFactory instance;
     private static final String POOL_PROPERTIES_FILE_NAME = "connectionPoolProperties.properties";
-    public static final String URL_KEY = "url";
+    private static final String URL_KEY = "url";
     private static final String PROPERTIES_FILE_NAME = "connectionProperties.properties";
     private static final String URL;
     private static final Properties properties;

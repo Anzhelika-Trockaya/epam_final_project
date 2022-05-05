@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.pharmacy.controller.Parameter.*;
+import static com.epam.pharmacy.controller.ParameterName.*;
 
 public class UserDaoImpl implements UserDao {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
             LOGGER.error("Adding user exception. " + e.getMessage());
-            throw new DaoException("Adding user exception. " + e.getMessage());
+            throw new DaoException("Adding user exception. ", e);
         }
     }
 
@@ -63,12 +63,12 @@ public class UserDaoImpl implements UserDao {
             UserRowMapper mapper = UserRowMapper.getInstance();
             Optional<User> currentUserOptional;
             if (resultSet.next()) {
-                currentUserOptional=mapper.mapRow(resultSet);
+                currentUserOptional = mapper.mapRow(resultSet);
                 currentUserOptional.ifPresent(users::add);
             }
         } catch (SQLException e) {
             LOGGER.error("Find all users exception. " + e.getMessage());
-            throw new DaoException("Find all users exception. " + e.getMessage());
+            throw new DaoException("Find all users exception. ", e);
         }
         return users;
     }
@@ -95,7 +95,7 @@ public class UserDaoImpl implements UserDao {
             }
         } catch (SQLException e) {
             LOGGER.error("Authentication exception. " + e.getMessage());
-            throw new DaoException("Authentication exception. " + e.getMessage());
+            throw new DaoException("Authentication exception. ", e);
         }
         return Optional.empty();
     }

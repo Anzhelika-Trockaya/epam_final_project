@@ -1,6 +1,6 @@
 package com.epam.pharmacy.controller;
 
-public final class Parameter {
+public final class ParameterName {
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
     public static final String LASTNAME = "lastname";
@@ -19,9 +19,19 @@ public final class Parameter {
     public static final String USER_ROLE = "user_role";
     public static final String USER_PHONE = "user_phone";
     public static final String USER_ADDRESS = "user_address";
-    public static final String INCORRECT_DATA_INFO="incorrect_data_info";
     public static final String PHONE = "phone";
     public static final String ADDRESS = "address";
+    public static final String LANGUAGE = "language";
+    public static final String INCORRECT_LOGIN = "incorrect_login";
+    public static final String INCORRECT_LASTNAME = "incorrect_lastname";
+    public static final String INCORRECT_NAME = "incorrect_name";
+    public static final String INCORRECT_PATRONYMIC = "incorrect_patronymic";
+    public static final String INCORRECT_PASSWORD = "incorrect_password";
+    public static final String INCORRECT_BIRTHDAY_DATE = "incorrect_birthday_date";
+    public static final String INCORRECT_SEX = "incorrect_sex";
+    public static final String INCORRECT_ROLE = "incorrect_role";
+    public static final String INCORRECT_PHONE = "incorrect_phone";
+    public static final String INCORRECT_ADDRESS = "incorrect_address";
 
-    private Parameter(){}
+    private ParameterName(){}
 }

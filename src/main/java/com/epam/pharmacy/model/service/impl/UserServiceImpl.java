@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.service.impl;
 
-import com.epam.pharmacy.controller.Parameter;
 import com.epam.pharmacy.model.dao.DaoProvider;
 import com.epam.pharmacy.model.dao.UserDao;
 import com.epam.pharmacy.model.entity.User;
@@ -18,7 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import static com.epam.pharmacy.controller.Parameter.*;
+import static com.epam.pharmacy.controller.ParameterName.*;
 
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LogManager.getLogger();

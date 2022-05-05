@@ -27,6 +27,15 @@ class ProxyConnection implements Connection {
     }
 
     @Override
+    public void close() throws SQLException {
+        ConnectionPool.getInstance().releaseConnection(this);
+    }
+
+    void reallyClose() throws SQLException {
+        connection.close();
+    }
+
+    @Override
     public Statement createStatement() throws SQLException {
         return connection.createStatement();
     }
@@ -64,11 +73,6 @@ class ProxyConnection implements Connection {
     @Override
     public void rollback() throws SQLException {
         connection.rollback();
-    }
-
-    @Override
-    public void close() throws SQLException {
-        ConnectionPool.getInstance().releaseConnection(this);
     }
 
     @Override
@@ -294,9 +298,5 @@ class ProxyConnection implements Connection {
     @Override
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         return connection.isWrapperFor(iface);
-    }
-
-    void reallyClose() throws SQLException {
-        connection.close();
     }
 }

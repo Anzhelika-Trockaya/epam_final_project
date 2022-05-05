@@ -26,6 +26,7 @@ public class Controller extends HttpServlet {
         Command command = CommandType.define(commandStr);
         try {
             Router router = command.execute(request);
+            request.getSession().setAttribute(AttributeName.CURRENT_PAGE, router.getPage());
             if(Router.Type.FORWARD==router.getType()) {
                 request.getRequestDispatcher(router.getPage()).forward(request, response);
             } else {

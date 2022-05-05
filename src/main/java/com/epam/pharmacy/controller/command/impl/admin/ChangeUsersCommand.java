@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.admin;
 
 import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.Router;
-import com.epam.pharmacy.controller.SessionAttribute;
+import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
@@ -21,7 +21,7 @@ public class ChangeUsersCommand implements Command {
         UserService userService = provider.getUserService();
         try {
             List<User> listUsers = userService.findAllUsers();
-            request.setAttribute(SessionAttribute.USERS_LIST, listUsers);
+            request.setAttribute(AttributeName.USERS_LIST, listUsers);
             return new Router(PagePath.USERS);
         } catch (ServiceException e) {
             throw new CommandException("Exception in the ChangeUsersCommand ", e);

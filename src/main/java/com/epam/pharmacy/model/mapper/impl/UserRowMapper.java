@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static com.epam.pharmacy.controller.Parameter.*;
+import static com.epam.pharmacy.controller.ParameterName.*;
 
 public class UserRowMapper implements CustomRowMapper<User> {
     private static final Logger LOGGER = LogManager.getLogger();

@@ -1,19 +1,24 @@
 body {
     background-color: #efefef;
+    margin: 0;
+    width: 100%;
     font-family: Arial
 }
-
+div {
+    display: block;
+}
 .header {
     position: relative;
-    background-color: lightgreen;
+    background-color: #14a647;
     width: 100%;
+    line-height: 100px;
     height: 100px;
     top: -30px;
 }
 
 .header_text {
-    font-family: Arial;
     position: relative;
+    text-align: left;
     left: 5%;
     color: azure;
     top: 25px
@@ -21,7 +26,7 @@ body {
 .menu{
     list-style: none;
     margin: 0;
-    padding: 4px
+    padding: 10px
 }
 .menu_li {display: inline;}
 .menu_a{text-decoration: none; }
@@ -29,4 +34,15 @@ body {
     position: relative;
     text-align: right;
     rigth: 10%
+}
+.login_form{
+    position: center;
+    width: 300px;
+    height: 300px;
+    margin: 30px auto;
+    padding: 10px;
+    border-radius: 10px;
+}
+.incorrect_data_msg{
+    color: darkred;
 }

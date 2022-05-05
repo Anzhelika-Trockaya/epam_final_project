@@ -8,6 +8,9 @@ public class Router {
         REDIRECT;
     }
 
+    public Router() {
+    }
+
     public Router(String page) {
         this.page = page;
     }

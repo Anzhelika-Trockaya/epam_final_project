@@ -1,8 +1,8 @@
-package com.epam.pharmacy.controller.command.impl;
+package com.epam.pharmacy.controller.command.impl.common;
 
-import com.epam.pharmacy.controller.Parameter;
+import com.epam.pharmacy.controller.ParameterName;
 import com.epam.pharmacy.controller.Router;
-import com.epam.pharmacy.controller.SessionAttribute;
+import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.ServiceProvider;
@@ -15,30 +15,30 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 
-public class LoginCommand implements Command {
+public class SignInCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String login = request.getParameter(Parameter.LOGIN);
-        String password = request.getParameter(Parameter.PASSWORD);
+        String login = request.getParameter(ParameterName.LOGIN);
+        String password = request.getParameter(ParameterName.PASSWORD);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
-        String page;
         HttpSession session = request.getSession();
         try {
             Optional<UserRole> userRoleOptional = userService.authenticate(login, password);
+            Router router=new Router();
             if (userRoleOptional.isPresent()) {
-                session.setAttribute(SessionAttribute.USER_NAME, login);
-                session.setAttribute(SessionAttribute.USER_ROLE, userRoleOptional.get());
-                page = PagePath.HOME;
+                session.setAttribute(AttributeName.LOGIN, login);//fixme зачем
+                session.setAttribute(AttributeName.USER_ROLE, userRoleOptional.get());
+                router.setPage(PagePath.HOME);
+                router.setTypeRedirect();
             } else {
-                request.setAttribute(SessionAttribute.FAILED_LOGIN_MESSAGE, "incorrect login or pass");//fixme magic value
-                page = PagePath.SIGN_IN;
+                request.setAttribute(AttributeName.FAILED, true);//fixme magic value
+                router.setPage(PagePath.SIGN_IN);
             }
-            session.setAttribute(SessionAttribute.CURRENT_PAGE, page);//fixme
+            return router;
         } catch (ServiceException e) {
             throw new CommandException(e);
         }
-        return new Router(page);
     }
 }
 
