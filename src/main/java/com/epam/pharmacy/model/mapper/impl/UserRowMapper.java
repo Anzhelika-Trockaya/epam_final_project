@@ -7,6 +7,7 @@ import com.epam.pharmacy.model.mapper.CustomRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -41,8 +42,9 @@ public class UserRowMapper implements CustomRowMapper<User> {
             String name = resultSet.getString(USER_NAME);
             String patronymic = resultSet.getString(USER_PATRONYMIC);
             String sexString = resultSet.getString(USER_SEX);
-            User.Sex sex = User.Sex.valueOf(sexString);
-            LocalDate birthdayDate = resultSet.getDate(USER_BIRTHDAY_DATE).toLocalDate();
+            User.Sex sex = sexString != null ? User.Sex.valueOf(sexString) : null;
+            Date date = resultSet.getDate(USER_BIRTHDAY_DATE);
+            LocalDate birthdayDate = date != null ? date.toLocalDate() : null;
             String phone = resultSet.getString(USER_PHONE);
             String address = resultSet.getString(USER_ADDRESS);
             User.Builder builder = new User.Builder(id, login, role);

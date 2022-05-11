@@ -28,7 +28,7 @@ public class SignInCommand implements Command {
             Router router=new Router();
             if (userRoleOptional.isPresent()) {
                 session.setAttribute(AttributeName.LOGIN, login);//fixme зачем
-                session.setAttribute(AttributeName.USER_ROLE, userRoleOptional.get());
+                session.setAttribute(AttributeName.CURRENT_USER_ROLE, userRoleOptional.get());
                 router.setPage(PagePath.HOME);
                 router.setTypeRedirect();
             } else {

@@ -21,31 +21,33 @@ public class Controller extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        processRequest(request, response);
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        processRequest(request, response);
+    }
+
+    @Override
+    public void destroy() {
+        ConnectionPool.getInstance().destroyPool();
+    }
+
+    private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");//todo to filter
         String commandStr = request.getParameter("command");
         Command command = CommandType.define(commandStr);
         try {
             Router router = command.execute(request);
-            request.getSession().setAttribute(AttributeName.CURRENT_PAGE, router.getPage());
             if(Router.Type.FORWARD==router.getType()) {
                 request.getRequestDispatcher(router.getPage()).forward(request, response);
             } else {
                 response.sendRedirect(router.getPage());//todo request.getContextPath()+
             }
         } catch (CommandException e) {
-            //todo throw new ServletException(e);
             request.setAttribute("error_msg", e.getCause());
-            request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);
+            request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);//todo redirect??
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-    }
-
-    @Override
-    public void destroy() {
-        ConnectionPool.getInstance().destroyPool();
     }
 }

@@ -204,12 +204,14 @@ public class User extends CustomEntity implements Serializable {
                 Objects.equals(name, user.name) &&
                 Objects.equals(patronymic, user.patronymic) &&
                 Objects.equals(birthdayDate, user.birthdayDate) &&
+                Objects.equals(phone, user.phone) &&
+                Objects.equals(address, user.address) &&
                 sex == user.sex;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, role, password, lastname, name, patronymic, birthdayDate, sex);
+        return Objects.hash(id, login, role, password, lastname, name, patronymic, birthdayDate, phone, address, sex);
     }
 
     @Override
@@ -223,6 +225,8 @@ public class User extends CustomEntity implements Serializable {
                 ", name='" + name + '\'' +
                 ", patronymic='" + patronymic + '\'' +
                 ", birthdayDate=" + birthdayDate +
+                ", phone='" + phone + '\'' +
+                ", address='" + address + '\'' +
                 ", sex=" + sex +
                 '}';
     }

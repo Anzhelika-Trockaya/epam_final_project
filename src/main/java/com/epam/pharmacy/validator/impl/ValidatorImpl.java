@@ -81,6 +81,7 @@ public class ValidatorImpl implements Validator {
         boolean result = true;
         String login = userData.get(USER_LOGIN);
         String password = userData.get(USER_PASSWORD);
+        String repeat_password = userData.get(REPEAT_PASSWORD);
         String lastname = userData.get(USER_LASTNAME);
         String name = userData.get(USER_NAME);
         String patronymic = userData.get(USER_PATRONYMIC);
@@ -91,11 +92,16 @@ public class ValidatorImpl implements Validator {
         String role = userData.get(USER_ROLE);
         if (!isCorrectLogin(login)) {
             result = false;
-            userData.put(USER_LOGIN, REGISTRATION_INCORRECT_LOGIN);//fixme on client
+            userData.put(USER_LOGIN, REGISTRATION_INCORRECT_LOGIN);
         }
         if (!isCorrectPassword(password)) {
             result = false;
             userData.put(USER_PASSWORD, REGISTRATION_INCORRECT_PASSWORD);
+        } else{
+            if(!password.equals(repeat_password)){
+                result = false;
+                userData.put(REPEAT_PASSWORD, REGISTRATION_INCORRECT_REPEAT_PASSWORD);
+            }
         }
         if (!isCorrectName(lastname)) {
             result = false;

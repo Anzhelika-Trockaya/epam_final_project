@@ -8,15 +8,15 @@ import java.util.Map;
 
 import static com.epam.pharmacy.controller.ParameterName.*;
 
-public class AddUserRequestMapper implements CustomRequestMapper {
-    private static AddUserRequestMapper instance;
+public class RegisterUserRequestMapper implements CustomRequestMapper {
+    private static RegisterUserRequestMapper instance;
 
-    private AddUserRequestMapper() {
+    private RegisterUserRequestMapper() {
     }
 
-    public static AddUserRequestMapper getInstance() {
+    public static RegisterUserRequestMapper getInstance() {
         if (instance == null) {
-            instance = new AddUserRequestMapper();
+            instance = new RegisterUserRequestMapper();
         }
         return instance;
     }
@@ -44,6 +44,8 @@ public class AddUserRequestMapper implements CustomRequestMapper {
         userData.put(USER_PHONE, phone);
         String address = request.getParameter(ADDRESS);
         userData.put(USER_ADDRESS, address);
+        String repeatPassword = request.getParameter(REPEAT_PASSWORD);
+        userData.put(REPEAT_PASSWORD, repeatPassword);
         return userData;
     }
 }

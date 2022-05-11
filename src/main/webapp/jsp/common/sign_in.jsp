@@ -1,64 +1,65 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Анжелика
-  Date: 10.04.2022
-  Time: 16:56
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@include file="../header/header.jsp" %>
 <html>
 <head>
-    <c:set var="failed_msg" value="Incorrect login or password!"/>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="${context_path}/css/style.css">
-    <title>Pharmacy | Sign In</title>
+    <c:set var="current_page" value="jsp/common/sign_in.jsp" scope="session"/>
+    <fmt:message key="sign_in.incorrect_data_msg" var="incorrect_data_msg"/>
+    <title><fmt:message key="sign_in.page_title"/></title>
 </head>
 <body>
-<header>
-    <%@include file="../header/header.jsp" %>
-</header>
 <div class="login_form">
     <c:if test="${not empty sessionScope.successful_registration}">
         <p><fmt:message key="registration.successful_msg"/></p>
         <c:remove var="successful_registration" scope="session"/>
     </c:if>
-    <form name="sign_in_form" action="${context_path}/controller"
-          onsubmit="return validate()" novalidate>
+    <form name="sign_in_form" action="${context_path}/controller" onsubmit="return validate()">
         <input type="hidden" name="command" value="sign_in"/>
         <div>
-            <label>Login</label>
-            <input type="text" id="login" name="login" required pattern="[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}"/>
+            <label for="login"><fmt:message key="login"/></label>
+            <input type="text" id="login" name="login"/>
         </div>
-        </br>
+        <br/>
         <div>
-            <label>Password</label>
-            <input type="password" id="password" name="password" required pattern="
-                   (?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])[A-ZА-ЯЁa-zа-яё0-9!@#$%^&*]{6,45}"/>
+            <label for="password"><fmt:message key="password"/></label>
+            <input type="password" id="password" name="password"/>
         </div>
         <br/>
         <p id="incorrect_login_data_msg" class="incorrect_data_msg">
             <c:if test="${not empty failed}">
-                ${failed_msg}
+                ${incorrect_data_msg}
             </c:if>
         </p>
-        <input type="submit" class="btn" value="Sign In"/>
+        <input type="submit" class="btn" value="<fmt:message key="sign_in"/>"/>
         <br/>
-        <script type="text/javascript">
-            function validate() {
-                const loginValue = document.forms["sign_in_form"]["login"].value;
-                const passwordValue = document.forms["sign_in_form"]["password"].value;
-                if (loginValue === "" || passwordValue === "" ||
-                    loginValue.validity.patternMismatch || passwordValue.validity.patternMismatch) {
-                    document.getElementById("incorrect_login_data_msg").innerHTML = "${failed_msg}";
-                    return false;
-                }
-                return true;
-            }
-        </script>
     </form>
-    <a href="${context_path}/jsp/common/registration.jsp">Go to registration page</a>
+    <a href="${context_path}/jsp/common/registration.jsp"><fmt:message key="sign_in.go_to_registration_page"/></a>
 </div>
 </body>
 </html>
+<script type="text/javascript">
+    function validate() {
+        const loginPattern = /[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}/;
+        const passwordPattern = /(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}/;
+        const loginValue = document.forms["sign_in_form"]["login"].value;
+        const passwordValue = document.forms["sign_in_form"]["password"].value;
+        return validateRequired(loginValue) && validatePatternMismatch(loginValue, loginPattern) &&
+            validateRequired(passwordValue) && validatePatternMismatch(passwordValue, passwordPattern);
+    }
+    function validateRequired(value) {
+        if (value === "") {
+            document.getElementById("incorrect_login_data_msg").innerHTML = "${incorrect_data_msg}";
+            return false;
+        }
+        return true;
+    }
+    function validatePatternMismatch(value, pattern) {
+        if (!pattern.test(value)) {
+            document.getElementById("incorrect_login_data_msg").innerHTML = "${incorrect_data_msg}";
+            return false;
+        }
+        return true;
+    }
+</script>

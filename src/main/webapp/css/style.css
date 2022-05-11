@@ -44,5 +44,13 @@ div {
     border-radius: 10px;
 }
 .incorrect_data_msg{
-    color: darkred;
+    color: red;
+    font-size: 12px;
+}
+.red_input{
+    border-color: red;
+}
+.table {
+    width: 100%;
+    table-layout: auto;
 }

@@ -3,8 +3,9 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="${pageContext}css/style.css">
+    <link rel="stylesheet" href="${context_path}/css/style.css">
     <title>Home</title>
+    <c:set var="current_page" value="jsp/home.jsp" scope="session"/>
 </head>
 <body>
 

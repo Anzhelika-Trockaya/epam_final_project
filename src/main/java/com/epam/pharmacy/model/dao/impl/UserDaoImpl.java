@@ -62,7 +62,7 @@ public class UserDaoImpl implements UserDao {
             ResultSet resultSet = statement.executeQuery();
             UserRowMapper mapper = UserRowMapper.getInstance();
             Optional<User> currentUserOptional;
-            if (resultSet.next()) {
+            while (resultSet.next()) {
                 currentUserOptional = mapper.mapRow(resultSet);
                 currentUserOptional.ifPresent(users::add);
             }

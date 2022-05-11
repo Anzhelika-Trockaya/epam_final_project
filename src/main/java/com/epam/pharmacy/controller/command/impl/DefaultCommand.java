@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class DefaultCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
-        String page = (String) request.getSession().getAttribute(AttributeName.CURRENT_PAGE);
+        String page = (String) request.getSession().getAttribute(AttributeName.CURRENT_PAGE);//todo current page??? request params? maybe home page
         return new Router(page, Router.Type.REDIRECT);
     }
 }

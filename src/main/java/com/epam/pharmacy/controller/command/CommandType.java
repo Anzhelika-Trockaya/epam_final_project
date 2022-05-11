@@ -1,19 +1,18 @@
 package com.epam.pharmacy.controller.command;
 
 import com.epam.pharmacy.controller.command.impl.*;
-import com.epam.pharmacy.controller.command.impl.admin.AddUserCommand;
 import com.epam.pharmacy.controller.command.impl.admin.ChangeUsersCommand;
 import com.epam.pharmacy.controller.command.impl.common.ChangeLanguageCommand;
+import com.epam.pharmacy.controller.command.impl.common.RegisterCommand;
 import com.epam.pharmacy.controller.command.impl.common.SignInCommand;
 
 public enum CommandType {
-    ADD_USER(new AddUserCommand()),
-    SIGN_IN(new SignInCommand()),
+    GO_CHANGE_USERS_PAGE(new ChangeUsersCommand()),
+    CHANGE_LANGUAGE(new ChangeLanguageCommand()),
+    DEFAULT(new DefaultCommand()),
     LOGOUT(new LogoutCommand()),
     REGISTER(new RegisterCommand()),
-    CHANGE_USERS(new ChangeUsersCommand()),
-    CHANGE_LANGUAGE(new ChangeLanguageCommand()),
-    DEFAULT(new DefaultCommand());
+    SIGN_IN(new SignInCommand());
 
     private final Command command;
 
