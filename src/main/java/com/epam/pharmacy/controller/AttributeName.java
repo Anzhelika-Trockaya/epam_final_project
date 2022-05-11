@@ -19,16 +19,6 @@ public final class AttributeName {
     public static final String INCORRECT_ADDRESS = "incorrect_address";
     public static final String INCORRECT_REPEAT_PASSWORD="incorrect_repeat_password";
     public static final String USER_ID = "user_id";
-    public static final String USER_LOGIN = "user_login";
-    public static final String USER_LASTNAME = "user_lastname";
-    public static final String USER_NAME = "user_name";
-    public static final String USER_PATRONYMIC = "user_patronymic";
-    public static final String USER_PASSWORD = "user_password";
-    public static final String USER_BIRTHDAY_DATE = "user_birthday_date";
-    public static final String USER_SEX = "user_sex";
-    public static final String USER_ROLE = "user_role";
-    public static final String USER_PHONE = "user_phone";
-    public static final String USER_ADDRESS = "user_address";
 
     private AttributeName(){}
 }

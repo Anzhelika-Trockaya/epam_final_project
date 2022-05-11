@@ -49,10 +49,11 @@ public class RegisterCommand implements Command {
     }
 
     private void addDataToRequest(HttpServletRequest request, Map<String, String> userData) {
-        addIncorrectDataInfo(request, userData);
-       /* for(String key: userData.keySet()){
+        //fixme delete method
+        // addIncorrectDataInfo(request, userData);
+        for(String key: userData.keySet()) {
             request.setAttribute(key, userData.get(key));
-        }*///fixme add data
+        }
     }
 
     private void addIncorrectDataInfo(HttpServletRequest request, Map<String, String> userData) {

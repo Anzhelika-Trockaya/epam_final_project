@@ -2,6 +2,7 @@ package com.epam.pharmacy.validator.impl;
 
 import com.epam.pharmacy.validator.Validator;
 
+import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
@@ -92,48 +93,48 @@ public class ValidatorImpl implements Validator {
         String role = userData.get(USER_ROLE);
         if (!isCorrectLogin(login)) {
             result = false;
-            userData.put(USER_LOGIN, REGISTRATION_INCORRECT_LOGIN);
+            userData.put(INCORRECT_LOGIN, REGISTRATION_INCORRECT_LOGIN);
         }
         if (!isCorrectPassword(password)) {
             result = false;
-            userData.put(USER_PASSWORD, REGISTRATION_INCORRECT_PASSWORD);
+            userData.put(INCORRECT_PASSWORD, REGISTRATION_INCORRECT_PASSWORD);
         } else{
             if(!password.equals(repeat_password)){
                 result = false;
-                userData.put(REPEAT_PASSWORD, REGISTRATION_INCORRECT_REPEAT_PASSWORD);
+                userData.put(INCORRECT_REPEAT_PASSWORD, REGISTRATION_INCORRECT_REPEAT_PASSWORD);
             }
         }
         if (!isCorrectName(lastname)) {
             result = false;
-            userData.put(USER_LASTNAME, REGISTRATION_INCORRECT_LASTNAME);
+            userData.put(INCORRECT_LASTNAME, REGISTRATION_INCORRECT_LASTNAME);
         }
         if (!isCorrectName(name)) {
             result = false;
-            userData.put(USER_NAME, REGISTRATION_INCORRECT_NAME);
+            userData.put(INCORRECT_NAME, REGISTRATION_INCORRECT_NAME);
         }
         if (!isCorrectName(patronymic)) {
             result = false;
-            userData.put(USER_PATRONYMIC, REGISTRATION_INCORRECT_PATRONYMIC);
+            userData.put(INCORRECT_PATRONYMIC, REGISTRATION_INCORRECT_PATRONYMIC);
         }
         if (!isCorrectBirthdayDate(birthdayDate)) {
             result = false;
-            userData.put(USER_BIRTHDAY_DATE, REGISTRATION_INCORRECT_BIRTHDAY_DATE);
+            userData.put(INCORRECT_BIRTHDAY_DATE, REGISTRATION_INCORRECT_BIRTHDAY_DATE);
         }
         if (!isCorrectSex(sex)) {
             result = false;
-            userData.put(USER_SEX, REGISTRATION_INCORRECT_SEX);
+            userData.put(INCORRECT_SEX, REGISTRATION_INCORRECT_SEX);
         }
         if (!isCorrectPhone(phone)) {
             result = false;
-            userData.put(USER_PHONE, REGISTRATION_INCORRECT_PHONE);
+            userData.put(INCORRECT_PHONE, REGISTRATION_INCORRECT_PHONE);
         }
         if (!isCorrectAddress(address)) {
             result = false;
-            userData.put(USER_ADDRESS, REGISTRATION_INCORRECT_ADDRESS);
+            userData.put(INCORRECT_ADDRESS, REGISTRATION_INCORRECT_ADDRESS);
         }
         if (!isCorrectUserRole(role)) {
             result = false;
-            userData.put(USER_ROLE, REGISTRATION_INCORRECT_ROLE);
+            userData.put(INCORRECT_ROLE, REGISTRATION_INCORRECT_ROLE);
         }
         return result;
     }
