@@ -1,5 +1,7 @@
 package com.epam.pharmacy.validator;
 
+import com.epam.pharmacy.model.entity.User;
+
 import java.util.Map;
 
 public interface Validator {
@@ -22,4 +24,8 @@ public interface Validator {
     boolean isCorrectLanguage(String language);
 
     boolean isCorrectRegisterData(Map<String, String> userData);
+
+    boolean isCorrectId(String id);
+
+    boolean isCorrectState(String state);
 }

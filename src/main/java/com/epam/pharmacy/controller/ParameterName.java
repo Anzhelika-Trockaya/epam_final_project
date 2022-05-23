@@ -9,6 +9,7 @@ public final class ParameterName {
     public static final String PATRONYMIC = "patronymic";
     public static final String BIRTHDAY_DATE = "birthday_date";
     public static final String SEX = "sex";
+    public static final String ROLE = "role";
     public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "user_login";
     public static final String USER_LASTNAME = "user_lastname";

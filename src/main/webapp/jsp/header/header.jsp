@@ -36,11 +36,11 @@
 </div>
 <div class="sign_in">
     <c:choose>
-        <c:when test="${sessionScope.user_role == null}">
+        <c:when test="${sessionScope.current_user_role == null}">
             <a href="${pageContext.request.contextPath}/jsp/common/sign_in.jsp"><fmt:message key="sign_in"/></a>
         </c:when>
         <c:otherwise>
-            <c:if test="${not(sessionScope.user_role eq 'ADMIN')}">
+            <c:if test="${not(sessionScope.current_user_role eq 'ADMIN')}">
                 <a href="${pageContext.request.contextPath}/controller?command=get_user_info">${cabinet}</a>
             </c:if>
             <a href="${pageContext.request.contextPath}/controller?command=logout">Log out</a>
@@ -50,16 +50,16 @@
 <div>
     <ul class="menu">
         <c:choose>
-            <c:when test="${user_role eq 'ADMIN'}">
+            <c:when test="${current_user_role eq 'ADMIN'}">
                 <%@include file="fragment/admin_fragment.jspf" %>
             </c:when>
-            <c:when test="${user_role eq 'PHARMACIST'}">
+            <c:when test="${current_user_role eq 'PHARMACIST'}">
                 <%@include file="fragment/pharmacist_fragment.jspf" %>
             </c:when>
-            <c:when test="${user_role eq 'DOCTOR'}">
+            <c:when test="${current_user_role eq 'DOCTOR'}">
                 <%@include file="fragment/doctor_fragment.jspf" %>
             </c:when>
-            <c:when test="${user_role eq 'CUSTOMER'}">
+            <c:when test="${current_user_role eq 'CUSTOMER'}">
                 <%@include file="fragment/customer_fragment.jspf" %>
             </c:when>
         </c:choose>

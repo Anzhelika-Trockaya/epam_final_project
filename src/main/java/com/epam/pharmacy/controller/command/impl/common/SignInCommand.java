@@ -5,6 +5,7 @@ import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
+import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.model.service.ServiceProvider;
 import com.epam.pharmacy.model.service.UserService;
 import com.epam.pharmacy.controller.command.Command;
@@ -24,15 +25,19 @@ public class SignInCommand implements Command {
         UserService userService = serviceProvider.getUserService();
         HttpSession session = request.getSession();
         try {
-            Optional<UserRole> userRoleOptional = userService.authenticate(login, password);
+            Optional<User> userOptional = userService.authenticate(login, password);
             Router router=new Router();
-            if (userRoleOptional.isPresent()) {
-                session.setAttribute(AttributeName.LOGIN, login);//fixme зачем
-                session.setAttribute(AttributeName.CURRENT_USER_ROLE, userRoleOptional.get());
+            if (userOptional.isPresent()) {
+                session.setAttribute(AttributeName.CURRENT_USER_ID, userOptional.get().getId());
+                session.setAttribute(AttributeName.CURRENT_USER_ROLE, userOptional.get().getRole());
                 router.setPage(PagePath.HOME);
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED, true);//fixme magic value
+                String loginFromRequest = request.getParameter(ParameterName.LOGIN);
+                request.setAttribute(AttributeName.LOGIN, loginFromRequest);
+                String passwordFromRequest = request.getParameter(ParameterName.PASSWORD);
+                request.setAttribute(AttributeName.PASSWORD, passwordFromRequest);
                 router.setPage(PagePath.SIGN_IN);
             }
             return router;

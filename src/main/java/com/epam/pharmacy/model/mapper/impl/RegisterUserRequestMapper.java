@@ -38,7 +38,7 @@ public class RegisterUserRequestMapper implements CustomRequestMapper {
         userData.put(USER_BIRTHDAY_DATE, birthdayDate);
         String sex = request.getParameter(SEX);
         userData.put(USER_SEX, sex);
-        String userRole = request.getParameter(USER_ROLE);
+        String userRole = request.getParameter(ROLE);
         userData.put(USER_ROLE, userRole);
         String phone = request.getParameter(PHONE);
         userData.put(USER_PHONE, phone);

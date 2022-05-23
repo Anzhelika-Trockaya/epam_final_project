@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class User extends CustomEntity implements Serializable {
+    //fixme serialVersion
     private static final long DEFAULT_ID = 0L;
     private final long id;
     private final String login;
@@ -13,6 +14,7 @@ public class User extends CustomEntity implements Serializable {
     private String lastname;
     private String name;
     private String patronymic;
+    private State state;
     private LocalDate birthdayDate;
     private Sex sex;
     private String phone;
@@ -21,6 +23,11 @@ public class User extends CustomEntity implements Serializable {
     public enum Sex {
         MALE,
         FEMALE
+    }
+
+    public enum State{
+        ACTIVE,
+        BLOCKED
     }
 
     public User(long id, String login) {
@@ -123,6 +130,14 @@ public class User extends CustomEntity implements Serializable {
         this.address = address;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     public static class Builder {
         private final User user;
 
@@ -159,6 +174,11 @@ public class User extends CustomEntity implements Serializable {
 
         public Builder buildSex(User.Sex sex) {
             user.setSex(sex);
+            return this;
+        }
+
+        public Builder buildState(User.State state) {
+            user.setState(state);
             return this;
         }
 
@@ -206,12 +226,13 @@ public class User extends CustomEntity implements Serializable {
                 Objects.equals(birthdayDate, user.birthdayDate) &&
                 Objects.equals(phone, user.phone) &&
                 Objects.equals(address, user.address) &&
-                sex == user.sex;
+                sex == user.sex &&
+                state == user.getState();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, login, role, password, lastname, name, patronymic, birthdayDate, phone, address, sex);
+        return Objects.hash(id, login, role, password, lastname, name, patronymic, birthdayDate, phone, address, sex, state);
     }
 
     @Override
@@ -224,6 +245,7 @@ public class User extends CustomEntity implements Serializable {
                 ", lastName='" + lastname + '\'' +
                 ", name='" + name + '\'' +
                 ", patronymic='" + patronymic + '\'' +
+                ", state='" + state + '\'' +
                 ", birthdayDate=" + birthdayDate +
                 ", phone='" + phone + '\'' +
                 ", address='" + address + '\'' +

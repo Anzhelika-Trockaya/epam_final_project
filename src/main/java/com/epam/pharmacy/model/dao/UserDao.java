@@ -1,11 +1,15 @@
 package com.epam.pharmacy.model.dao;
 
 import com.epam.pharmacy.model.entity.User;
-import com.epam.pharmacy.model.entity.UserRole;
 import com.epam.pharmacy.exception.DaoException;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface UserDao extends BaseDao<User> {
-    Optional<UserRole> authenticate(String login, String password) throws DaoException;
+public interface UserDao {
+    Optional<User> authenticate(String login, String password) throws DaoException;
+
+    Optional<User> findByLogin(String s) throws DaoException;
+
+    boolean changeState(long id, User.State state) throws DaoException;
 }

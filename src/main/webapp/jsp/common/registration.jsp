@@ -4,6 +4,7 @@
 <%@include file="../header/header.jsp" %>
 
 <fmt:message key="registration.page_title" var="registration_title"/>
+<fmt:message key="registration.add_user_title" var="add_user_title"/>
 <fmt:message key="registration.login" var="label_login"/>
 <fmt:message key="registration.password" var="label_password"/>
 <fmt:message key="registration.lastname" var="label_lastname"/>
@@ -13,6 +14,10 @@
 <fmt:message key="registration.male" var="title_male"/>
 <fmt:message key="registration.female" var="title_female"/>
 <fmt:message key="registration.role" var="label_role"/>
+<fmt:message key="registration.admin" var="title_admin"/>
+<fmt:message key="registration.pharmacist" var="title_pharmacist"/>
+<fmt:message key="registration.doctor" var="title_doctor"/>
+<fmt:message key="registration.customer" var="title_customer"/>
 <fmt:message key="registration.birthday_date" var="label_birthday_date"/>
 <fmt:message key="registration.phone" var="label_phone"/>
 <fmt:message key="registration.address" var="label_address"/>
@@ -31,13 +36,44 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>${registration_title}</title>
+    <title><c:choose>
+        <c:when test="${current_user_role eq 'ADMIN'}">${add_user_title}</c:when>
+        <c:otherwise>${registration_title}</c:otherwise>
+    </c:choose></title>
     <c:set var="current_page" value="jsp/common/registration.jsp" scope="session"/>
 </head>
 <body>
 <div class="registration_form">
-    <form name="registration_form" id="registration_form" action="${context_path}/controller" method="post">
+    <form name="registration_form" id="registration_form" action="${context_path}/controller" method="post"
+          onsubmit="return validate()">
         <input type="hidden" name="command" value="register"/>
+        <c:if test="${current_user_role eq 'ADMIN'}">
+            <c:if test="${not empty successful_registration}">
+                <br/>
+                <p><fmt:message key="users.successful_msg"/></p>
+                <br/>
+                <br/>
+            </c:if>
+            <label for="role">${label_role}</label>
+            <select id="role" name="role" size="1">
+                <option id="default_role" selected value="">-</option>
+                <option
+                        <c:if test="${user_role eq 'ADMIN'}">selected</c:if> value="ADMIN">${title_admin}</option>
+                <option
+                        <c:if test="${user_role eq 'DOCTOR'}">selected</c:if> value="DOCTOR">${title_doctor}</option>
+                <option
+                        <c:if test="${user_role eq 'PHARMACIST'}">selected</c:if>
+                        value="PHARMACIST">${title_pharmacist}</option>
+                <option
+                        <c:if test="${user_role eq 'CUSTOMER'}">selected</c:if>
+                        value="CUSTOMER">${title_customer}</option>
+            </select>
+            <p id="incorrect_role_msg" class="incorrect_data_msg"></p>
+            <c:if test="${not empty incorrect_role}">
+                <p class="incorrect_data_msg"><fmt:message key="${incorrect_role}"/></p>
+            </c:if>
+            <br/>
+        </c:if>
         <label for="lastname">${label_lastname}</label>
         <input type="text" id="lastname" name="lastname" value="${user_lastname}"/>
         <p id="incorrect_lastname_msg" class="incorrect_data_msg"></p>
@@ -61,9 +97,11 @@
         <br/>
         <label for="sex">${label_sex}</label>
         <select id="sex" name="sex" size="1">
-            <option id="FEMALE" value="FEMALE">${title_female}</option>
-            <option id="MALE" value="MALE">${title_male}</option>
-            <option disabled selected value="">-</option>
+            <option id="default" selected value="">-</option>
+            <option
+                    <c:if test="${user_sex eq 'FEMALE'}">selected</c:if> value="FEMALE">${title_female}</option>
+            <option
+                    <c:if test="${user_sex eq 'MALE'}">selected</c:if> value="MALE">${title_male}</option>
         </select>
         <p id="incorrect_sex_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_sex}">
@@ -106,7 +144,7 @@
         </c:if>
         <br/>
         <label for="repeat_password">${label_repeat_password}</label>
-        <input type="password" id="repeat_password" name="repeat_password" value="${user_repeat_password}"/>
+        <input type="password" id="repeat_password" name="repeat_password" value="${repeat_password}"/>
         <p id="incorrect_repeat_password_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_repeat_password}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_repeat_password}"/></p>
@@ -117,104 +155,106 @@
     </form>
 </div>
 </body>
+<script>    function validate() {
+    const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}$/;
+    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
+    const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
+    const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
+    const loginInput = document.forms["registration_form"]["login"];
+    const passwordInput = document.forms["registration_form"]["password"];
+    const lastnameInput = document.forms["registration_form"]["lastname"];
+    const nameInput = document.forms["registration_form"]["name"];
+    const patronymicInput = document.forms["registration_form"]["patronymic"];
+    const sexInput = document.forms["registration_form"]["sex"];
+    const phoneInput = document.forms["registration_form"]["phone"];
+    const addressInput = document.forms["registration_form"]["address"];
+    const birthdayDateInput = document.forms["registration_form"]["birthday_date"];
+    let result = true;
+    if (${current_user_role eq 'ADMIN'}) {
+        const roleInput = document.forms["registration_form"]["role"];
+        if (!validateRequired(roleInput, "incorrect_role_msg", "${msg_text_required}")) {
+            result = false;
+        }
+    }
+    if (!(validateRequired(loginInput, "incorrect_login_msg", "${msg_text_required}") &&
+        validatePatternMismatch(loginInput, loginPattern, "incorrect_login_msg", "${msg_text_incorrect_login}"))) {
+        result = false;
+    }
+    if (!(validateRequired(passwordInput, "incorrect_password_msg", "${msg_text_required}") &&
+        validatePatternMismatch(passwordInput, passwordPattern, "incorrect_password_msg", "${msg_text_incorrect_password}"))) {
+        result = false;
+    }
+    if (!(validateRequired(lastnameInput, "incorrect_lastname_msg", "${msg_text_required}") &&
+        validatePatternMismatch(lastnameInput, namePattern, "incorrect_lastname_msg", "${msg_text_incorrect_lastname}"))) {
+        result = false;
+    }
+    if (!(validateRequired(nameInput, "incorrect_name_msg", "${msg_text_required}") &&
+        validatePatternMismatch(nameInput, namePattern, "incorrect_name_msg", "${msg_text_incorrect_name}"))) {
+        result = false;
+    }
+    if (!(validateRequired(patronymicInput, "incorrect_patronymic_msg", "${msg_text_required}") &&
+        validatePatternMismatch(patronymicInput, namePattern, "incorrect_patronymic_msg", "${msg_text_incorrect_patronymic}"))) {
+        result = false;
+    }
+    if (!(validateRequired(phoneInput, "incorrect_phone_msg", "${msg_text_required}") &&
+        validatePatternMismatch(phoneInput, phonePattern, "incorrect_phone_msg", "${msg_text_incorrect_phone}"))) {
+        result = false;
+    }
+    if (!validateRequired(sexInput, "incorrect_sex_msg", "${msg_text_required}")) {
+        result = false;
+    }
+    if (!validateRequired(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_required}")) {
+        result = false;
+    }
+    if (!validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}")) {
+        result = false;
+    }
+    if (!validatePasswordRepeat(passwordInput)) {
+        result = false;
+    }
+    return result;
+}
+
+function validateRequired(input, msgPlaceId, msg) {
+    const value = input.value;
+    if (value === "") {
+        makeInputIncorrect(input, msgPlaceId, msg);
+        return false;
+    }
+    makeInputCorrect(input, msgPlaceId);
+    return true;
+}
+
+function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
+    const value = input.value;
+    if (!pattern.test(value)) {
+        makeInputIncorrect(input, msgPlaceId, msg);
+        return false;
+    }
+    makeInputCorrect(input, msgPlaceId);
+    return true;
+}
+
+function makeInputIncorrect(input, msgPlaceId, msg) {
+    document.getElementById(msgPlaceId).innerHTML = msg;
+    input.setAttribute("class", "red-input");
+}
+
+function makeInputCorrect(input, msgPlaceId) {
+    document.getElementById(msgPlaceId).innerHTML = "";
+    input.setAttribute("class", "");
+}
+
+function validatePasswordRepeat(passwordInput) {
+    const passwordValue = passwordInput.value;
+    const repeatPasswordInput = document.forms["registration_form"]["repeat_password"];
+    const repeatPasswordValue = repeatPasswordInput.value;
+    if (passwordValue !== repeatPasswordValue) {
+        makeInputIncorrect(repeatPasswordInput, "incorrect_repeat_password_msg", "${msg_text_incorrect_repeat_pass}");
+        return false;
+    }
+    makeInputCorrect(repeatPasswordInput, "incorrect_repeat_password_msg");
+    return true;
+}</script>
 </html>
-<script type="text/javascript">
-    function validate() {
-        const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}$/;
-        const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
-        const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
-        const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
-        const loginInput = document.forms["registration_form"]["login"];
-        const passwordInput = document.forms["registration_form"]["password"];
-        const lastnameInput = document.forms["registration_form"]["lastname"];
-        const nameInput = document.forms["registration_form"]["name"];
-        const patronymicInput = document.forms["registration_form"]["patronymic"];
-        const sexInput = document.forms["registration_form"]["sex"];
-        const phoneInput = document.forms["registration_form"]["phone"];
-        const addressInput = document.forms["registration_form"]["address"];
-        const birthdayDateInput = document.forms["registration_form"]["birthday_date"];
-        let result = true;
-        if (!(validateRequired(loginInput, "incorrect_login_msg", "${msg_text_required}") &&
-            validatePatternMismatch(loginInput, loginPattern, "incorrect_login_msg", "${msg_text_incorrect_login}"))) {
-            result = false;
-        }
-        if (!(validateRequired(passwordInput, "incorrect_password_msg", "${msg_text_required}") &&
-            validatePatternMismatch(passwordInput, passwordPattern, "incorrect_password_msg", "${msg_text_incorrect_password}"))) {
-            result = false;
-        }
-        if (!(validateRequired(lastnameInput, "incorrect_lastname_msg", "${msg_text_required}") &&
-            validatePatternMismatch(lastnameInput, namePattern, "incorrect_lastname_msg", "${msg_text_incorrect_lastname}"))) {
-            result = false;
-        }
-        if (!(validateRequired(nameInput, "incorrect_name_msg", "${msg_text_required}") &&
-            validatePatternMismatch(nameInput, namePattern, "incorrect_name_msg", "${msg_text_incorrect_name}"))) {
-            result = false;
-        }
-        if (!(validateRequired(patronymicInput, "incorrect_patronymic_msg", "${msg_text_required}") &&
-            validatePatternMismatch(patronymicInput, namePattern, "incorrect_patronymic_msg", "${msg_text_incorrect_patronymic}"))) {
-            result = false;
-        }
-        if (!(validateRequired(phoneInput, "incorrect_phone_msg", "${msg_text_required}") &&
-            validatePatternMismatch(phoneInput, phonePattern, "incorrect_phone_msg", "${msg_text_incorrect_phone}"))) {
-            result = false;
-        }
-        if (!validateRequired(sexInput, "incorrect_sex_msg", "${msg_text_required}")) {
-            result = false;
-        }
-        if (!validateRequired(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_required}")) {
-            result = false;
-        }
-        if (!validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}")) {
-            result = false;
-        }
-        if (!validatePasswordRepeat(passwordInput)) {
-            result = false;
-        }
-        return result;
-    }
 
-    function validateRequired(input, msgPlaceId, msg) {
-        const value = input.value;
-        if (value === "") {
-            makeInputIncorrect(input, msgPlaceId, msg);
-            return false;
-        }
-        makeInputCorrect(input, msgPlaceId);
-        return true;
-    }
-
-    function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
-        const value = input.value;
-        if (!pattern.test(value)) {
-            makeInputIncorrect(input, msgPlaceId, msg);
-            return false;
-        }
-        makeInputCorrect(input, msgPlaceId);
-        return true;
-    }
-
-    function makeInputIncorrect(input, msgPlaceId, msg) {
-        document.getElementById(msgPlaceId).innerHTML = msg;
-        input.setAttribute("class", "red-input");
-    }
-
-    function makeInputCorrect(input, msgPlaceId) {
-        document.getElementById(msgPlaceId).innerHTML = "";
-        input.setAttribute("class", "");
-    }
-
-    function validatePasswordRepeat(passwordInput) {
-        const passwordValue = passwordInput.value;
-        const repeatPasswordInput = document.forms["registration_form"]["repeat_password"];
-        const repeatPasswordValue = repeatPasswordInput.value;
-        if (passwordValue !== repeatPasswordValue) {
-            makeInputIncorrect(repeatPasswordInput, "incorrect_repeat_password_msg", "${msg_text_incorrect_repeat_pass}");
-            return false;
-        }
-        makeInputCorrect(repeatPasswordInput, "incorrect_repeat_password_msg");
-        return true;
-    }
-</script>
-<script type="text/javascript">
-    function defineLastname(){}
-</script>

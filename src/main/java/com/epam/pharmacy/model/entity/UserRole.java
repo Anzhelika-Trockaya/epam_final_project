@@ -1,6 +1,9 @@
 package com.epam.pharmacy.model.entity;
 
-public enum UserRole {
+import java.io.Serializable;
+
+public enum UserRole implements Serializable {
+    //fixme serialVersion
     ADMIN,
     PHARMACIST,
     DOCTOR,

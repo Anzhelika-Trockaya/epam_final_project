@@ -1,7 +1,12 @@
 package com.epam.pharmacy.model.service.impl;
 
-import com.epam.pharmacy.model.dao.DaoProvider;
+import com.epam.pharmacy.controller.AttributeName;
+import com.epam.pharmacy.controller.ParameterName;
+import com.epam.pharmacy.controller.PropertyKey;
+import com.epam.pharmacy.model.dao.AbstractDao;
+import com.epam.pharmacy.model.dao.EntityTransaction;
 import com.epam.pharmacy.model.dao.UserDao;
+import com.epam.pharmacy.model.dao.impl.UserDaoImpl;
 import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.model.entity.UserRole;
 import com.epam.pharmacy.exception.DaoException;
@@ -17,26 +22,35 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
 import static com.epam.pharmacy.controller.ParameterName.*;
 
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public Optional<UserRole> authenticate(String login, String password) throws ServiceException {
+    public Optional<User> authenticate(String login, String password) throws ServiceException {
         Validator validator = ValidatorImpl.getInstance();
         if (!validator.isCorrectLogin(login) || !validator.isCorrectPassword(password)) {
             return Optional.empty();
         }
-        DaoProvider daoProvider = DaoProvider.getInstance();
-        UserDao userDao = daoProvider.getUserDao();
-        String encryptedPassword = PasswordEncryptor.encrypt(password);
+        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        EntityTransaction transaction = new EntityTransaction();
         try {
+            transaction.beginWithAutoCommit(userDao);
+            String encryptedPassword = PasswordEncryptor.encrypt(password);
             return userDao.authenticate(login, encryptedPassword);
         } catch (DaoException daoException) {
             LOGGER.error("Exception when authenticate user. Login:'" + login + "', password:'" + password + "'",
                     daoException);
-            throw new ServiceException(daoException);
+            throw new ServiceException("Exception when authenticate user. Login:'" + login + "', password:'" +
+                    password + "'", daoException);
+        } finally {
+            try {
+                transaction.end();
+            } catch (DaoException e) {
+                LOGGER.error("Exception when ending transaction", e);
+            }
         }
     }
 
@@ -46,33 +60,101 @@ public class UserServiceImpl implements UserService {
         if (!validator.isCorrectRegisterData(userData)) {
             return false;
         }
-        DaoProvider daoProvider = DaoProvider.getInstance();
-        UserDao userDao = daoProvider.getUserDao();
+        UserDaoImpl userDao = UserDaoImpl.getInstance();
         User user = buildUser(userData);
         String password = user.getPassword();
         String encryptedPassword = PasswordEncryptor.encrypt(password);
         user.setPassword(encryptedPassword);
+        EntityTransaction transaction = new EntityTransaction();
         try {
-            return userDao.create(user);
+            transaction.begin(userDao);
+            String login = userData.get(ParameterName.USER_LOGIN);
+            if (userDao.findByLogin(login).isPresent()) {
+                userData.put(AttributeName.INCORRECT_LOGIN, PropertyKey.REGISTRATION_NOT_UNIQUE_LOGIN);
+                return false;
+            }
+            boolean created = userDao.create(user);
+            transaction.commit();
+            return created;
         } catch (DaoException daoException) {
             LOGGER.error("Exception when create user." + user, daoException);
-            throw new ServiceException(daoException);
+            try {
+                transaction.rollback();
+            } catch (DaoException e) {
+                LOGGER.error("Exception rollback transaction." + daoException);
+                throw new ServiceException("Exception rollback transaction.", e);
+            }
+            throw new ServiceException("Exception when create user." + user, daoException);
+        } finally {
+            try {
+                transaction.end();
+            } catch (DaoException e) {
+                LOGGER.error("Exception when ending transaction");
+            }
         }
     }
 
     @Override
-    public List<User> findAllUsers() throws ServiceException {
-        DaoProvider daoProvider = DaoProvider.getInstance();
-        UserDao userDao = daoProvider.getUserDao();
+    public boolean deleteById(String idString) throws ServiceException {//FIXME TRANSACTION
+        Validator validator = ValidatorImpl.getInstance();
+        if (!validator.isCorrectId(idString)) {
+            return false;
+        }
+        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        long idValue;
+        try {
+            idValue = Long.parseLong(idString);
+        } catch (NumberFormatException e) {
+            throw new ServiceException("Exception when remove user. Incorrect id=" + idString);
+        }
+        try {
+            return userDao.deleteById(idValue);
+        } catch (DaoException daoException) {
+            LOGGER.error("Exception when remove user. id=" + idString + " " + daoException);
+            throw new ServiceException("Exception when remove user. id=" + idString, daoException);
+        }
+    }
+
+    @Override
+    public boolean changeState(String idString, String stateString) throws ServiceException {
+        Validator validator = ValidatorImpl.getInstance();
+        if (!validator.isCorrectId(idString) || !validator.isCorrectState(stateString)) {
+            return false;
+        }
+        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        long idValue;
+        try {
+            idValue = Long.parseLong(idString);
+        } catch (NumberFormatException e) {
+            throw new ServiceException("Exception when change user state. Incorrect id=" + idString);
+        }
+        try {
+            Optional<User> optionalUser = userDao.findById(idValue);
+            if (!optionalUser.isPresent()) {
+                return false;
+            }
+            User.State state = User.State.valueOf(stateString);
+            return userDao.changeState(idValue, state);
+        } catch (DaoException daoException) {
+            LOGGER.error("Exception when change user state id=" + idString + " state=" + stateString + " " +
+                    daoException);
+            throw new ServiceException("Exception when change user state id=" + idString + " state=" + stateString +
+                    " ", daoException);
+        }
+    }
+
+    @Override
+    public List<User> findAll() throws ServiceException {
+        UserDaoImpl userDao = UserDaoImpl.getInstance();
         try {
             return userDao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("Exception when find all users."+e);
+            LOGGER.error("Exception when find all users." + e);
             throw new ServiceException(e);
         }
     }
 
-    private User buildUser(Map<String, String> userData){
+    private User buildUser(Map<String, String> userData) {
         String login = userData.get(USER_LOGIN);
         String roleString = userData.get(USER_ROLE);
         UserRole role = UserRole.valueOf(roleString);
@@ -86,6 +168,7 @@ public class UserServiceImpl implements UserService {
         String phone = userData.get(USER_PHONE);
         String address = userData.get(USER_ADDRESS);
         User.Builder builder = new User.Builder(login, role).
+                buildState(User.State.ACTIVE).
                 buildLastname(lastname).buildName(name).buildPatronymic(patronymic).
                 buildPassword(password).buildSex(sex).buildBirthdayDate(birthdayDate).
                 buildPhone(phone).buildAddress(address);

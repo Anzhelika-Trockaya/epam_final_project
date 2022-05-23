@@ -20,7 +20,7 @@ public class ChangeUsersCommand implements Command {
         ServiceProvider provider = ServiceProvider.getInstance();
         UserService userService = provider.getUserService();
         try {
-            List<User> listUsers = userService.findAllUsers();
+            List<User> listUsers = userService.findAll();
             request.setAttribute(AttributeName.USERS_LIST, listUsers);
             return new Router(PagePath.USERS);
         } catch (ServiceException e) {

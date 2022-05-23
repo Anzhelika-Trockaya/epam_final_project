@@ -11,20 +11,19 @@
 </head>
 <body>
 <div class="login_form">
-    <c:if test="${not empty sessionScope.successful_registration}">
+    <c:if test="${not empty successful_registration}">
         <p><fmt:message key="registration.successful_msg"/></p>
-        <c:remove var="successful_registration" scope="session"/>
     </c:if>
     <form name="sign_in_form" action="${context_path}/controller" onsubmit="return validate()">
         <input type="hidden" name="command" value="sign_in"/>
         <div>
             <label for="login"><fmt:message key="login"/></label>
-            <input type="text" id="login" name="login"/>
+            <input type="text" id="login" value="${login}" name="login"/>
         </div>
         <br/>
         <div>
             <label for="password"><fmt:message key="password"/></label>
-            <input type="password" id="password" name="password"/>
+            <input type="password" id="password" value="${password}" name="password"/>
         </div>
         <br/>
         <p id="incorrect_login_data_msg" class="incorrect_data_msg">

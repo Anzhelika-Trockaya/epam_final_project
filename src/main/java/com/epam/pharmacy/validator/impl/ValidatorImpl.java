@@ -1,5 +1,6 @@
 package com.epam.pharmacy.validator.impl;
 
+import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.validator.Validator;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
@@ -10,6 +11,8 @@ import java.util.Map;
 
 public class ValidatorImpl implements Validator {
     private static ValidatorImpl instance;
+    private static final String ID_REGEX = "[1-9]\\d{0,18}";
+    private static final String USER_STATE_REGEX = "(ACTIVE|BLOCKED)";
     private static final String SEX_REGEX = "(MALE|FEMALE)";
     private static final String USER_ROLE_REGEX = "(ADMIN|PHARMACIST|DOCTOR|CUSTOMER)";
     private static final String USER_NAME_REGEX = "[\\p{Alpha}][\\p{Alpha}-]{0,44}";
@@ -17,7 +20,7 @@ public class ValidatorImpl implements Validator {
     private static final String USER_PASSWORD_REGEX = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])[A-ZА-ЯЁa-zа-яё0-9!@#$%^&*]{6,45}";
     private static final String DATE_REGEX = "[1-2]\\d{3}-[0-1]\\d-[0-3]\\d";
     private static final String PHONE_REGEX = "\\+375(33|29|25|44)\\d{7}";
-    private static final String LANGUAGE_REGEX="(be_BY|en_US)";
+    private static final String LANGUAGE_REGEX = "(be_BY|en_US)";
 
     private ValidatorImpl() {
     }
@@ -98,8 +101,8 @@ public class ValidatorImpl implements Validator {
         if (!isCorrectPassword(password)) {
             result = false;
             userData.put(INCORRECT_PASSWORD, REGISTRATION_INCORRECT_PASSWORD);
-        } else{
-            if(!password.equals(repeat_password)){
+        } else {
+            if (!password.equals(repeat_password)) {
                 result = false;
                 userData.put(INCORRECT_REPEAT_PASSWORD, REGISTRATION_INCORRECT_REPEAT_PASSWORD);
             }
@@ -137,5 +140,15 @@ public class ValidatorImpl implements Validator {
             userData.put(INCORRECT_ROLE, REGISTRATION_INCORRECT_ROLE);
         }
         return result;
+    }
+
+    @Override
+    public boolean isCorrectId(String id) {
+        return id != null && id.matches(ID_REGEX);
+    }
+
+    @Override
+    public boolean isCorrectState(String state) {
+        return state != null && state.matches(USER_STATE_REGEX);
     }
 }

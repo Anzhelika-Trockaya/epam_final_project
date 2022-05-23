@@ -13,5 +13,6 @@ public final class PropertyKey {
     public static final String REGISTRATION_INCORRECT_PHONE="registration.incorrect_phone";
     public static final String REGISTRATION_INCORRECT_ADDRESS="registration.incorrect_address";
     public static final String REGISTRATION_INCORRECT_REPEAT_PASSWORD="registration.incorrect_repeat_password";
+    public static final String REGISTRATION_NOT_UNIQUE_LOGIN="registration.not_unique_login";
     private PropertyKey(){}
 }

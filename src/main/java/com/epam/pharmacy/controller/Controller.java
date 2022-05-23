@@ -9,11 +9,15 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebServlet(name = "helloServlet", urlPatterns = {"/controller", "*.do"})
+@WebServlet(name = "helloServlet", urlPatterns = {"/controller"})
 public class Controller extends HttpServlet {
+    private static final Logger LOGGER = LogManager.getLogger();
+
     @Override
     public void init() {
         ConnectionPool.getInstance();
@@ -40,10 +44,16 @@ public class Controller extends HttpServlet {
         Command command = CommandType.define(commandStr);
         try {
             Router router = command.execute(request);
-            if(Router.Type.FORWARD==router.getType()) {
-                request.getRequestDispatcher(router.getPage()).forward(request, response);
-            } else {
-                response.sendRedirect(router.getPage());//todo request.getContextPath()+
+            switch (router.getType()) {
+                case FORWARD:
+                    request.getRequestDispatcher(router.getPage()).forward(request, response);
+                    break;
+                case REDIRECT:
+                    response.sendRedirect(router.getPage());//todo request.getContextPath()+
+                    break;
+                default:
+                    LOGGER.warn("Unknown Router type" + router.getType());
+                    break;
             }
         } catch (CommandException e) {
             request.setAttribute("error_msg", e.getCause());

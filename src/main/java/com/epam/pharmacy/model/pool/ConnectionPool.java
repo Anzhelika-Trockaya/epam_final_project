@@ -46,13 +46,11 @@ public class ConnectionPool {
     }
 
     private ConnectionPool() {
-        ProxyConnectionFactory connectionFactory = ProxyConnectionFactory.getInstance();
         ProxyConnection connection;
         for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
             try {
-                connection = connectionFactory.createProxyConnection();
+                connection = createConnection();
                 availableConnections.add(connection);
-                LOGGER.info("Connection created. " + connection);
             } catch (SQLException e) {
                 LOGGER.warn("Exception when creating connection" + e);
             }
@@ -61,9 +59,8 @@ public class ConnectionPool {
             int missingConnectionsNumber = DEFAULT_POOL_SIZE - availableConnections.size();
             for (int j = 0; j < missingConnectionsNumber; j++) {
                 try {
-                    connection = connectionFactory.createProxyConnection();
+                    connection = createConnection();
                     availableConnections.add(connection);
-                    LOGGER.info("Connection created. " + connection);
                 } catch (SQLException e) {
                     LOGGER.fatal("Connection was not created!" + e);
                     throw new ExceptionInInitializerError("Connection was not created!" + e.getMessage());
@@ -125,6 +122,13 @@ public class ConnectionPool {
             }
         }
         deregisterDrivers();
+    }
+
+    private ProxyConnection createConnection() throws SQLException {
+        ProxyConnectionFactory connectionFactory = ProxyConnectionFactory.getInstance();
+        ProxyConnection connection = connectionFactory.createProxyConnection();
+        LOGGER.info("Connection created. " + connection);
+        return connection;
     }
 
     private void deregisterDrivers() {
