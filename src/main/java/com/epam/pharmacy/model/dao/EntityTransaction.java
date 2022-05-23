@@ -22,6 +22,13 @@ public class EntityTransaction {
         dao.setConnection(connection);
     }
 
+    public void beginWithAutoCommit(AbstractDao... daos) throws DaoException {
+        initConnection(true);
+        for (AbstractDao dao : daos) {
+            dao.setConnection(connection);
+        }
+    }
+
     public void begin(AbstractDao... daos) throws DaoException {
         initConnection(false);
         for (AbstractDao dao : daos) {
@@ -29,13 +36,12 @@ public class EntityTransaction {
         }
     }
 
-    public void end() throws DaoException {
+    public void end() {
         if (connection != null) {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
                 LOGGER.error("Exception when change autoCommit to false" + e);
-                throw new DaoException("Exception when change autoCommit to false", e);
             } finally {
                 ConnectionPool connectionPool = ConnectionPool.getInstance();
                 connectionPool.releaseConnection(connection);
@@ -43,21 +49,19 @@ public class EntityTransaction {
         }
     }
 
-    public void commit() throws DaoException {
+    public void commit() {
         try {
             connection.commit();
         } catch (SQLException e) {
             LOGGER.error("Exception when commit transaction" + e);
-            throw new DaoException("Exception when commit transaction", e);
         }
     }
 
-    public void rollback() throws DaoException {
+    public void rollback() {
         try {
             connection.rollback();
         } catch (SQLException e) {
             LOGGER.error("Exception when rollback transaction" + e);
-            throw new DaoException("Exception when rollback transaction", e);
         }
     }
 

@@ -46,11 +46,7 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException("Exception when authenticate user. Login:'" + login + "', password:'" +
                     password + "'", daoException);
         } finally {
-            try {
                 transaction.end();
-            } catch (DaoException e) {
-                LOGGER.error("Exception when ending transaction", e);
-            }
         }
     }
 
@@ -67,7 +63,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encryptedPassword);
         EntityTransaction transaction = new EntityTransaction();
         try {
-            transaction.begin(userDao);
+            transaction.beginWithAutoCommit(userDao);
             String login = userData.get(ParameterName.USER_LOGIN);
             if (userDao.findByLogin(login).isPresent()) {
                 userData.put(AttributeName.INCORRECT_LOGIN, PropertyKey.REGISTRATION_NOT_UNIQUE_LOGIN);
@@ -78,19 +74,10 @@ public class UserServiceImpl implements UserService {
             return created;
         } catch (DaoException daoException) {
             LOGGER.error("Exception when create user." + user, daoException);
-            try {
                 transaction.rollback();
-            } catch (DaoException e) {
-                LOGGER.error("Exception rollback transaction." + daoException);
-                throw new ServiceException("Exception rollback transaction.", e);
-            }
             throw new ServiceException("Exception when create user." + user, daoException);
         } finally {
-            try {
                 transaction.end();
-            } catch (DaoException e) {
-                LOGGER.error("Exception when ending transaction");
-            }
         }
     }
 
