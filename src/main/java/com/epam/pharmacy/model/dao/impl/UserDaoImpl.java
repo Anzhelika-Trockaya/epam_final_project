@@ -82,7 +82,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public boolean changeState(long id, User.State state) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_STATE)) {
             statement.setString(1, state.name());
-            statement.setLong(1, id);
+            statement.setLong(2, id);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
             LOGGER.error("Exception when change state user id=" + id + " state=" + state + e);
@@ -139,16 +139,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public Optional<User> findByLogin(String login) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_LOGIN)) {
             statement.setString(1, login);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                UserRowMapper mapper = UserRowMapper.getInstance();
-                Optional<User> userOptional;
-                if (resultSet.next()) {
-                    userOptional = mapper.mapRow(resultSet);
-                } else {
-                    userOptional = Optional.empty();
-                }
-                return userOptional;
-            }
+            return findUser(statement);
         } catch (SQLException e) {
             LOGGER.error("Find user by id exception. " + e.getMessage());
             throw new DaoException("Find user by id exception. ", e);
@@ -159,19 +150,23 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     public Optional<User> findById(long id) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_USER_BY_ID)) {
             statement.setLong(1, id);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                UserRowMapper mapper = UserRowMapper.getInstance();
-                Optional<User> userOptional;
-                if (resultSet.next()) {
-                    userOptional = mapper.mapRow(resultSet);
-                } else {
-                    userOptional = Optional.empty();
-                }
-                return userOptional;
-            }
+            return findUser(statement);
         } catch (SQLException e) {
             LOGGER.error("Find user by login exception. " + e.getMessage());
             throw new DaoException("Find user by login exception. ", e);
+        }
+    }
+
+    private Optional<User> findUser(PreparedStatement statement) throws SQLException, DaoException {
+        try (ResultSet resultSet = statement.executeQuery()) {
+            UserRowMapper mapper = UserRowMapper.getInstance();
+            Optional<User> userOptional;
+            if (resultSet.next()) {
+                userOptional = mapper.mapRow(resultSet);
+            } else {
+                userOptional = Optional.empty();
+            }
+            return userOptional;
         }
     }
 }

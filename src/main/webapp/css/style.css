@@ -47,6 +47,16 @@ div {
     color: red;
     font-size: 12px;
 }
+.failed_msg{
+    color: red;
+    font-size: 14px;
+    left: 5%;
+}
+.successful_msg{
+    color: forestgreen;
+    font-size: 14px;
+    left: 5%;
+}
 .red_input{
     border-color: red;
 }

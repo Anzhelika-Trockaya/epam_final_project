@@ -2,14 +2,14 @@ package com.epam.pharmacy.controller.command;
 
 import com.epam.pharmacy.controller.command.impl.*;
 import com.epam.pharmacy.controller.command.impl.admin.ChangeUserStateCommand;
-import com.epam.pharmacy.controller.command.impl.admin.ChangeUsersCommand;
+import com.epam.pharmacy.controller.command.impl.admin.GoChangeUsersCommand;
 import com.epam.pharmacy.controller.command.impl.admin.DeleteUserCommand;
 import com.epam.pharmacy.controller.command.impl.common.ChangeLanguageCommand;
 import com.epam.pharmacy.controller.command.impl.common.RegisterCommand;
 import com.epam.pharmacy.controller.command.impl.common.SignInCommand;
 
 public enum CommandType {
-    GO_CHANGE_USERS_PAGE(new ChangeUsersCommand()),
+    GO_CHANGE_USERS_PAGE(new GoChangeUsersCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
     DELETE_USER(new DeleteUserCommand()),

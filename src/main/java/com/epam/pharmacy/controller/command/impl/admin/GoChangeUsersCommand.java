@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
-public class ChangeUsersCommand implements Command {
+public class GoChangeUsersCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {

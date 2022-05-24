@@ -14,5 +14,10 @@ public final class PropertyKey {
     public static final String REGISTRATION_INCORRECT_ADDRESS="registration.incorrect_address";
     public static final String REGISTRATION_INCORRECT_REPEAT_PASSWORD="registration.incorrect_repeat_password";
     public static final String REGISTRATION_NOT_UNIQUE_LOGIN="registration.not_unique_login";
+    public static final String USERS_DELETED_MESSAGE = "users.deleted_msg";
+    public static final String USERS_NOT_DELETED_MESSAGE = "users.not_deleted_msg";
+    public static final Object USERS_STATE_CHANGED_MESSAGE = "users.state_changed_msg";
+    public static final Object USERS_STATE_NOT_CHANGED_MESSAGE = "users.state_not_changed_msg";
+
     private PropertyKey(){}
 }

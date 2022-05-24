@@ -50,7 +50,7 @@
         <c:if test="${current_user_role eq 'ADMIN'}">
             <c:if test="${not empty successful_registration}">
                 <br/>
-                <p><fmt:message key="users.successful_msg"/></p>
+                <div class="successful_msg"><fmt:message key="users.successful_msg"/></div>
                 <br/>
                 <br/>
             </c:if>

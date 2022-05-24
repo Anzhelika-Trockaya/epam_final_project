@@ -21,6 +21,8 @@ public final class AttributeName {
     public static final String USER_ID = "user_id";
     public static final String CURRENT_USER_ID = "current_user_id";
     public static final String PASSWORD = "password";
+    public static final String SUCCESSFUL_CHANGE_MESSAGE = "successful_change_message";
+    public static final String FAILED_CHANGE_MESSAGE = "failed_change_message";
 
     private AttributeName(){}
 }

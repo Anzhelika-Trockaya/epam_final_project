@@ -12,8 +12,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
 import java.util.Map;
-import static com.epam.pharmacy.controller.PropertyKey.*;
-import static com.epam.pharmacy.controller.AttributeName.*;
 
 public class RegisterCommand implements Command {
     @Override
@@ -34,7 +32,7 @@ public class RegisterCommand implements Command {
             page = (String) session.getAttribute(AttributeName.CURRENT_PAGE);
             if (isCreated) {
                 request.setAttribute(AttributeName.SUCCESSFUL_REGISTRATION, true);
-                if (session.getAttribute(AttributeName.CURRENT_USER_ROLE)==null) {
+                if (session.getAttribute(AttributeName.CURRENT_USER_ROLE) == null) {
                     page = PagePath.SIGN_IN;
                 }
             } else {
@@ -48,7 +46,7 @@ public class RegisterCommand implements Command {
     }
 
     private void addDataToRequest(HttpServletRequest request, Map<String, String> userData) {
-        for(String key: userData.keySet()) {
+        for (String key : userData.keySet()) {
             request.setAttribute(key, userData.get(key));
         }
     }

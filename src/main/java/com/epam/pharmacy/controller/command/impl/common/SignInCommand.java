@@ -33,7 +33,7 @@ public class SignInCommand implements Command {
                 router.setPage(PagePath.HOME);
                 router.setTypeRedirect();
             } else {
-                request.setAttribute(AttributeName.FAILED, true);//fixme magic value
+                request.setAttribute(AttributeName.FAILED, true);
                 String loginFromRequest = request.getParameter(ParameterName.LOGIN);
                 request.setAttribute(AttributeName.LOGIN, loginFromRequest);
                 String passwordFromRequest = request.getParameter(ParameterName.PASSWORD);

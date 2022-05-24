@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class EntityTransaction {
+public class EntityTransaction implements AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger();
     private Connection connection;
 
@@ -36,6 +36,11 @@ public class EntityTransaction {
         }
     }
 
+    @Override
+    public void close() {
+        end();
+    }
+
     public void end() {
         if (connection != null) {
             try {
@@ -45,15 +50,17 @@ public class EntityTransaction {
             } finally {
                 ConnectionPool connectionPool = ConnectionPool.getInstance();
                 connectionPool.releaseConnection(connection);
+                connection = null;
             }
         }
     }
 
-    public void commit() {
+    public void commit() throws DaoException {
         try {
             connection.commit();
         } catch (SQLException e) {
             LOGGER.error("Exception when commit transaction" + e);
+            throw new DaoException("Exception when commit transaction", e);
         }
     }
 

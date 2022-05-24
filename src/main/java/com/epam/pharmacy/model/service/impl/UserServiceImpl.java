@@ -35,8 +35,7 @@ public class UserServiceImpl implements UserService {
             return Optional.empty();
         }
         UserDaoImpl userDao = UserDaoImpl.getInstance();
-        EntityTransaction transaction = new EntityTransaction();
-        try {
+        try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
             String encryptedPassword = PasswordEncryptor.encrypt(password);
             return userDao.authenticate(login, encryptedPassword);
@@ -45,8 +44,6 @@ public class UserServiceImpl implements UserService {
                     daoException);
             throw new ServiceException("Exception when authenticate user. Login:'" + login + "', password:'" +
                     password + "'", daoException);
-        } finally {
-                transaction.end();
         }
     }
 
@@ -61,28 +58,22 @@ public class UserServiceImpl implements UserService {
         String password = user.getPassword();
         String encryptedPassword = PasswordEncryptor.encrypt(password);
         user.setPassword(encryptedPassword);
-        EntityTransaction transaction = new EntityTransaction();
-        try {
+        try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
             String login = userData.get(ParameterName.USER_LOGIN);
             if (userDao.findByLogin(login).isPresent()) {
                 userData.put(AttributeName.INCORRECT_LOGIN, PropertyKey.REGISTRATION_NOT_UNIQUE_LOGIN);
                 return false;
             }
-            boolean created = userDao.create(user);
-            transaction.commit();
-            return created;
+            return userDao.create(user);
         } catch (DaoException daoException) {
             LOGGER.error("Exception when create user." + user, daoException);
-                transaction.rollback();
             throw new ServiceException("Exception when create user." + user, daoException);
-        } finally {
-                transaction.end();
         }
     }
 
     @Override
-    public boolean deleteById(String idString) throws ServiceException {//FIXME TRANSACTION
+    public boolean deleteById(String idString) throws ServiceException {
         Validator validator = ValidatorImpl.getInstance();
         if (!validator.isCorrectId(idString)) {
             return false;
@@ -94,7 +85,8 @@ public class UserServiceImpl implements UserService {
         } catch (NumberFormatException e) {
             throw new ServiceException("Exception when remove user. Incorrect id=" + idString);
         }
-        try {
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
             return userDao.deleteById(idValue);
         } catch (DaoException daoException) {
             LOGGER.error("Exception when remove user. id=" + idString + " " + daoException);
@@ -115,7 +107,8 @@ public class UserServiceImpl implements UserService {
         } catch (NumberFormatException e) {
             throw new ServiceException("Exception when change user state. Incorrect id=" + idString);
         }
-        try {
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
             Optional<User> optionalUser = userDao.findById(idValue);
             if (!optionalUser.isPresent()) {
                 return false;
@@ -133,11 +126,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() throws ServiceException {
         UserDaoImpl userDao = UserDaoImpl.getInstance();
-        try {
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
             return userDao.findAll();
         } catch (DaoException e) {
             LOGGER.error("Exception when find all users." + e);
-            throw new ServiceException(e);
+            throw new ServiceException("Exception when find all users.", e);
         }
     }
 

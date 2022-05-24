@@ -15,7 +15,7 @@ public class ValidatorImpl implements Validator {
     private static final String USER_STATE_REGEX = "(ACTIVE|BLOCKED)";
     private static final String SEX_REGEX = "(MALE|FEMALE)";
     private static final String USER_ROLE_REGEX = "(ADMIN|PHARMACIST|DOCTOR|CUSTOMER)";
-    private static final String USER_NAME_REGEX = "[\\p{Alpha}][\\p{Alpha}-]{0,44}";
+    private static final String USER_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]{0,44}";
     private static final String USER_LOGIN_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}";
     private static final String USER_PASSWORD_REGEX = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])[A-ZА-ЯЁa-zа-яё0-9!@#$%^&*]{6,45}";
     private static final String DATE_REGEX = "[1-2]\\d{3}-[0-1]\\d-[0-3]\\d";

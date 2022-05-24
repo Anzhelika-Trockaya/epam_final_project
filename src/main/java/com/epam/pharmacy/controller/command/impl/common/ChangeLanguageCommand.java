@@ -23,7 +23,7 @@ public class ChangeLanguageCommand implements Command {
         HttpSession session = request.getSession();
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         String language = request.getParameter(LANGUAGE);
-        Router router = new Router(currentPage);
+        Router router = new Router(currentPage, Router.Type.REDIRECT);
         Validator validator = ValidatorImpl.getInstance();//fixme!!!!! add attrs data
         if(validator.isCorrectLanguage(language)){
             session.setAttribute(LANGUAGE, language);
