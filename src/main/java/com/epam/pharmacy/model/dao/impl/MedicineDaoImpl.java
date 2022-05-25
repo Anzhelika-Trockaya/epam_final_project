@@ -30,7 +30,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             statement.setString(1, medicine.getName());
             statement.setLong(2, medicine.getInternationalNameId());
             statement.setBigDecimal(3, medicine.getPrice());
-            statement.setInt(4, medicine.getPartsQuantity());
+            statement.setInt(4, medicine.getTotalNumberOfParts());
             statement.setInt(5, medicine.getPartsInPackage());
             statement.setInt(6, medicine.getAmountInPart());
             statement.setLong(7, medicine.getFormId());

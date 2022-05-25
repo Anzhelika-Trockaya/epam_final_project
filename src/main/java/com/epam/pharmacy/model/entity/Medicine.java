@@ -11,7 +11,7 @@ public class Medicine extends CustomEntity implements Serializable {
     private String name;
     private long internationalNameId;
     private BigDecimal price;
-    private int partsQuantity;
+    private int totalNumberOfParts;
     private int partsInPackage;
     private int amountInPart;
     private long formId;
@@ -59,12 +59,12 @@ public class Medicine extends CustomEntity implements Serializable {
         this.price = price;
     }
 
-    public int getPartsQuantity() {
-        return partsQuantity;
+    public int getTotalNumberOfParts() {
+        return totalNumberOfParts;
     }
 
-    public void setPartsQuantity(int partsQuantity) {
-        this.partsQuantity = partsQuantity;
+    public void setTotalNumberOfParts(int totalNumberOfParts) {
+        this.totalNumberOfParts = totalNumberOfParts;
     }
 
     public int getPartsInPackage() {
@@ -153,7 +153,7 @@ public class Medicine extends CustomEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Medicine medicine = (Medicine) o;
         return id == medicine.id && internationalNameId == medicine.internationalNameId &&
-                partsQuantity == medicine.partsQuantity && partsInPackage == medicine.partsInPackage &&
+                totalNumberOfParts == medicine.totalNumberOfParts && partsInPackage == medicine.partsInPackage &&
                 amountInPart == medicine.amountInPart && formId == medicine.formId && dosage == medicine.dosage &&
                 needPrescription == medicine.needPrescription && manufacturerId == medicine.manufacturerId &&
                 Objects.equals(name, medicine.name) && Objects.equals(price, medicine.price) &&
@@ -163,7 +163,7 @@ public class Medicine extends CustomEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, internationalNameId, price, partsQuantity, partsInPackage, amountInPart,
+        return Objects.hash(id, name, internationalNameId, price, totalNumberOfParts, partsInPackage, amountInPart,
                 formId, dosage, dosageUnit, ingredients, needPrescription, manufacturerId, instruction, imagePath);
     }
 
@@ -174,7 +174,7 @@ public class Medicine extends CustomEntity implements Serializable {
                 ", name='" + name + '\'' +
                 ", internationalNameId=" + internationalNameId +
                 ", price=" + price +
-                ", partsQuantity=" + partsQuantity +
+                ", totalNumberOfParts=" + totalNumberOfParts +
                 ", partsInPackage=" + partsInPackage +
                 ", amountInPart=" + amountInPart +
                 ", formId=" + formId +
@@ -214,8 +214,8 @@ public class Medicine extends CustomEntity implements Serializable {
             return this;
         }
 
-        public Builder buildPartsQuantity(int quantity) {
-            medicine.setPartsQuantity(quantity);
+        public Builder buildTotalNumberOfParts(int quantity) {
+            medicine.setTotalNumberOfParts(quantity);
             return this;
         }
 

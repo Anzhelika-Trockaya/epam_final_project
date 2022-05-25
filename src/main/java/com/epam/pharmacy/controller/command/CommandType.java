@@ -7,9 +7,11 @@ import com.epam.pharmacy.controller.command.impl.admin.DeleteUserCommand;
 import com.epam.pharmacy.controller.command.impl.common.ChangeLanguageCommand;
 import com.epam.pharmacy.controller.command.impl.common.RegisterCommand;
 import com.epam.pharmacy.controller.command.impl.common.SignInCommand;
+import com.epam.pharmacy.controller.command.impl.pharmacist.GoAddMedicinePageCommand;
 
 public enum CommandType {
     GO_CHANGE_USERS_PAGE(new GoChangeUsersCommand()),
+    GO_ADD_MEDICINE_PAGE(new GoAddMedicinePageCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
     DELETE_USER(new DeleteUserCommand()),
@@ -28,7 +30,7 @@ public enum CommandType {
         return command;
     }
 
-    public static Command define(String commandStr) {
+    public static Command commandOf(String commandStr) {
         CommandType current;
         String commandName = commandStr.toUpperCase();
         if (existCommand(commandName)) {
@@ -39,7 +41,7 @@ public enum CommandType {
         return current.getCommand();
     }
 
-    private static boolean existCommand(String commandName) {
+    private static boolean existCommand(String commandName) {//fixme one method
         CommandType[] values = CommandType.values();
         for (CommandType value : values) {
             if (value.name().equals(commandName)) {

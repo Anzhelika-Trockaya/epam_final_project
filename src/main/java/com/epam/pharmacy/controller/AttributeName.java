@@ -23,6 +23,7 @@ public final class AttributeName {
     public static final String PASSWORD = "password";
     public static final String SUCCESSFUL_CHANGE_MESSAGE = "successful_change_message";
     public static final String FAILED_CHANGE_MESSAGE = "failed_change_message";
+    public static final String FORMS_LIST="forms_list";
 
     private AttributeName(){}
 }

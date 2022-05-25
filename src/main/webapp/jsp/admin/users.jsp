@@ -41,11 +41,11 @@
         <hr>
         <br/>
         <c:if test="${not empty successful_change_message}">
-            <div class="successful_msg"><fmt:message key="${successful_change_message}"/></div>
+            <div><p class="successful_msg"><fmt:message key="${successful_change_message}"/></p></div>
             <br/>
         </c:if>
         <c:if test="${not empty failed_change_message}">
-            <div class="failed_msg"><fmt:message key="${failed_change_message}"/></div>
+            <div><p class="failed_msg"><fmt:message key="${failed_change_message}"/></p></div>
             <br/>
         </c:if>
         <c:if test="${empty users_list}">

@@ -41,7 +41,7 @@ public class Controller extends HttpServlet {
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         response.setContentType("text/html");//todo to filter
         String commandStr = request.getParameter("command");
-        Command command = CommandType.define(commandStr);
+        Command command = CommandType.commandOf(commandStr);
         try {
             Router router = command.execute(request);
             switch (router.getType()) {
@@ -57,7 +57,7 @@ public class Controller extends HttpServlet {
             }
         } catch (CommandException e) {
             request.setAttribute("error_msg", e.getCause());
-            request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);//todo redirect??
+            request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);
         }
     }
 }

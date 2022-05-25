@@ -36,10 +36,12 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title><c:choose>
-        <c:when test="${current_user_role eq 'ADMIN'}">${add_user_title}</c:when>
-        <c:otherwise>${registration_title}</c:otherwise>
-    </c:choose></title>
+    <title>
+        <c:choose>
+            <c:when test="${current_user_role eq 'ADMIN'}">${add_user_title}</c:when>
+            <c:otherwise>${registration_title}</c:otherwise>
+        </c:choose>
+    </title>
     <c:set var="current_page" value="jsp/common/registration.jsp" scope="session"/>
 </head>
 <body>
@@ -58,15 +60,19 @@
             <select id="role" name="role" size="1">
                 <option id="default_role" selected value="">-</option>
                 <option
-                        <c:if test="${user_role eq 'ADMIN'}">selected</c:if> value="ADMIN">${title_admin}</option>
+                        <c:if test="${user_role eq 'ADMIN'}">selected</c:if> value="ADMIN">${title_admin}
+                </option>
                 <option
-                        <c:if test="${user_role eq 'DOCTOR'}">selected</c:if> value="DOCTOR">${title_doctor}</option>
+                        <c:if test="${user_role eq 'DOCTOR'}">selected</c:if> value="DOCTOR">${title_doctor}
+                </option>
                 <option
                         <c:if test="${user_role eq 'PHARMACIST'}">selected</c:if>
-                        value="PHARMACIST">${title_pharmacist}</option>
+                        value="PHARMACIST">${title_pharmacist}
+                </option>
                 <option
                         <c:if test="${user_role eq 'CUSTOMER'}">selected</c:if>
-                        value="CUSTOMER">${title_customer}</option>
+                        value="CUSTOMER">${title_customer}
+                </option>
             </select>
             <p id="incorrect_role_msg" class="incorrect_data_msg"></p>
             <c:if test="${not empty incorrect_role}">
@@ -155,7 +161,8 @@
     </form>
 </div>
 </body>
-<script>    function validate() {
+<script>
+    function validate() {
     const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}$/;
     const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
     const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
@@ -237,12 +244,10 @@ function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
 
 function makeInputIncorrect(input, msgPlaceId, msg) {
     document.getElementById(msgPlaceId).innerHTML = msg;
-    input.setAttribute("class", "red-input");
 }
 
 function makeInputCorrect(input, msgPlaceId) {
     document.getElementById(msgPlaceId).innerHTML = "";
-    input.setAttribute("class", "");
 }
 
 function validatePasswordRepeat(passwordInput) {

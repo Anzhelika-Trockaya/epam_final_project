@@ -13,5 +13,10 @@ public final class ColumnName {
     public static final String USER_ROLE = "user_role";
     public static final String USER_PHONE = "user_phone";
     public static final String USER_ADDRESS = "user_address";
-    private ColumnName(){}
+    public static final String FORM_ID = "form_id";
+    public static final String FORM_NAME = "form_name";
+    public static final String FORM_UNIT = "form_unit";
+
+    private ColumnName() {
+    }
 }
