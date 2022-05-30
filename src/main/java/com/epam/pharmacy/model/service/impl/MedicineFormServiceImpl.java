@@ -31,7 +31,7 @@ public class MedicineFormServiceImpl implements MedicineFormService {
 
     @Override
     public List<MedicineForm> findAll() throws ServiceException {
-        MedicineFormDaoImpl medicineFormDao = MedicineFormDaoImpl.getInstance();
+        MedicineFormDaoImpl medicineFormDao = new MedicineFormDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(medicineFormDao);
             return medicineFormDao.findAll();

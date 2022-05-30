@@ -1,7 +1,6 @@
 package com.epam.pharmacy.model.service.impl;
 
 import com.epam.pharmacy.controller.AttributeName;
-import com.epam.pharmacy.controller.ParameterName;
 import com.epam.pharmacy.controller.PropertyKey;
 import com.epam.pharmacy.model.dao.EntityTransaction;
 import com.epam.pharmacy.model.dao.impl.UserDaoImpl;
@@ -11,8 +10,8 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.UserService;
 import com.epam.pharmacy.util.PasswordEncryptor;
-import com.epam.pharmacy.validator.Validator;
-import com.epam.pharmacy.validator.impl.ValidatorImpl;
+import com.epam.pharmacy.validator.DataValidator;
+import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,18 +20,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.epam.pharmacy.controller.ParameterName.*;
+import static com.epam.pharmacy.controller.AttributeName.*;
 
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public Optional<User> authenticate(String login, String password) throws ServiceException {
-        Validator validator = ValidatorImpl.getInstance();
+        DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectLogin(login) || !validator.isCorrectPassword(password)) {
             return Optional.empty();
         }
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        UserDaoImpl userDao = new UserDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
             String encryptedPassword = PasswordEncryptor.encrypt(password);
@@ -47,18 +46,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean create(Map<String, String> userData) throws ServiceException {
-        Validator validator = ValidatorImpl.getInstance();
+        DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectRegisterData(userData)) {
             return false;
         }
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        UserDaoImpl userDao = new UserDaoImpl();
         User user = buildUser(userData);
         String password = user.getPassword();
         String encryptedPassword = PasswordEncryptor.encrypt(password);
         user.setPassword(encryptedPassword);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
-            String login = userData.get(ParameterName.USER_LOGIN);
+            String login = userData.get(USER_LOGIN);
             if (userDao.findByLogin(login).isPresent()) {
                 userData.put(AttributeName.INCORRECT_LOGIN, PropertyKey.REGISTRATION_NOT_UNIQUE_LOGIN);
                 return false;
@@ -72,11 +71,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteById(String idString) throws ServiceException {
-        Validator validator = ValidatorImpl.getInstance();
+        DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectId(idString)) {
             return false;
         }
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        UserDaoImpl userDao = new UserDaoImpl();
         long idValue;
         try {
             idValue = Long.parseLong(idString);
@@ -94,11 +93,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean changeState(String idString, String stateString) throws ServiceException {
-        Validator validator = ValidatorImpl.getInstance();
+        DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectId(idString) || !validator.isCorrectState(stateString)) {
             return false;
         }
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        UserDaoImpl userDao = new UserDaoImpl();
         long idValue;
         try {
             idValue = Long.parseLong(idString);
@@ -123,7 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() throws ServiceException {
-        UserDaoImpl userDao = UserDaoImpl.getInstance();
+        UserDaoImpl userDao = new UserDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
             return userDao.findAll();

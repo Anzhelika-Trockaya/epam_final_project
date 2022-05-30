@@ -1,10 +1,8 @@
 package com.epam.pharmacy.validator;
 
-import com.epam.pharmacy.model.entity.User;
-
 import java.util.Map;
 
-public interface Validator {
+public interface DataValidator {
     boolean isCorrectLogin(String login);
 
     boolean isCorrectPassword(String password);
@@ -17,7 +15,7 @@ public interface Validator {
 
     boolean isCorrectPhone(String phone);
 
-    boolean isCorrectAddress(String address);
+    boolean isNotEmpty(String address);
 
     boolean isCorrectUserRole(String user_role);
 
@@ -28,4 +26,12 @@ public interface Validator {
     boolean isCorrectId(String id);
 
     boolean isCorrectState(String state);
+
+    boolean isCorrectMedicineData(Map<String, String> medicineData);
+
+    boolean isCorrectInteger(String value);
+
+    boolean isCorrectDosageUnit(String unit);
+
+    boolean isCorrectPrice(String price);
 }

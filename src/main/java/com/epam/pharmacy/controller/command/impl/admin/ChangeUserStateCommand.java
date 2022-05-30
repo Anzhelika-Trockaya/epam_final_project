@@ -9,11 +9,14 @@ import com.epam.pharmacy.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import static com.epam.pharmacy.controller.AttributeName.USER_ID;
+import static com.epam.pharmacy.controller.AttributeName.USER_STATE;
+
 public class ChangeUserStateCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String idString = request.getParameter(ParameterName.USER_ID);
-        String stateString = request.getParameter(ParameterName.USER_STATE);
+        String idString = request.getParameter(USER_ID);
+        String stateString = request.getParameter(USER_STATE);
         ServiceProvider provider = ServiceProvider.getInstance();
         UserService userService = provider.getUserService();
         try {

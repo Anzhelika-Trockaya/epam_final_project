@@ -1,17 +1,13 @@
 package com.epam.pharmacy.controller.command.impl.common;
 
-import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.exception.CommandException;
-import com.epam.pharmacy.validator.Validator;
-import com.epam.pharmacy.validator.impl.ValidatorImpl;
+import com.epam.pharmacy.validator.DataValidator;
+import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_PAGE;
 import static com.epam.pharmacy.controller.ParameterName.LANGUAGE;
@@ -24,7 +20,7 @@ public class ChangeLanguageCommand implements Command {
         String currentPage = (String) session.getAttribute(CURRENT_PAGE);
         String language = request.getParameter(LANGUAGE);
         Router router = new Router(currentPage, Router.Type.REDIRECT);
-        Validator validator = ValidatorImpl.getInstance();//fixme!!!!! add attrs data
+        DataValidator validator = DataValidatorImpl.getInstance();//fixme!!!!! add attrs data
         if(validator.isCorrectLanguage(language)){
             session.setAttribute(LANGUAGE, language);
         }

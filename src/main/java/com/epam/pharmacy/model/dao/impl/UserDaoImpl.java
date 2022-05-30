@@ -13,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.pharmacy.controller.AttributeName.USER_PASSWORD;
 import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_STATE;
 
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static UserDaoImpl instance;
     private static final int ONE_UPDATED = 1;
     private static final String SQL_SELECT_ALL_USERS =
             "SELECT user_id, user_login, user_password, user_lastname, user_name, user_patronymic, user_birthday_date, " +
@@ -36,15 +36,6 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                     "user_birthday_date, user_sex, user_role, user_phone, user_address, user_state) values(?,?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_UPDATE_USER_STATE = "UPDATE users SET user_state = ? WHERE user_id = ?";
     private static final String SQL_DELETE_USER = "DELETE FROM users WHERE user_id = ?";
-
-    private UserDaoImpl(){}
-
-    public static UserDaoImpl getInstance(){
-        if(instance==null){
-            instance=new UserDaoImpl();
-        }
-        return instance;
-    }
 
     @Override
     public boolean create(User user) throws DaoException {

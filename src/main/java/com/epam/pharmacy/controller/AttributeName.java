@@ -1,12 +1,24 @@
 package com.epam.pharmacy.controller;
 
 public final class AttributeName {
-    public static final String LOGIN="login";
-    public static final String CURRENT_USER_ROLE ="current_user_role";
-    public static final String CURRENT_PAGE="current_page";
-    public static final String SUCCESSFUL_REGISTRATION="successful_registration";
+    public static final String LOGIN = "login";
+    public static final String CURRENT_USER_ROLE = "current_user_role";
+    public static final String CURRENT_PAGE = "current_page";
+    public static final String SUCCESSFUL_REGISTRATION = "successful_registration";
     public static final String USERS_LIST = "users_list";
     public static final String FAILED = "failed";
+    public static final String USER_ID = "user_id";
+    public static final String USER_LOGIN = "user_login";
+    public static final String USER_LASTNAME = "user_lastname";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PATRONYMIC = "user_patronymic";
+    public static final String USER_PASSWORD = "user_password";
+    public static final String USER_BIRTHDAY_DATE = "user_birthday_date";
+    public static final String USER_SEX = "user_sex";
+    public static final String USER_ROLE = "user_role";
+    public static final String USER_PHONE = "user_phone";
+    public static final String USER_ADDRESS = "user_address";
+    public static final String USER_STATE = "user_state";
     public static final String INCORRECT_LASTNAME = "incorrect_lastname";
     public static final String INCORRECT_LOGIN = "incorrect_login";
     public static final String INCORRECT_NAME = "incorrect_name";
@@ -17,13 +29,43 @@ public final class AttributeName {
     public static final String INCORRECT_ROLE = "incorrect_role";
     public static final String INCORRECT_PHONE = "incorrect_phone";
     public static final String INCORRECT_ADDRESS = "incorrect_address";
-    public static final String INCORRECT_REPEAT_PASSWORD="incorrect_repeat_password";
-    public static final String USER_ID = "user_id";
+    public static final String INCORRECT_REPEAT_PASSWORD = "incorrect_repeat_password";
     public static final String CURRENT_USER_ID = "current_user_id";
     public static final String PASSWORD = "password";
     public static final String SUCCESSFUL_CHANGE_MESSAGE = "successful_change_message";
     public static final String FAILED_CHANGE_MESSAGE = "failed_change_message";
-    public static final String FORMS_LIST="forms_list";
+    public static final String FORMS_LIST = "forms_list";
+    public static final String ERROR_MSG = "error_msg";
+    public static final String MANUFACTURERS_LIST = "manufacturers_list";
+    public static final String INTERNATIONAL_NAMES_LIST = "international_names_list";
+    public static final String INCORRECT_INTERNATIONAL_NAME = "incorrect_international_name";
+    public static final String INCORRECT_FORM = "incorrect_form";
+    public static final String INCORRECT_DOSAGE = "incorrect_dosage";
+    public static final String INCORRECT_DOSAGE_UNIT = "incorrect_dosage_unit";
+    public static final String INCORRECT_MANUFACTURER = "incorrect_manufacturer";
+    public static final String INCORRECT_PARTS_IN_PACKAGE = "incorrect_parts_in_package";
+    public static final String INCORRECT_AMOUNT_IN_PART = "incorrect_amount_in_part";
+    public static final String INCORRECT_TOTAL_PARTS = "incorrect_total_parts";
+    public static final String INCORRECT_PRICE = "incorrect_price";
+    public static final String INCORRECT_INGREDIENTS = "incorrect_ingredients";
+    public static final String INCORRECT_INSTRUCTION = "incorrect_instruction";
+    public static final String MEDICINE_NAME="medicine_name";
+    public static final String MEDICINE_INTERNATIONAL_NAME_ID="medicine_international_name_id";
+    public static final String MEDICINE_FORM_ID="medicine_form_id";
+    public static final String MEDICINE_DOSAGE="medicine_dosage";
+    public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
+    public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
+    public static final String MEDICINE_MANUFACTURER_ID="medicine_manufacturer_id";
+    public static final String MEDICINE_AMOUNT_IN_PART="medicine_amount_in_part";
+    public static final String MEDICINE_PARTS_IN_PACKAGE="medicine_parts_in_package";
+    public static final String MEDICINE_TOTAL_PARTS="medicine_total_parts";
+    public static final String MEDICINE_PRICE="medicine_price";
+    public static final String MEDICINE_INGREDIENTS="medicine_ingredients";
+    public static final String MEDICINE_INSTRUCTION="medicine_instruction";
+    public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
+    public static final String SUCCESSFUL_ADDED = "successful_added";
+    public static final String INCORRECT_FILE ="incorrect_file" ;
 
-    private AttributeName(){}
+    private AttributeName() {
+    }
 }

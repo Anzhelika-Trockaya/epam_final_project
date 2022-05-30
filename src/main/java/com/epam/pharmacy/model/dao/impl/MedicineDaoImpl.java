@@ -18,7 +18,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
     private static final String SQL_INSERT_MEDICINE =
-            "INSERT INTO medicines (medicine_name, international_name_id, medicine_price, medicine_parts_quantity, " +
+            "INSERT INTO medicines (medicine_name, international_name_id, medicine_price, total_number_of_parts, " +
                     "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
                     "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
                     "medicine_instruction, medicine_image_path) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -41,6 +41,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             statement.setLong(12, medicine.getManufacturerId());
             statement.setString(13, medicine.getInstruction());
             statement.setString(14, medicine.getImagePath());
+
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
             LOGGER.error("Adding medicine exception. " + e.getMessage());

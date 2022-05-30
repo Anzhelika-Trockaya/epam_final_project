@@ -7,6 +7,7 @@
         <entry key="file://$PROJECT_DIR$/src/main/webapp/jsp/admin/users.jsp" value="file://$PROJECT_DIR$/src/main/webapp/jsp/admin" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/jsp/common/registration.jsp" value="file://$PROJECT_DIR$/src/main/webapp/jsp/common" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/jsp/common/sign_in.jsp" value="file://$PROJECT_DIR$/src/main/webapp/jsp/common" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/jsp/pharmacist/adding_medicine.jsp" value="file://$PROJECT_DIR$/src/main/webapp/jsp/pharmacist" />
       </map>
     </option>
   </component>

@@ -15,19 +15,24 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class GoChangeUsersCommand implements Command {
+public class GoChangeUsersPageCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        ServiceProvider provider = ServiceProvider.getInstance();
-        UserService userService = provider.getUserService();
+        addUsersList(request);
+        return new Router(PagePath.USERS);
+
+    }
+
+    public void addUsersList(HttpServletRequest request) throws CommandException {
         try {
+            ServiceProvider provider = ServiceProvider.getInstance();
+            UserService userService = provider.getUserService();
             List<User> listUsers = userService.findAll();
             request.setAttribute(AttributeName.USERS_LIST, listUsers);
-            return new Router(PagePath.USERS);
         } catch (ServiceException e) {
-           LOGGER.error("Exception in the ChangeUsersCommand "+e);
+            LOGGER.error("Exception in the ChangeUsersCommand " + e);
             throw new CommandException("Exception in the ChangeUsersCommand ", e);
         }
     }

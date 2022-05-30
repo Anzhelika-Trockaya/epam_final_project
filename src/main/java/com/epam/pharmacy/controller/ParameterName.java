@@ -10,21 +10,24 @@ public final class ParameterName {
     public static final String BIRTHDAY_DATE = "birthday_date";
     public static final String SEX = "sex";
     public static final String ROLE = "role";
-    public static final String USER_ID = "user_id";
-    public static final String USER_LOGIN = "user_login";
-    public static final String USER_LASTNAME = "user_lastname";
-    public static final String USER_NAME = "user_name";
-    public static final String USER_PATRONYMIC = "user_patronymic";
-    public static final String USER_PASSWORD = "user_password";
-    public static final String USER_BIRTHDAY_DATE = "user_birthday_date";
-    public static final String USER_SEX = "user_sex";
-    public static final String USER_ROLE = "user_role";
-    public static final String USER_PHONE = "user_phone";
-    public static final String USER_ADDRESS = "user_address";
     public static final String PHONE = "phone";
     public static final String ADDRESS = "address";
     public static final String LANGUAGE = "language";
-    public static final String USER_STATE = "user_state";
+    public static final String COMMAND = "command";
+    public static final String INTERNATIONAL_NAME="international_name";
+    public static final String FORM="form";
+    public static final String DOSAGE="dosage";
+    public static final String DOSAGE_UNIT="dosage_unit";
+    public static final String NEED_PRESCRIPTION="need_prescription";
+    public static final String MANUFACTURER="manufacturer";
+    public static final String AMOUNT_IN_PART="amount_in_part";
+    public static final String PARTS_IN_PACKAGE="parts_in_package";
+    public static final String TOTAL_PARTS="total_parts";
+    public static final String PRICE="price";
+    public static final String INGREDIENTS="ingredients";
+    public static final String INSTRUCTION="instruction";
+    public static final String IMAGE="image";
+
 
     private ParameterName(){}
 }

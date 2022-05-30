@@ -14,7 +14,7 @@
     <c:if test="${not empty successful_registration}">
         <p><fmt:message key="registration.successful_msg"/></p>
     </c:if>
-    <form name="sign_in_form" action="${context_path}/controller" onsubmit="return validate()">
+    <form name="sign_in_form" action="${context_path}/controller" method="post" onsubmit="return validate()">
         <input type="hidden" name="command" value="sign_in"/>
         <div>
             <label for="login"><fmt:message key="login"/></label>

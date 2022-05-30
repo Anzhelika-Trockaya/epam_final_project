@@ -15,7 +15,7 @@ import static com.epam.pharmacy.model.dao.ColumnName.FORM_ID;
 import static com.epam.pharmacy.model.dao.ColumnName.FORM_NAME;
 import static com.epam.pharmacy.model.dao.ColumnName.FORM_UNIT;
 
-public class MedicineFormRowMapper implements CustomRowMapper {
+public class MedicineFormRowMapper implements CustomRowMapper<MedicineForm> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static MedicineFormRowMapper instance;
 
