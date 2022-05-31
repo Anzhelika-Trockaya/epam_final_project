@@ -5,7 +5,7 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Medicine extends CustomEntity implements Serializable {
-    //fixme serial version
+    private static final long serialVersionUID = 6279244349374001815L;
     private static final long DEFAULT_ID = 0L;
     private final long id;
     private String name;

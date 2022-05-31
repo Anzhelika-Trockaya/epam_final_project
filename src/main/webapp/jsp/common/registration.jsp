@@ -31,6 +31,7 @@
 <fmt:message key="registration.incorrect_phone" var="msg_text_incorrect_phone"/>
 <fmt:message key="registration.incorrect_address" var="msg_text_incorrect_address"/>
 <fmt:message key="registration.required_field" var="msg_text_required"/>
+<fmt:message key="registration.incorrect_birthday_date" var="msg_text_incorrect_birthday_date"/>
 <fmt:message key="registration.incorrect_repeat_password" var="msg_text_incorrect_repeat_pass"/>
 
 <html>
@@ -163,103 +164,122 @@
 </body>
 <script>
     function validate() {
-    const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}$/;
-    const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
-    const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
-    const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
-    const loginInput = document.forms["registration_form"]["login"];
-    const passwordInput = document.forms["registration_form"]["password"];
-    const lastnameInput = document.forms["registration_form"]["lastname"];
-    const nameInput = document.forms["registration_form"]["name"];
-    const patronymicInput = document.forms["registration_form"]["patronymic"];
-    const sexInput = document.forms["registration_form"]["sex"];
-    const phoneInput = document.forms["registration_form"]["phone"];
-    const addressInput = document.forms["registration_form"]["address"];
-    const birthdayDateInput = document.forms["registration_form"]["birthday_date"];
-    let result = true;
-    if (${current_user_role eq 'ADMIN'}) {
-        const roleInput = document.forms["registration_form"]["role"];
-        if (!validateRequired(roleInput, "incorrect_role_msg", "${msg_text_required}")) {
+        const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}$/;
+        const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
+        const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
+        const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
+        const loginInput = document.forms["registration_form"]["login"];
+        const passwordInput = document.forms["registration_form"]["password"];
+        const lastnameInput = document.forms["registration_form"]["lastname"];
+        const nameInput = document.forms["registration_form"]["name"];
+        const patronymicInput = document.forms["registration_form"]["patronymic"];
+        const sexInput = document.forms["registration_form"]["sex"];
+        const phoneInput = document.forms["registration_form"]["phone"];
+        const addressInput = document.forms["registration_form"]["address"];
+        const birthdayDateInput = document.forms["registration_form"]["birthday_date"];
+        let result = true;
+        if (${current_user_role eq 'ADMIN'}) {
+            const roleInput = document.forms["registration_form"]["role"];
+            if (!validateRequired(roleInput, "incorrect_role_msg", "${msg_text_required}")) {
+                result = false;
+            }
+        }
+        if (!(validateRequired(loginInput, "incorrect_login_msg", "${msg_text_required}") &&
+            validatePatternMismatch(loginInput, loginPattern, "incorrect_login_msg", "${msg_text_incorrect_login}"))) {
             result = false;
         }
+        if (!(validateRequired(passwordInput, "incorrect_password_msg", "${msg_text_required}") &&
+            validatePatternMismatch(passwordInput, passwordPattern, "incorrect_password_msg", "${msg_text_incorrect_password}"))) {
+            result = false;
+        }
+        if (!(validateRequired(lastnameInput, "incorrect_lastname_msg", "${msg_text_required}") &&
+            validatePatternMismatch(lastnameInput, namePattern, "incorrect_lastname_msg", "${msg_text_incorrect_lastname}"))) {
+            result = false;
+        }
+        if (!(validateRequired(nameInput, "incorrect_name_msg", "${msg_text_required}") &&
+            validatePatternMismatch(nameInput, namePattern, "incorrect_name_msg", "${msg_text_incorrect_name}"))) {
+            result = false;
+        }
+        if (!(validateRequired(patronymicInput, "incorrect_patronymic_msg", "${msg_text_required}") &&
+            validatePatternMismatch(patronymicInput, namePattern, "incorrect_patronymic_msg", "${msg_text_incorrect_patronymic}"))) {
+            result = false;
+        }
+        if (!(validateRequired(phoneInput, "incorrect_phone_msg", "${msg_text_required}") &&
+            validatePatternMismatch(phoneInput, phonePattern, "incorrect_phone_msg", "${msg_text_incorrect_phone}"))) {
+            result = false;
+        }
+        if (!validateRequired(sexInput, "incorrect_sex_msg", "${msg_text_required}")) {
+            result = false;
+        }
+        if (!(validateRequired(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_required}") &&
+            validateBirthdayDate(birthdayDateInput))) {
+            result = false;
+        }
+        if (!validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}")) {
+            result = false;
+        }
+        if (!validatePasswordRepeat(passwordInput)) {
+            result = false;
+        }
+        return result;
     }
-    if (!(validateRequired(loginInput, "incorrect_login_msg", "${msg_text_required}") &&
-        validatePatternMismatch(loginInput, loginPattern, "incorrect_login_msg", "${msg_text_incorrect_login}"))) {
-        result = false;
-    }
-    if (!(validateRequired(passwordInput, "incorrect_password_msg", "${msg_text_required}") &&
-        validatePatternMismatch(passwordInput, passwordPattern, "incorrect_password_msg", "${msg_text_incorrect_password}"))) {
-        result = false;
-    }
-    if (!(validateRequired(lastnameInput, "incorrect_lastname_msg", "${msg_text_required}") &&
-        validatePatternMismatch(lastnameInput, namePattern, "incorrect_lastname_msg", "${msg_text_incorrect_lastname}"))) {
-        result = false;
-    }
-    if (!(validateRequired(nameInput, "incorrect_name_msg", "${msg_text_required}") &&
-        validatePatternMismatch(nameInput, namePattern, "incorrect_name_msg", "${msg_text_incorrect_name}"))) {
-        result = false;
-    }
-    if (!(validateRequired(patronymicInput, "incorrect_patronymic_msg", "${msg_text_required}") &&
-        validatePatternMismatch(patronymicInput, namePattern, "incorrect_patronymic_msg", "${msg_text_incorrect_patronymic}"))) {
-        result = false;
-    }
-    if (!(validateRequired(phoneInput, "incorrect_phone_msg", "${msg_text_required}") &&
-        validatePatternMismatch(phoneInput, phonePattern, "incorrect_phone_msg", "${msg_text_incorrect_phone}"))) {
-        result = false;
-    }
-    if (!validateRequired(sexInput, "incorrect_sex_msg", "${msg_text_required}")) {
-        result = false;
-    }
-    if (!validateRequired(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_required}")) {
-        result = false;
-    }
-    if (!validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}")) {
-        result = false;
-    }
-    if (!validatePasswordRepeat(passwordInput)) {
-        result = false;
-    }
-    return result;
-}
 
-function validateRequired(input, msgPlaceId, msg) {
-    const value = input.value;
-    if (value === "") {
-        makeInputIncorrect(input, msgPlaceId, msg);
-        return false;
+    function validateBirthdayDate(birthdayDateInput) {
+        const dateValue = new Date(birthdayDateInput.value);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const birthdayDateThisYear = new Date(today.getFullYear(), dateValue.getMonth(), dateValue.getDate());
+        let age = today.getFullYear() - dateValue.getFullYear();
+        if (today < birthdayDateThisYear) {
+            age = age - 1;
+        }
+        if (age > 17) {
+            makeInputCorrect(birthdayDateInput, "incorrect_birthday_date_msg");
+            return true;
+        } else {
+            makeInputIncorrect(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_incorrect_birthday_date}");
+            return false;
+        }
     }
-    makeInputCorrect(input, msgPlaceId);
-    return true;
-}
 
-function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
-    const value = input.value;
-    if (!pattern.test(value)) {
-        makeInputIncorrect(input, msgPlaceId, msg);
-        return false;
+    function validateRequired(input, msgPlaceId, msg) {
+        const value = input.value;
+        if (value === "") {
+            makeInputIncorrect(input, msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(input, msgPlaceId);
+        return true;
     }
-    makeInputCorrect(input, msgPlaceId);
-    return true;
-}
 
-function makeInputIncorrect(input, msgPlaceId, msg) {
-    document.getElementById(msgPlaceId).innerHTML = msg;
-}
-
-function makeInputCorrect(input, msgPlaceId) {
-    document.getElementById(msgPlaceId).innerHTML = "";
-}
-
-function validatePasswordRepeat(passwordInput) {
-    const passwordValue = passwordInput.value;
-    const repeatPasswordInput = document.forms["registration_form"]["repeat_password"];
-    const repeatPasswordValue = repeatPasswordInput.value;
-    if (passwordValue !== repeatPasswordValue) {
-        makeInputIncorrect(repeatPasswordInput, "incorrect_repeat_password_msg", "${msg_text_incorrect_repeat_pass}");
-        return false;
+    function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
+        const value = input.value;
+        if (!pattern.test(value)) {
+            makeInputIncorrect(input, msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(input, msgPlaceId);
+        return true;
     }
-    makeInputCorrect(repeatPasswordInput, "incorrect_repeat_password_msg");
-    return true;
-}</script>
+
+    function makeInputIncorrect(input, msgPlaceId, msg) {
+        document.getElementById(msgPlaceId).innerHTML = msg;
+    }
+
+    function makeInputCorrect(input, msgPlaceId) {
+        document.getElementById(msgPlaceId).innerHTML = "";
+    }
+
+    function validatePasswordRepeat(passwordInput) {
+        const passwordValue = passwordInput.value;
+        const repeatPasswordInput = document.forms["registration_form"]["repeat_password"];
+        const repeatPasswordValue = repeatPasswordInput.value;
+        if (passwordValue !== repeatPasswordValue) {
+            makeInputIncorrect(repeatPasswordInput, "incorrect_repeat_password_msg", "${msg_text_incorrect_repeat_pass}");
+            return false;
+        }
+        makeInputCorrect(repeatPasswordInput, "incorrect_repeat_password_msg");
+        return true;
+    }</script>
 </html>
 

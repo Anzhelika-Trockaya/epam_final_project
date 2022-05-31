@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 public class User extends CustomEntity implements Serializable {
-    //fixme serialVersion
+    private static final long serialVersionUID = -3995979375755262375L;
     private static final long DEFAULT_ID = 0L;
     private final long id;
     private final String login;

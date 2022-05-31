@@ -1,7 +1,8 @@
 package com.epam.pharmacy.model.entity;
 
-public enum FormUnit {
-    //fixme serial version
+import java.io.Serializable;
+
+public enum FormUnit implements Serializable {
     TABLES,
     PIECES,
     MILLILITERS

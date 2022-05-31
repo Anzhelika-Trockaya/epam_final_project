@@ -7,6 +7,8 @@ import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineService;
 import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.validator.DataValidator;
+import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -30,13 +32,8 @@ public class AddMedicineCommand implements Command {
         MedicineImageUploader imageUploader = MedicineImageUploader.getInstance();
         String link = imageUploader.uploadImage(request);
         try {
-            boolean isCreated;
-            if (!link.isEmpty()) {
-                medicineData.put(MEDICINE_IMAGE_LINK, link);
-                isCreated = medicineService.create(medicineData);
-            } else {
-                isCreated = false;
-            }
+            medicineData.put(MEDICINE_IMAGE_LINK, link);
+            boolean isCreated = medicineService.create(medicineData);
             router = new Router(PagePath.ADD_MEDICINES);
             if (isCreated) {
                 HttpSession session = request.getSession();

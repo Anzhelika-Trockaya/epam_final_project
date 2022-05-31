@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class MedicineForm extends CustomEntity implements Serializable {
-    //fixme serialVersion equals hashcode toString
+    private static final long serialVersionUID = 2532449760325244454L;
     private static final long DEFAULT_ID = 0L;
     private final long id;
     private String name;
@@ -58,10 +58,10 @@ public class MedicineForm extends CustomEntity implements Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()+"{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", unit=" + unit +
-                '}';
+        return new StringBuilder(this.getClass().getSimpleName()).append("{").
+                append("id=").append(id).
+                append(", name='").append(name).append('\'').
+                append(", unit=").append(unit).append('}').
+                toString();
     }
 }

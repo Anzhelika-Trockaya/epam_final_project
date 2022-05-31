@@ -36,6 +36,10 @@ public class MedicineImageUploader {
         try {
             Part part = request.getPart(ParameterName.IMAGE);
             String submittedFileName = part.getSubmittedFileName();
+            if(submittedFileName.isEmpty()){
+                request.setAttribute(AttributeName.INCORRECT_FILE, PropertyKey.ADDING_MEDICINE_INCORRECT_REQUIRED);
+                return new String();
+            }
             long fileSize = part.getSize();
             String extension = submittedFileName.toLowerCase().substring(submittedFileName.lastIndexOf('.'));
             String contentType = part.getContentType();

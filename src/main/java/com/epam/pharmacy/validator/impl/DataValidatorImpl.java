@@ -6,6 +6,8 @@ import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.Map;
 
 public class DataValidatorImpl implements DataValidator {
@@ -50,8 +52,21 @@ public class DataValidatorImpl implements DataValidator {
     }
 
     @Override
-    public boolean isCorrectBirthdayDate(String birthdayDate) {
-        return birthdayDate != null && birthdayDate.matches(DATE_REGEX);
+    public boolean isCorrectBirthdayDate(String birthdayDateString) {
+        boolean result = false;
+        if (birthdayDateString != null && birthdayDateString.matches(DATE_REGEX)) {
+            LocalDate today = LocalDate.now();
+            LocalDate birthdayDate = LocalDate.parse(birthdayDateString);
+            LocalDate birthdayThisYear = LocalDate.of(today.getYear(), birthdayDate.getMonth(), birthdayDate.getDayOfMonth());
+            int age = today.getYear() - birthdayDate.getYear();
+            if (birthdayThisYear.isAfter(today)) {
+                age--;
+            }
+            if (age > 17) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
@@ -172,6 +187,7 @@ public class DataValidatorImpl implements DataValidator {
         String price = medicineData.get(MEDICINE_PRICE);
         String instruction = medicineData.get(MEDICINE_INSTRUCTION);
         String ingredients = medicineData.get(MEDICINE_INGREDIENTS);
+        String imageLink = medicineData.get(MEDICINE_IMAGE_LINK);
         if (!isNotEmpty(name)) {
             result = false;
             medicineData.put(INCORRECT_NAME, ADDING_MEDICINE_INCORRECT_REQUIRED);
@@ -219,6 +235,9 @@ public class DataValidatorImpl implements DataValidator {
         if (!isNotEmpty(instruction)) {
             result = false;
             medicineData.put(INCORRECT_INSTRUCTION, ADDING_MEDICINE_INCORRECT_REQUIRED);
+        }
+        if (!isNotEmpty(imageLink)) {
+            result = false;
         }
         return result;
     }

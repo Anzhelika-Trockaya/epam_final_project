@@ -1,4 +1,14 @@
-<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/jsp/admin/users.jsp"  >USERS</a></li>
-<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/jsp/pharmacist/medicines.jsp"  >MEDICINES</a></li>
-<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=go_change_orders_page"  >ORDERS</a></li>
-<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=go_change_prescriptions_page"  >PRESCRIPTIONS</a></li>
+<a href="${pageContext.request.contextPath}/jsp/admin/users.jsp"  >${users_nav_title}</a>
+<div class="dropdown">
+    <button class="dropbtn">${medicines_nav_title}
+        <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+        <a href="${pageContext.request.contextPath}/jsp/pharmacist/medicines.jsp">${edit_medicines_nav_title}</a>
+        <a href="${pageContext.request.contextPath}/jsp/pharmacist/international_names.jsp">${edit_international_names_nav_title}</a>
+        <a href="${pageContext.request.contextPath}/jsp/pharmacist/manufacturers.jsp">${edit_manufacturers_nav_title}</a>
+        <a href="${pageContext.request.contextPath}/jsp/pharmacist/forms.jsp">${edit_forms_nav_title}</a>
+    </div>
+</div>
+<a href="${pageContext.request.contextPath}/controller?command=go_change_orders_page">${orders_nav_title}</a>
+<a href="${pageContext.request.contextPath}/controller?command=go_change_prescriptions_page">${prescriptions_nav_title}</a>

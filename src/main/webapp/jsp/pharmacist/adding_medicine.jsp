@@ -28,6 +28,8 @@
 <fmt:message key="adding_medicine.incorrect_required" var="incorrect_required_msg_text"/>
 <fmt:message key="adding_medicine.incorrect_not_integer" var="incorrect_integer_msg_text"/>
 <fmt:message key="adding_medicine.incorrect_price" var="incorrect_price_msg_text"/>
+<fmt:message key="adding_medicine.incorrect_file_size" var="incorrect_file_size_msg_text"/>
+<fmt:message key="adding_medicine.incorrect_file_type" var="incorrect_file_type_msg_text"/>
 <fmt:message key="adding_medicine.choose_file" var="choose_file"/>
 <html>
 <head>
@@ -36,7 +38,8 @@
 </head>
 <body>
 <div class="medicine_form">
-    <form name="medicine_form" id="medicine_form" action="${context_path}/controller" method="post" enctype="multipart/form-data" onsubmit="return validate()">
+    <form name="medicine_form" id="medicine_form" action="${context_path}/controller" method="post"
+          enctype="multipart/form-data" onsubmit="return validate()">
         <input type="hidden" name="command" value="add_medicine"/>
         <c:if test="${not empty successful_added}">
             <p class="successful_msg">${successful_added_msg}</p>
@@ -53,7 +56,8 @@
         <select id="international_name" name="international_name" size="1">
             <option id="default_international_name" selected value="">-</option>
             <c:forEach var="international_name" items="${international_names_list}">
-                <option <c:if test="${medicine_international_name_id eq international_name.id}">selected</c:if>
+                <option
+                        <c:if test="${medicine_international_name_id eq international_name.id}">selected</c:if>
                         value="${international_name.id}">
                         ${international_name.internationalName}
                 </option>
@@ -73,7 +77,8 @@
         <select id="form" name="form" size="1">
             <option id="default_form" selected value="">-</option>
             <c:forEach var="form" items="${forms_list}">
-                <option <c:if test="${medicine_form_id eq form.id}">selected</c:if> value="${form.id}">
+                <option
+                        <c:if test="${medicine_form_id eq form.id}">selected</c:if> value="${form.id}">
                         ${form.name}
                 </option>
             </c:forEach>
@@ -87,22 +92,28 @@
         <input type="text" id="dosage" name="dosage" value="${medicine_dosage}"/>
         <select id="dosage_unit" name="dosage_unit" size="1">
             <option id="default_dosage_unit" selected value="">-</option>
-            <option <c:if test="${medicine_dosage_unit eq 'MILLILITER'}">selected</c:if> value="MILLILITER">
+            <option
+                    <c:if test="${medicine_dosage_unit eq 'MILLILITER'}">selected</c:if> value="MILLILITER">
                 ${unit_name_ml}
             </option>
-            <option <c:if test="${medicine_dosage_unit eq 'MILLIGRAM'}">selected</c:if> value="MILLIGRAM">
+            <option
+                    <c:if test="${medicine_dosage_unit eq 'MILLIGRAM'}">selected</c:if> value="MILLIGRAM">
                 ${unit_name_mg}
             </option>
-            <option <c:if test="${medicine_dosage_unit eq 'GRAM'}">selected</c:if> value="GRAM">
+            <option
+                    <c:if test="${medicine_dosage_unit eq 'GRAM'}">selected</c:if> value="GRAM">
                 ${unit_name_g}
             </option>
-            <option <c:if test="${medicine_dosage_unit eq 'MICROGRAM'}">selected</c:if> value="MICROGRAM">
+            <option
+                    <c:if test="${medicine_dosage_unit eq 'MICROGRAM'}">selected</c:if> value="MICROGRAM">
                 ${unit_name_mcg}
             </option>
-            <option <c:if test="${medicine_dosage_unit eq 'ME'}">selected</c:if> value="ME">
+            <option
+                    <c:if test="${medicine_dosage_unit eq 'ME'}">selected</c:if> value="ME">
                 ${unit_name_me}
             </option>
-            <option <c:if test="${medicine_dosage_unit eq 'NANOGRAM'}">selected</c:if> value="NANOGRAM">
+            <option
+                    <c:if test="${medicine_dosage_unit eq 'NANOGRAM'}">selected</c:if> value="NANOGRAM">
                 ${unit_name_ng}
             </option>
         </select>
@@ -171,20 +182,65 @@
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_instruction}"/></p>
         </c:if>
         <br/>
-        <input type="button" id="loadFileXml" value="${choose_file}" onclick="document.getElementById('image').click();" />
-        <input type="file" style="display:none;" accept="image/*" id="image" name="image">
+        <input type="button" id="loadFileXml" value="${choose_file}"
+               onclick="document.getElementById('image').click();"/>
+        <input type="file" style="display:none;" onchange="checkFile()" id="image" name="image">
+        <p id="file_path_msg" class="successful_msg"></p>
+        <div id="imagePreview" style="margin-top: 20px"></div>
+        <p id="incorrect_file_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_file}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_file}"/></p>
         </c:if>
-        <br/>
         <br/>
         <input type="submit" name="sub" value="${adding_btn_value}"/>
         <br/>
     </form>
 </div>
 </body>
-
 <script>
+    function checkFile() {
+        const fileInput = document.forms["medicine_form"]["image"];
+        if (validateFile()) {
+            document.getElementById("file_path_msg").innerHTML = fileInput.value;
+            makeInputCorrect("incorrect_file_msg");
+            showPreview(fileInput);
+        }
+    }
+    function validateFile() {
+        const fileInput = document.forms["medicine_form"]["image"];
+        const allowedExtensionsPattern = /.+(\.jpg|\.jpeg|\.png|\.bmp|\.JPG|\.JPEG|\.PNG|\.BMP)$/;
+        const filePath = fileInput.value;
+        if (filePath === "") {
+            makeFileInputIncorrect(fileInput, "${incorrect_required_msg_text}");
+            return false;
+        }
+        if (!allowedExtensionsPattern.exec(filePath)) {
+            makeFileInputIncorrect(fileInput, "${incorrect_file_type_msg_text}");
+            return false;
+        }
+        const fileSize = fileInput.files.item(0).size;
+        if (fileSize > (1024 * 1024)) {
+            makeFileInputIncorrect(fileInput, "${incorrect_file_size_msg_text}");
+            return false;
+        }
+        return true;
+    }
+    function makeFileInputIncorrect(fileInput, msg) {
+        document.getElementById("imagePreview").innerHTML = "";
+        document.getElementById("file_path_msg").innerHTML = "";
+        makeInputIncorrect("incorrect_file_msg", msg);
+        fileInput.value = '';
+    }
+    function showPreview(fileInput) {
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("imagePreview").innerHTML =
+                    "<img src=\"" + e.target.result + "\" width=\"300\" alt=\"Preview image\"/>";
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
     function validate() {
         const intPattern = /^[1-9]\d{0,9}$/;
         const pricePattern = /^\d{1,20}(.\d{2})?$/;
@@ -240,34 +296,33 @@
         if (!validateRequired(instructionInput, "incorrect_instruction_msg", "${incorrect_required_msg_text}")) {
             result = false;
         }
+        if (!validateFile()) {
+            result = false;
+        }
         return result;
     }
-
     function validateRequired(input, msgPlaceId, msg) {
         const value = input.value;
         if (value === "") {
-            makeInputIncorrect(input, msgPlaceId, msg);
+            makeInputIncorrect(msgPlaceId, msg);
             return false;
         }
-        makeInputCorrect(input, msgPlaceId);
+        makeInputCorrect(msgPlaceId);
         return true;
     }
-
     function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
         const value = input.value;
         if (!pattern.test(value)) {
-            makeInputIncorrect(input, msgPlaceId, msg);
+            makeInputIncorrect(msgPlaceId, msg);
             return false;
         }
-        makeInputCorrect(input, msgPlaceId);
+        makeInputCorrect(msgPlaceId);
         return true;
     }
-
-    function makeInputIncorrect(input, msgPlaceId, msg) {
+    function makeInputIncorrect(msgPlaceId, msg) {
         document.getElementById(msgPlaceId).innerHTML = msg;
     }
-
-    function makeInputCorrect(input, msgPlaceId) {
+    function makeInputCorrect(msgPlaceId) {
         document.getElementById(msgPlaceId).innerHTML = "";
     }
 </script>

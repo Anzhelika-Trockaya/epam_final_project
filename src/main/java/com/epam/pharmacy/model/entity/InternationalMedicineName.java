@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class InternationalMedicineName extends CustomEntity implements Serializable {
-    //fixme serialVersion
+    private static final long serialVersionUID = 7482338068541838620L;
     private static final long DEFAULT_ID = 0L;
     private final long id;
     private String internationalName;
