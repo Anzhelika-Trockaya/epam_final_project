@@ -72,11 +72,11 @@ public class Manufacturer extends CustomEntity implements Serializable {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", country='" + country + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+        return new StringBuilder(this.getClass().getSimpleName()).append("{").
+                append("id=").append(id).
+                append(", name='").append(name).append('\'').
+                append(", country='").append(country).append('\'').
+                append(", address='").append(address).append('\'').
+                append('}').toString();
     }
 }

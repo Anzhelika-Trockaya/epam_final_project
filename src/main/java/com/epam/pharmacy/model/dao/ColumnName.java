@@ -1,5 +1,9 @@
 package com.epam.pharmacy.model.dao;
 
+import com.epam.pharmacy.model.entity.DosageUnit;
+
+import java.math.BigDecimal;
+
 public final class ColumnName {
     public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "user_login";
@@ -22,7 +26,22 @@ public final class ColumnName {
     public static final String MANUFACTURER_ADDRESS="manufacturer_address";
     public static final String INTERNATIONAL_MEDICINE_NAME_ID="international_medicine_name_id";
     public static final String INTERNATIONAL_MEDICINE_NAME="international_medicine_name";
-
+    public static final String MEDICINE_ID="medicine_id";
+    public static final String MEDICINE_NAME="medicine_name";
+    public static final String MEDICINE_INTERNATIONAL_NAME_ID="international_name_id";
+    public static final String MEDICINE_PRICE="medicine_price";
+    public static final String MEDICINE_TOTAL_NUMBER="medicine_total_number_of_parts";
+    public static final String MEDICINE_PARTS_AMOUNT_IN_PACKAGE="medicine_parts_amount_in_package";
+    public static final String MEDICINE_AMOUNT_IN_PART="medicine_amount_in_part";
+    public static final String MEDICINE_FORM_ID="form_id";
+    public static final String MEDICINE_DOSAGE="medicine_dosage";
+    public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
+    public static final String MEDICINE_INGREDIENTS="medicine_ingredients";
+    public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
+    public static final String MEDICINE_MANUFACTURER_ID="manufacturer_id";
+    public static final String MEDICINE_INSTRUCTION="medicine_instruction";
+    public static final String MEDICINE_IMAGE_PATH="medicine_image_path";
+    public static final String ORDER_ID = "order_id";
     private ColumnName() {
     }
 }

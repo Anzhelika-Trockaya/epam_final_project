@@ -65,6 +65,7 @@ public final class AttributeName {
     public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
     public static final String SUCCESSFUL_ADDED = "successful_added";
     public static final String INCORRECT_FILE ="incorrect_file" ;
+    public static final String MEDICINES_LIST = "medicines_list";
 
     private AttributeName() {
     }

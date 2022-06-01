@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epam.pharmacy.controller.AttributeName.USER_PASSWORD;
-import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_STATE;
 
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {

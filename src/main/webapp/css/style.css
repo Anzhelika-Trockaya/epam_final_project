@@ -115,3 +115,6 @@ div {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+.numbers button input{
+    width: 10px
+}

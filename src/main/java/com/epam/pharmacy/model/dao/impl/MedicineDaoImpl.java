@@ -4,13 +4,18 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.MedicineDao;
 import com.epam.pharmacy.model.entity.Medicine;
+import com.epam.pharmacy.model.entity.User;
+import com.epam.pharmacy.model.mapper.impl.MedicineRowMapper;
+import com.epam.pharmacy.model.mapper.impl.UserRowMapper;
 import com.epam.pharmacy.model.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +23,15 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
     private static final String SQL_INSERT_MEDICINE =
-            "INSERT INTO medicines (medicine_name, international_name_id, medicine_price, total_number_of_parts, " +
+            "INSERT INTO medicines (medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
                     "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
                     "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
                     "medicine_instruction, medicine_image_path) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_SELECT_ALL_MEDICINES =
+            "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
+            "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
+            "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
+            "medicine_instruction, medicine_image_path FROM medicines";
 
     @Override
     public boolean create(Medicine medicine) throws DaoException {
@@ -56,7 +66,20 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
 
     @Override
     public List<Medicine> findAll() throws DaoException {
-        return null;
+        List<Medicine> medicines = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_MEDICINES);
+             ResultSet resultSet = statement.executeQuery()) {
+            MedicineRowMapper mapper = MedicineRowMapper.getInstance();
+            Optional<Medicine> currentMedicineOptional;
+            while (resultSet.next()) {
+                currentMedicineOptional = mapper.mapRow(resultSet);
+                currentMedicineOptional.ifPresent(medicines::add);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find all medicines exception. " + e.getMessage());
+            throw new DaoException("Find all medicines exception. ", e);
+        }
+        return medicines;
     }
 
     @Override

@@ -22,16 +22,6 @@ public abstract class AbstractDao<T extends CustomEntity> {
 
     public abstract T update(T t) throws DaoException;
 
-    public void close(Statement statement){
-        try{
-            if(statement!=null){
-                statement.close();
-            }
-        } catch (SQLException e) {
-            //fixme log?
-        }
-    }
-
     void setConnection(Connection connection) {
         this.connection = connection;
     }

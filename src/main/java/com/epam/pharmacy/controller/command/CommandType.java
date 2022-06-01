@@ -14,6 +14,7 @@ public enum CommandType {
     ADD_MEDICINE(new AddMedicineCommand()),
     GO_CHANGE_USERS_PAGE(new GoChangeUsersPageCommand()),
     GO_ADD_MEDICINE_PAGE(new GoAddMedicinePageCommand()),
+    GO_HOME_PAGE(new GoHomePageCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
     DELETE_USER(new DeleteUserCommand()),
@@ -33,24 +34,15 @@ public enum CommandType {
     }
 
     public static Command commandOf(String commandStr) {
-        CommandType current;
         String commandName = commandStr.toUpperCase();
-        if (existCommand(commandName)) {
-            current = CommandType.valueOf(commandName);
-        } else {
-            current = DEFAULT;
-        }
-        return current.getCommand();
-    }
-
-    private static boolean existCommand(String commandName) {//fixme one method
         CommandType[] values = CommandType.values();
         for (CommandType value : values) {
             if (value.name().equals(commandName)) {
-                return true;
+                CommandType commandType = CommandType.valueOf(commandName);
+                return commandType.getCommand();
             }
         }
-        return false;
+        return DEFAULT.getCommand();
     }
 }
 

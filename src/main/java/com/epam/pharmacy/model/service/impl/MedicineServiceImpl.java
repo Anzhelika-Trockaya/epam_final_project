@@ -65,7 +65,14 @@ public class MedicineServiceImpl implements MedicineService {
 
     @Override
     public List<Medicine> findAll() throws ServiceException {
-        return null;
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao);
+            return medicineDao.findAll();
+        }catch (DaoException e) {
+            LOGGER.error("Exception when find all medicines." + e);
+            throw new ServiceException("Exception when find all medicines.", e);
+        }
     }
 
     private Medicine buildMedicine(Map<String, String> medicineData) throws ServiceException {

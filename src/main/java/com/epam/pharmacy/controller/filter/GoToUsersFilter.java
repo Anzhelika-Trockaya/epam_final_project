@@ -21,7 +21,7 @@ public class GoToUsersFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        GoChangeUsersPageCommand command = (GoChangeUsersPageCommand) CommandType.GO_CHANGE_USERS_PAGE.getCommand();//todo можно ли в комманде сделать отдельный метод заполнения request и вызывать его?
+        GoChangeUsersPageCommand command = (GoChangeUsersPageCommand) CommandType.GO_CHANGE_USERS_PAGE.getCommand();
         try {
             command.addUsersList(httpServletRequest);
         } catch (CommandException e) {
