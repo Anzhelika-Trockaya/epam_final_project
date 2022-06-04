@@ -38,7 +38,8 @@
             <c:otherwise>
                 <a href="${context_path}/controller?command=change_language&language=be_BY">${lang}</a>
             </c:otherwise>
-        </c:choose></div>
+        </c:choose>
+    </div>
     <div class="header">
         <a href="${context_path}/jsp/home.jsp"><h1>${label_pharmacy}</h1></a>
     </div>

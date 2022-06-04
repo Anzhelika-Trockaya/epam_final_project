@@ -16,6 +16,7 @@ public class DataValidatorImpl implements DataValidator {
     private static final String USER_STATE_REGEX = "(ACTIVE|BLOCKED)";
     private static final String SEX_REGEX = "(MALE|FEMALE)";
     private static final String USER_ROLE_REGEX = "(ADMIN|PHARMACIST|DOCTOR|CUSTOMER)";
+    private static final String USER_ADDRESS_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ/,_:;.'\"-]+";
     private static final String USER_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]{0,44}";
     private static final String USER_LOGIN_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}";
     private static final String USER_PASSWORD_REGEX = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])[A-ZА-ЯЁa-zа-яё0-9!@#$%^&*]{6,45}";
@@ -148,7 +149,7 @@ public class DataValidatorImpl implements DataValidator {
             result = false;
             userData.put(INCORRECT_PHONE, REGISTRATION_INCORRECT_PHONE);
         }
-        if (!isNotEmpty(address)) {
+        if (!isCorrectAddress(address)) {
             result = false;
             userData.put(INCORRECT_ADDRESS, REGISTRATION_INCORRECT_ADDRESS);
         }
@@ -157,6 +158,10 @@ public class DataValidatorImpl implements DataValidator {
             userData.put(INCORRECT_ROLE, REGISTRATION_INCORRECT_ROLE);
         }
         return result;
+    }
+
+    private boolean isCorrectAddress(String address) {
+        return address!=null && address.matches(USER_ADDRESS_REGEX);
     }
 
     @Override

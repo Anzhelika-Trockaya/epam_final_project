@@ -1,0 +1,41 @@
+<c:forEach var="medicine" items="${medicines_list}">
+    <tr>
+        <td><img src="${context_path}/uploadImage?image_path=${medicine.imagePath}" height="216" width="297" alt="no image"></td>
+        <td>
+            <p>
+                <a href="${context_path}/controller?command=go_medicine_page&id=<c:out value="${medicine.id}"/>">
+                    <c:out value="${medicine.name}"/>
+                </a>
+            </p>
+            <c:forEach var="international_name" items="${international_names_list}">
+                <c:if test="${medicine.internationalNameId eq international_name.id}">
+                    <p>${international_name.internationalName}</p>
+                </c:if>
+            </c:forEach>
+            <p>${dosage} <c:out value="${medicine.dosage}"/> <c:out value="${medicine.dosageUnit}"/></p>
+            <c:forEach var="form" items="${forms_list}">
+                <c:if test="${medicine.formId eq form.id}">
+                    <p>${form.name}</p>
+                    <p><c:out value="${medicine.amountInPart}"/> ${form.unit} ${in_part} (
+                        <c:out value="${medicine.partsInPackage}"/> ${parts_in_package})</p>
+                </c:if>
+            </c:forEach>
+            <form action="${context_path}/controller" method="post">
+                <input type="hidden" name="command" value="add_medicine_to_cart"/>
+                <input type="hidden" name="order_medicine_id" value="<c:out value="${medicine.id}"/>"/>
+                <div class="numbers">
+                    <button type="button" id="${medicine.id}_btn_minus" onclick="minus(${medicine.id})">-
+                    </button>
+                    <input type="text" value="1" onclick="this.select()"
+                           onkeyup="validate(${medicine.id}, ${medicine.totalNumberOfParts})"
+                           id="${medicine.id}_item_number" name="order_medicine_number" style="width: 30px"/>
+                    <button type="button" id="${medicine.id}_btn_plus" onclick="plus(${medicine.id},
+                        ${medicine.totalNumberOfParts})">+
+                    </button>
+                    parts
+                    <input type="submit" value="${add_to_basket}"/>
+                </div>
+            </form>
+        </td>
+    </tr>
+</c:forEach>

@@ -130,7 +130,7 @@
         </c:if>
         <br/>
         <label for="address">${label_address}</label>
-        <textarea id="address" name="address" maxlength="100">${user_address}</textarea>
+        <textarea id="address" name="address">${user_address}</textarea>
         <p id="incorrect_address_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_address}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_address}"/></p>
@@ -168,6 +168,7 @@
         const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
         const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
         const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
+        const addressPattern = /^[a-zA-Z0-9а-яА-ЯёЁ'"/.,_:;-]{1,100}$/;
         const loginInput = document.forms["registration_form"]["login"];
         const passwordInput = document.forms["registration_form"]["password"];
         const lastnameInput = document.forms["registration_form"]["lastname"];
@@ -208,14 +209,15 @@
             validatePatternMismatch(phoneInput, phonePattern, "incorrect_phone_msg", "${msg_text_incorrect_phone}"))) {
             result = false;
         }
+        if (!(validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}") &&
+            validatePatternMismatch(addressInput, addressPattern, "incorrect_address_msg", "${msg_text_incorrect_address}"))) {
+            result = false;
+        }
         if (!validateRequired(sexInput, "incorrect_sex_msg", "${msg_text_required}")) {
             result = false;
         }
         if (!(validateRequired(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_required}") &&
             validateBirthdayDate(birthdayDateInput))) {
-            result = false;
-        }
-        if (!validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}")) {
             result = false;
         }
         if (!validatePasswordRepeat(passwordInput)) {

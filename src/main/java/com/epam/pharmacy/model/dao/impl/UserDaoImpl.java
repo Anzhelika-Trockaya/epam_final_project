@@ -142,8 +142,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setLong(1, id);
             return findUser(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find user by login exception. " + e.getMessage());
-            throw new DaoException("Find user by login exception. ", e);
+            LOGGER.error("Find user by id exception. " + e.getMessage());
+            throw new DaoException("Find user by id exception. ", e);
         }
     }
 

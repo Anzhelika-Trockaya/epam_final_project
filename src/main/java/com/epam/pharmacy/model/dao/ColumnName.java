@@ -42,6 +42,7 @@ public final class ColumnName {
     public static final String MEDICINE_INSTRUCTION="medicine_instruction";
     public static final String MEDICINE_IMAGE_PATH="medicine_image_path";
     public static final String ORDER_ID = "order_id";
+    public static final String ORDER_MEDICINE_QUANTITY = "order_medicine_quantity";
     private ColumnName() {
     }
 }

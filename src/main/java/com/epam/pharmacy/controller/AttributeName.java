@@ -66,6 +66,7 @@ public final class AttributeName {
     public static final String SUCCESSFUL_ADDED = "successful_added";
     public static final String INCORRECT_FILE ="incorrect_file" ;
     public static final String MEDICINES_LIST = "medicines_list";
+    public static final String CURRENT_USER_CART_CONTENT = "current_user_cart_content";
 
     private AttributeName() {
     }

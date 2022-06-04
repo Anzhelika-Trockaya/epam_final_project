@@ -9,6 +9,7 @@ public class ServiceProvider {
     private final InternationalNameService internationalNameService;
     private final ManufacturerService manufacturerService;
     private final MedicineService medicineService;
+    private final OrderService orderService;
 
     public static ServiceProvider getInstance() {
         return instance;
@@ -20,6 +21,7 @@ public class ServiceProvider {
         internationalNameService = new InternationalNameServiceImpl();
         manufacturerService = new ManufacturerServiceImpl();
         medicineService = new MedicineServiceImpl();
+        orderService = new OrderServiceImpl();
     }
 
     public UserService getUserService() {
@@ -40,5 +42,9 @@ public class ServiceProvider {
 
     public MedicineService getMedicineService() {
         return medicineService;
+    }
+
+    public OrderService getOrderService() {
+        return orderService;
     }
 }

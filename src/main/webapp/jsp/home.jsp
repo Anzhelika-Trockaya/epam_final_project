@@ -4,7 +4,6 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="${context_path}/css/style.css">
     <title>Home</title>
     <c:set var="current_page" value="jsp/home.jsp" scope="session"/>
 </head>
@@ -13,59 +12,75 @@
 <fmt:message key="home.dosage" var="dosage"/>
 <fmt:message key="home.in_part" var="in_part"/>
 <fmt:message key="home.parts_in_package" var="parts_in_package"/>
+<fmt:message key="home.medicines_not_found" var="not_found_msg"/>
+
 <div>
-    <form action="controller">
-        <input type="hidden" name="command" value="search_medicine"/>
-        <input type="text" name="medicine_name" placeholder="Enter medicine name"/>
-        <input type="submit" name="sub" value="Search"/>
-        <br/>
-    </form>
-    <div>
-        <table>
-            <tbody>
-            <c:forEach var="medicine" items="${medicines_list}">
-                <tr>
-                    <td><img src="<c:out value="${medicine.imagePath}"/>" height="216" width="297" alt="no image"></td>
-                    <td>
-                        <p>
-                            <a href="/controller?command=go_medicine_page&id=<c:out value="${medicine.id}"/>">
-                                <c:out value="${medicine.name}"/>
-                            </a>
-                        </p>
-                        <c:forEach var="international_name" items="${international_names_list}">
-                            <c:if test="${medicine.internationalNameId eq international_name.id}">
-                                <p>${international_name.internationalName}</p>
-                            </c:if>
-                        </c:forEach>
-                        <p>${dosage} <c:out value="${medicine.dosage}"/> <c:out value="${medicine.dosageUnit}"/></p>
-                        <c:forEach var="form" items="${forms_list}">
-                            <c:if test="${medicine.formId eq form.id}">
-                                <p>${form.name}</p>
-                                <p><c:out value="${medicine.amountInPart}"/> ${form.unit} ${in_part} (
-                                    <c:out value="${medicine.partsInPackage}"/> ${parts_in_package})</p>
-                            </c:if>
-                        </c:forEach>
-                        <form action="/controller" method="post">
-                            <input type="hidden" name="command" value="add_medicine_to_basket"/>
-                            <input type="hidden" name="medicine_id" value="<c:out value="${medicine.id}"/>"/>
-                            <div class="numbers">
-                                <button type="button" id="${medicine.id}_btn_minus" onclick="minus(${medicine.id})">-
-                                </button>
-                                <input type="number" value="1"
-                                       onkeyup="validate(${medicine.id}, ${medicine.totalNumberOfParts})"
-                                       id="${medicine.id}_item_number" name="number"/>
-                                <button type="button" id="${medicine.id}_btn_plus" onclick="plus(${medicine.id},
-                                    ${medicine.totalNumberOfParts})">+</button>
-                                parts
-                                <input type="submit" value="${add_to_basket}"/>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-            </c:forEach>
-            </tbody>
-        </table>
-    </div>
+    <c:if test="${current_user_role eq 'CUSTOMER'}">
+        <form action="controller">
+            <input type="hidden" name="command" value="search_medicine"/>
+            <input type="text" name="medicine_name" placeholder="Enter medicine name"/>
+            <input type="submit" name="sub" value="Search"/>
+            <br/>
+        </form>
+    </c:if>
+    <c:choose>
+        <c:when test="${current_user_role != 'CUSTOMER'}">
+            <div>
+                <br/>
+                <p><b><fmt:message key="home.text_one"/> </b></p>
+                <p>
+                    &#10004;<fmt:message key="home.text_two"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_three"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_four"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_five"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_six"/>
+                </p>
+                <br/>
+                <p><b><fmt:message key="home.text_seven"/> </b></p>
+                <p>
+                    &#10004;<fmt:message key="home.text_eight"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_nine"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_ten"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_eleven"/>
+                </p>
+                <p>
+                    &#10004;<fmt:message key="home.text_twelve"/>
+                </p>
+                <br/>
+                <p><b><fmt:message key="home.text_thirteen"/> </b></p>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <c:choose>
+                <c:when test="${empty medicines_list}">
+                    <p class="successful_msg">${not_found_msg}</p>
+                </c:when>
+                <c:otherwise>
+                    <div>
+                        <table>
+                            <tbody>
+                            <%@include file="fragment/show_medicines_list_fragment.jspf" %>
+                            </tbody>
+                        </table>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+        </c:otherwise>
+    </c:choose>
 </div>
 <script>
     function minus(medicineId) {
@@ -87,12 +102,17 @@
     }
 
     function validate(medicineId, totalNumber) {
+        const numberPattern = /^\d{1,6}$/;
         var itemNumber = document.getElementById(medicineId + '_item_number');
-        var value = parseInt(itemNumber.value);
-        if (value > totalNumber) {
-            itemNumber.value = totalNumber;
-        } else if (value < 1) {
+        if (!numberPattern.test(itemNumber.value)) {
             itemNumber.value = 1;
+        } else {
+            var value = parseInt(itemNumber.value);
+            if (value < 1) {
+                itemNumber.value = 1;
+            } else if (value > totalNumber) {
+                itemNumber.value = totalNumber;
+            }
         }
     }
 </script>

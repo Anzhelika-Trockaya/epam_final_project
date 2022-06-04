@@ -47,7 +47,7 @@ public class Controller extends HttpServlet {
                     request.getRequestDispatcher(router.getPage()).forward(request, response);
                     break;
                 case REDIRECT:
-                    response.sendRedirect(router.getPage());//todo request.getContextPath()+
+                    response.sendRedirect(router.getPage());
                     break;
                 default:
                     LOGGER.warn("Unknown Router type" + router.getType());

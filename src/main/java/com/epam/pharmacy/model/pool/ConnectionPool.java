@@ -98,7 +98,7 @@ public class ConnectionPool {
 
     public boolean releaseConnection(Connection connection) {
         boolean released;
-        if (!busyConnections.contains(connection)) {
+        if (!(connection instanceof ProxyConnection) || !busyConnections.contains(connection)) {
             LOGGER.warn("Illegal connection. " + connection);
             return false;
         }

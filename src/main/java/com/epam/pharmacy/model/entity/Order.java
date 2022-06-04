@@ -10,10 +10,16 @@ public class Order extends CustomEntity implements Serializable {
     private final long id;
     private long customerId;
     private LocalDate paymentDate;
-    private LocalDate expectedDate;
-    private LocalDate completeDate;
+    private State state;
     private long pharmacistId;
     private String check;
+
+    public enum State {
+        CREATED,
+        PAID,
+        PROCESSED,
+        COMPLETED
+    }
 
     public Order() {
         id = DEFAULT_ID;
@@ -48,22 +54,6 @@ public class Order extends CustomEntity implements Serializable {
         this.paymentDate = paymentDate;
     }
 
-    public LocalDate getExpectedDate() {
-        return expectedDate;
-    }
-
-    public void setExpectedDate(LocalDate expectedDate) {
-        this.expectedDate = expectedDate;
-    }
-
-    public LocalDate getCompleteDate() {
-        return completeDate;
-    }
-
-    public void setCompleteDate(LocalDate completeDate) {
-        this.completeDate = completeDate;
-    }
-
     public long getPharmacistId() {
         return pharmacistId;
     }
@@ -80,17 +70,27 @@ public class Order extends CustomEntity implements Serializable {
         this.check = check;
     }
 
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
-        return id == order.id && customerId == order.customerId && pharmacistId == order.pharmacistId && Objects.equals(paymentDate, order.paymentDate) && Objects.equals(expectedDate, order.expectedDate) && Objects.equals(completeDate, order.completeDate) && Objects.equals(check, order.check);
+        return id == order.id && customerId == order.customerId && pharmacistId == order.pharmacistId &&
+                state == order.state && Objects.equals(paymentDate, order.paymentDate) &&
+                Objects.equals(check, order.check);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, paymentDate, expectedDate, completeDate, pharmacistId, check);
+        return Objects.hash(id, customerId, state, paymentDate, pharmacistId, check);
     }
 
     @Override
@@ -98,9 +98,8 @@ public class Order extends CustomEntity implements Serializable {
         return new StringBuilder(this.getClass().getSimpleName()).
                 append("id=").append(id).
                 append(", customerId=").append(customerId).
+                append(", state=").append(state).
                 append(", paymentDate=").append(paymentDate).
-                append(", expectedDate=").append(expectedDate).
-                append(", completeDate=").append(completeDate).
                 append(", pharmacistId=").append(pharmacistId).
                 append(", check='").append(check).append('\'').
                 append('}').toString();
@@ -131,13 +130,8 @@ public class Order extends CustomEntity implements Serializable {
             return this;
         }
 
-        public Builder buildExpectedDate(LocalDate date) {
-            order.setExpectedDate(date);
-            return this;
-        }
-
-        public Builder buildCompleteDate(LocalDate date) {
-            order.setCompleteDate(date);
+        public Builder buildPharmacistId(State state) {
+            order.setState(state);
             return this;
         }
 

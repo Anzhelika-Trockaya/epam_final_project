@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.PropertyKey.*;
@@ -63,13 +64,38 @@ public class MedicineServiceImpl implements MedicineService {
         return false;
     }
 
+    @Override//FIXME!!!!
+    public Optional<Medicine> findById(String medicineIdString) throws ServiceException {
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        DataValidator validator = DataValidatorImpl.getInstance();
+        Optional<Medicine> optionalMedicine = Optional.empty();
+        if (!validator.isCorrectId(medicineIdString)) {
+            LOGGER.error("Exception when checked medicine quantity. Incorrect id=" + medicineIdString);
+            return optionalMedicine;
+        }
+        long idValue;
+        try {
+            idValue = Long.parseLong(medicineIdString);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Exception when checked medicine quantity. Incorrect id=" + medicineIdString);
+            return optionalMedicine;
+        }
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao);
+            return medicineDao.findById(idValue);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when checked medicine quantity." + e);
+            throw new ServiceException("Exception when checked medicine quantity.", e);
+        }
+    }
+
     @Override
     public List<Medicine> findAll() throws ServiceException {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(medicineDao);
             return medicineDao.findAll();
-        }catch (DaoException e) {
+        } catch (DaoException e) {
             LOGGER.error("Exception when find all medicines." + e);
             throw new ServiceException("Exception when find all medicines.", e);
         }

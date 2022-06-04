@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
         try {
             idValue = Long.parseLong(idString);
         } catch (NumberFormatException e) {
-            throw new ServiceException("Exception when remove user. Incorrect id=" + idString);
+            return false;
         }
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
         try {
             idValue = Long.parseLong(idString);
         } catch (NumberFormatException e) {
-            throw new ServiceException("Exception when change user state. Incorrect id=" + idString);
+            return false;
         }
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
