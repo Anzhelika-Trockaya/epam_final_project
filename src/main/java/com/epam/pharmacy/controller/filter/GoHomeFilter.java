@@ -1,6 +1,7 @@
 package com.epam.pharmacy.controller.filter;
 
 import com.epam.pharmacy.controller.AttributeName;
+import com.epam.pharmacy.controller.RequestFiller;
 import com.epam.pharmacy.controller.command.CommandType;
 import com.epam.pharmacy.controller.command.GoHomePageCommand;
 import com.epam.pharmacy.exception.CommandException;
@@ -13,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-//@WebFilter(filterName = "GoHomeFilter", urlPatterns = "/jsp/home.jsp")
+@WebFilter(filterName = "GoHomeFilter", urlPatterns = "/jsp/home.jsp", dispatcherTypes = DispatcherType.REQUEST)
 public class GoHomeFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -22,7 +23,7 @@ public class GoHomeFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         GoHomePageCommand command = (GoHomePageCommand) CommandType.GO_HOME_PAGE.getCommand();
         try {
-            command.fillRequestInternationalNames(httpServletRequest);
+            RequestFiller.getInstance().addInternationalNames(httpServletRequest);
         } catch (CommandException e) {
             LOGGER.error("Exception when fill page home.jsp" + e);
             throw new ServletException("Exception when fill page home.jsp", e);

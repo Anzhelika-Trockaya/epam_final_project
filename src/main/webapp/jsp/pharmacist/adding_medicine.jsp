@@ -18,7 +18,7 @@
 <fmt:message key="adding_medicine.instruction" var="label_instruction"/>
 <fmt:message key="adding_medicine.image" var="label_image"/>
 <fmt:message key="adding_medicine.successful_msg" var="successful_added_msg"/>
-<fmt:message key="adding_medicine.add" var="adding_btn_value"/>
+<fmt:message key="action.add" var="adding_btn_value"/>
 <fmt:message key="medicines.milliliter" var="unit_name_ml"/>
 <fmt:message key="medicines.milligram" var="unit_name_mg"/>
 <fmt:message key="medicines.gram" var="unit_name_g"/>
@@ -46,7 +46,7 @@
             <br/>
         </c:if>
         <label for="name">${label_name}</label>
-        <input type="text" id="name" name="name" value="${medicine_name}"/>
+        <input type="text" class="uppercase" id="name" name="name" value="${medicine_name}"/>
         <p id="incorrect_name_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_name}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_name}"/></p>

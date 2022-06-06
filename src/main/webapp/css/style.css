@@ -119,3 +119,9 @@ div {
     width: 10px
 }
 tr:nth-child(even) {background-color: #f2f2f2}
+.searchForm input[type=text]{
+    width: 50%;
+}
+.uppercase{
+    text-transform: uppercase;
+}

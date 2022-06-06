@@ -3,6 +3,7 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.UserDao;
+import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.model.mapper.impl.UserRowMapper;
 import org.apache.logging.log4j.LogManager;
@@ -99,7 +100,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public User update(User user) throws DaoException {
+    public Optional<User> update(User user) throws DaoException {
         return null;//fixme
     }
 

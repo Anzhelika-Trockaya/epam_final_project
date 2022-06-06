@@ -1,2 +1,2 @@
-<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=get_orders"  >ORDERS</a></li>
-<li class="menu_li"><a class="menu_a" href="${pageContext.request.contextPath}/controller?command=get_prescriptions"  >PRESCRIPTIONS</a></li>
+<a class="menu_a" href="${pageContext.request.contextPath}/controller?command=get_orders">${orders_nav_title}</a>
+<a class="menu_a" href="${pageContext.request.contextPath}/controller?command=get_prescriptions">${prescriptions_nav_title}</a>

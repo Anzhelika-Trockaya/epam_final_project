@@ -41,8 +41,10 @@ public class AddMedicineCommand implements Command {
                 router.setTypeRedirect();
             } else {
                 addDataToRequest(request, medicineData);
-                GoAddMedicinePageCommand command = (GoAddMedicinePageCommand) CommandType.GO_ADD_MEDICINE_PAGE.getCommand();
-                command.fillRequest(request);
+                RequestFiller requestFiller = RequestFiller.getInstance();
+                requestFiller.addManufacturers(request);
+                requestFiller.addForms(request);
+                requestFiller.addInternationalNames(request);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the AddMedicineCommand" + e);

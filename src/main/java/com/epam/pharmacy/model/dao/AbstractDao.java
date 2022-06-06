@@ -2,10 +2,9 @@ package com.epam.pharmacy.model.dao;
 
 import com.epam.pharmacy.model.entity.CustomEntity;
 import com.epam.pharmacy.exception.DaoException;
+import com.epam.pharmacy.model.entity.InternationalMedicineName;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,7 @@ public abstract class AbstractDao<T extends CustomEntity> {
 
     public abstract Optional<T> findById(long id) throws DaoException;
 
-    public abstract T update(T t) throws DaoException;
+    public abstract Optional<T> update(T t) throws DaoException;
 
     void setConnection(Connection connection) {
         this.connection = connection;

@@ -16,5 +16,8 @@ public interface MedicineService {
 
     Optional<Medicine> findById(String medicineIdString) throws ServiceException;
 
+    //FIXME!!!!
+    List<Medicine> findByName(String medicineName) throws ServiceException;
+
     List<Medicine> findAll() throws ServiceException;
 }

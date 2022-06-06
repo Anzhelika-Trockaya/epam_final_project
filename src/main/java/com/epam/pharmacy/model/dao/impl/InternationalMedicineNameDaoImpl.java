@@ -21,13 +21,17 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
         implements InternationalMedicineNameDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
-    private static final String SQL_SELECT_ALL_INTERNATIONAL_NAMES=
+    private static final String SQL_SELECT_ALL_INTERNATIONAL_NAMES =
             "SELECT international_medicine_name_id, international_medicine_name FROM international_medicines_names";
     private static final String SQL_INSERT_INTERNATIONAL_NAME =
             "INSERT INTO international_medicines_names (international_medicine_name) values(?)";
-    private static final String SQL_SELECT_INTERNATIONAL_NAME_BY_ID=
+    private static final String SQL_SELECT_INTERNATIONAL_NAME_BY_ID =
             "SELECT international_medicine_name_id, international_medicine_name FROM international_medicines_names " +
                     "WHERE international_medicine_name_id = ?";
+    private static final String SQL_UPDATE_INTERNATIONAL_NAME_BY_ID =
+            "UPDATE international_medicines_names SET international_medicine_name = (?) " +
+                    "WHERE international_medicine_name_id = (?)";
+
     @Override
     public boolean create(InternationalMedicineName internationalMedicineName) throws DaoException {
         try (Connection connection = ConnectionPool.getInstance().getConnection();
@@ -67,7 +71,7 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
     public Optional<InternationalMedicineName> findById(long id) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_INTERNATIONAL_NAME_BY_ID)) {
             statement.setLong(1, id);
-            try(ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet resultSet = statement.executeQuery()) {
                 InternationalNameRowMapper mapper = InternationalNameRowMapper.getInstance();
                 Optional<InternationalMedicineName> internationalMedicineNameOptional;
                 if (resultSet.next()) {
@@ -84,7 +88,15 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
     }
 
     @Override
-    public InternationalMedicineName update(InternationalMedicineName internationalMedicineName) throws DaoException {
-        return null;
+    public Optional<InternationalMedicineName> update(InternationalMedicineName internationalMedicineName) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_INTERNATIONAL_NAME_BY_ID)) {
+            Optional<InternationalMedicineName> medicineName = findById(internationalMedicineName.getId());
+            statement.setString(1, internationalMedicineName.getInternationalName());
+            statement.setLong(2, internationalMedicineName.getId());
+            return statement.executeUpdate() == ONE_UPDATED ? medicineName : Optional.empty();
+        } catch (SQLException e) {
+            LOGGER.error("Update international name by id exception. " + e.getMessage());
+            throw new DaoException("Update international name by id exception. ", e);
+        }
     }
 }

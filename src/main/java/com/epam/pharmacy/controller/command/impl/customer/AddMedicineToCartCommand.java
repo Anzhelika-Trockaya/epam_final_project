@@ -2,10 +2,9 @@ package com.epam.pharmacy.controller.command.impl.customer;
 
 import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.controller.PagePath;
+import com.epam.pharmacy.controller.RequestFiller;
 import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.GoHomePageCommand;
-import com.epam.pharmacy.controller.command.impl.pharmacist.GoChangeMedicinesPageCommand;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.OrderService;
@@ -38,8 +37,7 @@ public class AddMedicineToCartCommand implements Command {
                 session.setAttribute(AttributeName.SUCCESSFUL_ADDED, Boolean.TRUE.toString());
                 router.setTypeRedirect();
             } else{
-                GoHomePageCommand goHomeCommand = new GoHomePageCommand();
-                goHomeCommand.fillRequestInternationalNames(request);
+                RequestFiller.getInstance().addInternationalNames(request);
                 request.setAttribute(AttributeName.FAILED, Boolean.TRUE);
             }
         } catch(ServiceException e){

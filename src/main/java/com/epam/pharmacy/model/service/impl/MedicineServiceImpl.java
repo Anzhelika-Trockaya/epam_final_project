@@ -13,9 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.PropertyKey.*;
@@ -64,7 +62,7 @@ public class MedicineServiceImpl implements MedicineService {
         return false;
     }
 
-    @Override//FIXME!!!!
+    @Override
     public Optional<Medicine> findById(String medicineIdString) throws ServiceException {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         DataValidator validator = DataValidatorImpl.getInstance();
@@ -90,6 +88,23 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
+    public List<Medicine> findByName(String medicineName) throws ServiceException {
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        DataValidator validator = DataValidatorImpl.getInstance();
+        if (!validator.isNotEmpty(medicineName)) {
+            LOGGER.error("Exception when finding medicines by name. Incorrect name=" + medicineName);
+            return new ArrayList<>();
+        }
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao);
+            return medicineDao.findByName(medicineName.trim().toUpperCase());
+        } catch (DaoException e) {
+            LOGGER.error("Exception when checked medicine quantity." + e);
+            throw new ServiceException("Exception when checked medicine quantity.", e);
+        }
+    }
+
+    @Override
     public List<Medicine> findAll() throws ServiceException {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
@@ -102,7 +117,7 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     private Medicine buildMedicine(Map<String, String> medicineData) throws ServiceException {
-        String name = medicineData.get(MEDICINE_NAME);
+        String name = medicineData.get(MEDICINE_NAME).trim().toUpperCase();
         String internationalNameIdString = medicineData.get(MEDICINE_INTERNATIONAL_NAME_ID);
         long internationalNameId = Long.parseLong(internationalNameIdString);
         String manufacturerIdString = medicineData.get(MEDICINE_MANUFACTURER_ID);

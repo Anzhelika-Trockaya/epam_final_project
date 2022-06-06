@@ -9,7 +9,7 @@
 <fmt:message key="users.add" var="add_user"/>
 <fmt:message key="users.block" var="block_btn"/>
 <fmt:message key="users.unblock" var="unblock_btn"/>
-<fmt:message key="delete" var="delete_btn"/>
+<fmt:message key="action.delete" var="delete_btn"/>
 <fmt:message key="users.login" var="login_title"/>
 <fmt:message key="users.role" var="role_title"/>
 <fmt:message key="users.state" var="state_title"/>

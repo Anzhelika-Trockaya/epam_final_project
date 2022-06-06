@@ -5,10 +5,7 @@ import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.ManufacturerDao;
 import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.Manufacturer;
-import com.epam.pharmacy.model.entity.MedicineForm;
-import com.epam.pharmacy.model.mapper.impl.InternationalNameRowMapper;
 import com.epam.pharmacy.model.mapper.impl.ManufacturerRowMapper;
-import com.epam.pharmacy.model.mapper.impl.MedicineFormRowMapper;
 import com.epam.pharmacy.model.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -90,7 +87,7 @@ public class ManufacturerDaoImpl extends AbstractDao<Manufacturer> implements Ma
     }
 
     @Override
-    public Manufacturer update(Manufacturer manufacturer) throws DaoException {
+    public Optional<Manufacturer> update(Manufacturer manufacturer) throws DaoException {
         return null;
     }
 }

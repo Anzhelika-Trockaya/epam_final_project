@@ -30,6 +30,8 @@ public final class ParameterName {
     public static final String ORDER_MEDICINE_ID = "order_medicine_id";
     public static final String ORDER_MEDICINE_NUMBER = "order_medicine_number";
     public static final String IMAGE_PATH = "image_path";
+    public static final String SEARCH_MEDICINE_NAME = "search_medicine_name";
+    public static final String INTERNATIONAL_NAME_ID="international_name_id";
 
     private ParameterName() {
     }

@@ -1,30 +1,33 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="header/header.jsp" %>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Home</title>
-    <c:set var="current_page" value="jsp/home.jsp" scope="session"/>
-</head>
-<body>
 <fmt:message key="home.add_to_basket" var="add_to_basket"/>
 <fmt:message key="home.dosage" var="dosage"/>
 <fmt:message key="home.in_part" var="in_part"/>
 <fmt:message key="home.parts_in_package" var="parts_in_package"/>
 <fmt:message key="home.medicines_not_found" var="not_found_msg"/>
-
+<fmt:message key="home.title" var="home_title"/>
+<fmt:message key="home.enter_medicine_name" var="enter_medicine_name"/>
+<fmt:message key="home.search" var="search"/>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>${home_title}</title>
+    <c:set var="current_page" value="jsp/home.jsp" scope="session"/>
+</head>
+<body>
 <div>
+    <br/>
     <c:if test="${current_user_role eq 'CUSTOMER'}">
-        <form action="controller">
+        <form class="searchForm" action="controller">
             <input type="hidden" name="command" value="search_medicine"/>
-            <input type="text" name="medicine_name" placeholder="Enter medicine name"/>
-            <input type="submit" name="sub" value="Search"/>
+            <input type="text" name="search_medicine_name" placeholder="${enter_medicine_name}"/>
+            <input type="submit" name="sub" value="${search}"/>
             <br/>
         </form>
     </c:if>
     <c:choose>
-        <c:when test="${current_user_role != 'CUSTOMER'}">
+        <c:when test="${current_user_role != 'CUSTOMER' or(empty show_search_result)}">
             <div>
                 <br/>
                 <p><b><fmt:message key="home.text_one"/> </b></p>

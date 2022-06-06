@@ -3,6 +3,7 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.OrderDao;
+import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.Order;
 import com.epam.pharmacy.model.mapper.impl.MedicineRowMapper;
@@ -64,7 +65,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public Order update(Order order) throws DaoException {
+    public Optional<Order> update(Order order) throws DaoException {
         return null;
     }
 

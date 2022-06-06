@@ -34,4 +34,6 @@ public interface DataValidator {
     boolean isCorrectDosageUnit(String unit);
 
     boolean isCorrectPrice(String price);
+
+    boolean isCorrectInternationalName(String name);
 }

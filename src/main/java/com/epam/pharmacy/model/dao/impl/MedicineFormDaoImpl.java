@@ -3,9 +3,8 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.MedicineFormDao;
-import com.epam.pharmacy.model.entity.Manufacturer;
+import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.MedicineForm;
-import com.epam.pharmacy.model.mapper.impl.ManufacturerRowMapper;
 import com.epam.pharmacy.model.mapper.impl.MedicineFormRowMapper;
 import com.epam.pharmacy.model.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
@@ -84,7 +83,7 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
     }
 
     @Override
-    public MedicineForm update(MedicineForm medicineForm) throws DaoException {
+    public Optional<MedicineForm> update(MedicineForm medicineForm) throws DaoException {
         return null;
     }
 }

@@ -35,6 +35,15 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
                     "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
                     "medicine_instruction, medicine_image_path FROM medicines WHERE medicine_id = ?";
+    private static final String SQL_SELECT_MEDICINE_BY_PART_OF_NAME = "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
+            "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
+            "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
+            "medicine_instruction, medicine_image_path FROM medicines WHERE medicine_name LIKE %?%";
+    private static final String SQL_SELECT_MEDICINE_BY_INTERNATIONAL_NAME_ID = "" +
+            "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
+            "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
+            "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
+            "medicine_instruction, medicine_image_path FROM medicines WHERE international_name_id = ?";
 
     @Override
     public boolean create(Medicine medicine) throws DaoException {
@@ -105,7 +114,47 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     }
 
     @Override
-    public Medicine update(Medicine medicine) throws DaoException {
+    public List<Medicine> findByName(String name) throws DaoException {
+        List<Medicine> medicines = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_PART_OF_NAME)) {
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                MedicineRowMapper mapper = MedicineRowMapper.getInstance();
+                Optional<Medicine> currentMedicineOptional;
+                while (resultSet.next()) {
+                    currentMedicineOptional = mapper.mapRow(resultSet);
+                    currentMedicineOptional.ifPresent(medicines::add);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find medicine by name exception. name=" + name + e.getMessage());
+            throw new DaoException("Find medicine by name exception. name=" + name, e);
+        }
+        return medicines;
+    }
+
+    @Override
+    public List<Medicine> findByInternationalNameId(long id) throws DaoException {
+        List<Medicine> medicines = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_INTERNATIONAL_NAME_ID)) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                MedicineRowMapper mapper = MedicineRowMapper.getInstance();
+                Optional<Medicine> currentMedicineOptional;
+                while (resultSet.next()) {
+                    currentMedicineOptional = mapper.mapRow(resultSet);
+                    currentMedicineOptional.ifPresent(medicines::add);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find medicine by international name exception. international name id =" + id + e.getMessage());
+            throw new DaoException("Find medicine by international name exception. international name id =" + id, e);
+        }
+        return medicines;
+    }
+
+    @Override
+    public Optional<Medicine> update(Medicine medicine) throws DaoException {
         return null;
     }
 

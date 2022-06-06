@@ -26,6 +26,7 @@ public class DataValidatorImpl implements DataValidator {
     private static final String INTEGER_REGEX = "[1-9]\\d{0,9}";
     private static final String DOSAGE_UNIT_REGEX = "(MILLILITER|MILLIGRAM|GRAM|MICROGRAM|ME|NANOGRAM)";
     private static final String PRICE_REGEX = "\\d{1,20}(.\\d{2})?";
+    private static final String INTERNATIONAL_NAME_REGEX = "[A-Z][a-zA-Z-]{0,99}";
 
     private DataValidatorImpl() {
     }
@@ -260,6 +261,11 @@ public class DataValidatorImpl implements DataValidator {
     @Override
     public boolean isCorrectPrice(String price) {
         return price != null && price.matches(PRICE_REGEX);
+    }
+
+    @Override
+    public boolean isCorrectInternationalName(String name) {
+        return name != null && name.matches(INTERNATIONAL_NAME_REGEX);
     }
 
 

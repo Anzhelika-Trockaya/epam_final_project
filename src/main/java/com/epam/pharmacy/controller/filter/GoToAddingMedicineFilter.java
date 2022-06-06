@@ -1,5 +1,6 @@
 package com.epam.pharmacy.controller.filter;
 
+import com.epam.pharmacy.controller.RequestFiller;
 import com.epam.pharmacy.controller.command.CommandType;
 import com.epam.pharmacy.controller.command.impl.pharmacist.GoAddMedicinePageCommand;
 import com.epam.pharmacy.exception.CommandException;
@@ -21,9 +22,11 @@ public class GoToAddingMedicineFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        GoAddMedicinePageCommand command = (GoAddMedicinePageCommand) CommandType.GO_ADD_MEDICINE_PAGE.getCommand();
         try {
-            command.fillRequest(httpServletRequest);
+            RequestFiller requestFiller = RequestFiller.getInstance();
+            requestFiller.addManufacturers(httpServletRequest);
+            requestFiller.addForms(httpServletRequest);
+            requestFiller.addInternationalNames(httpServletRequest);
         } catch (CommandException e) {
             LOGGER.error("Exception when fill page adding_medicine.jsp" + e);
             throw new ServletException("Exception when fill page adding_medicine.jsp", e);
