@@ -8,6 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 public class GetUserInfoCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        return null;
+        return null;//todo
     }
 }

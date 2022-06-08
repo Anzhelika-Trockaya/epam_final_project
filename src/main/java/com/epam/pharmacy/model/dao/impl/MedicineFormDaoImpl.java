@@ -3,7 +3,6 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.MedicineFormDao;
-import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.MedicineForm;
 import com.epam.pharmacy.model.mapper.impl.MedicineFormRowMapper;
 import com.epam.pharmacy.model.pool.ConnectionPool;
@@ -24,6 +23,10 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
     private static final String SQL_SELECT_ALL_FORMS = "SELECT form_id, form_name, form_unit FROM forms";
     private static final String SQL_INSERT_FORM = "INSERT INTO forms (form_name, form_unit) values(?,?)";
     private static final String SQL_SELECT_FORM_BY_ID = "SELECT form_id, form_name, form_unit FROM forms WHERE form_id = ?";
+    private static final String SQL_SELECT_FORM_BY_NAME = "SELECT form_id, form_name, form_unit FROM forms WHERE form_name = ?";
+    private static final String SQL_UPDATE_FORM_BY_NAME =
+            "UPDATE forms SET form_name = ?, form_unit = ? WHERE form_id = ?";
+    private static final String SQL_DELETE_FORM_BY_ID = "DELETE FROM forms WHERE form_id = ?";
 
 
     @Override
@@ -41,7 +44,13 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
 
     @Override
     public boolean deleteById(Long id) throws DaoException {
-        return false;
+        try (PreparedStatement statement = connection.prepareStatement(SQL_DELETE_FORM_BY_ID)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Delete form by id exception. id=" + id + e.getMessage());
+            throw new DaoException("Delete form by id exception. id=" + id, e);
+        }
     }
 
     @Override
@@ -84,6 +93,32 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
 
     @Override
     public Optional<MedicineForm> update(MedicineForm medicineForm) throws DaoException {
-        return null;
+        Optional<MedicineForm> oldMedicineForm = findById(medicineForm.getId());
+        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_FORM_BY_NAME)) {
+            statement.setString(1, medicineForm.getName());
+            statement.setString(2, medicineForm.getUnit().name());
+            return statement.executeUpdate() == ONE_UPDATED ? oldMedicineForm : Optional.empty();
+        } catch (SQLException e) {
+            LOGGER.error("Update form by id exception. " + e.getMessage());
+            throw new DaoException("Update form by id exception. ", e);
+        }
+    }
+
+    @Override
+    public boolean existFormName(String name) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_FORM_BY_NAME)) {
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                MedicineFormRowMapper mapper = MedicineFormRowMapper.getInstance();
+                Optional<MedicineForm> currentFormOptional = Optional.empty();
+                if (resultSet.next()) {
+                    currentFormOptional = mapper.mapRow(resultSet);
+                }
+                return currentFormOptional.isPresent();
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Checking exists form name exception. name=" + name + e.getMessage());
+            throw new DaoException("Checking exists form name exception. name=" + name, e);
+        }
     }
 }

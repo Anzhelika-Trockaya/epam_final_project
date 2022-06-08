@@ -4,7 +4,9 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.dao.EntityTransaction;
 import com.epam.pharmacy.model.dao.impl.InternationalMedicineNameDaoImpl;
+import com.epam.pharmacy.model.dao.impl.MedicineDaoImpl;
 import com.epam.pharmacy.model.entity.InternationalMedicineName;
+import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.service.InternationalNameService;
 import com.epam.pharmacy.validator.DataValidator;
 import com.epam.pharmacy.validator.impl.DataValidatorImpl;
@@ -19,38 +21,74 @@ public class InternationalNameServiceImpl implements InternationalNameService {
 
     @Override
     public boolean create(String name) throws ServiceException {
-        return false;
+        DataValidator dataValidator = DataValidatorImpl.getInstance();
+        if (!dataValidator.isCorrectInternationalName(name)) {
+            return false;
+        }
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(internationalNameDao);
+            if (internationalNameDao.existInternationalName(name)) {
+                return false;
+            }
+            InternationalMedicineName internationalMedicineName = new InternationalMedicineName(name);
+            return internationalNameDao.create(internationalMedicineName);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when create international name. Name = " + name + e);
+            throw new ServiceException("Exception when create international name. Name = " + name, e);
+        }
     }
 
     @Override
-    public boolean delete(String id) throws ServiceException {
-        return false;
+    public boolean delete(String idString) throws ServiceException {
+        long id;
+        try {
+            id = Long.parseLong(idString);
+        } catch (NumberFormatException e) {
+            LOGGER.error("Exception when delete international name. Incorrect id=" + idString);
+            return false;
+        }
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao, internationalNameDao);
+            List<Medicine> medicinesWithInternationalName = medicineDao.findByInternationalNameId(id);
+            if(!medicinesWithInternationalName.isEmpty()){
+                return false;
+            }
+            return internationalNameDao.deleteById(id);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when delete international name. id = " + id + e);
+            throw new ServiceException("Exception when delete international name. id = " + id, e);
+        }
     }
 
     @Override
     public Optional<InternationalMedicineName> update(String idString, String name) throws ServiceException {
         DataValidator dataValidator = DataValidatorImpl.getInstance();
-        Optional<InternationalMedicineName> nameOptional = Optional.empty();
-        if(!dataValidator.isCorrectInternationalName(name) || !dataValidator.isCorrectId(idString)){
-            LOGGER.error("Exception when update international name. Incorrect data: id=" + idString+" name="+name);
-            return nameOptional;
+        if (!dataValidator.isCorrectInternationalName(name) || !dataValidator.isCorrectId(idString)) {
+            LOGGER.error("Exception when update international name. Incorrect data: id=" + idString + " name=" + name);
+            return Optional.empty();
         }
         long id;
-        try{
-            id=Long.parseLong(idString);
-            LOGGER.error("Exception when update international name. Incorrect data: id=" + idString+" name="+name);
+        try {
+            id = Long.parseLong(idString);
         } catch (NumberFormatException e) {
-            return nameOptional;
+            LOGGER.error("Exception when update international name. Incorrect data: id=" + idString + " name=" + name);
+            return Optional.empty();
         }
         InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(internationalNameDao);
-            //fixme check existing name!!!!!
+            if (internationalNameDao.existInternationalName(name)) {
+                return Optional.empty();
+            }
             InternationalMedicineName internationalMedicineName = new InternationalMedicineName(id, name);
             return internationalNameDao.update(internationalMedicineName);
         } catch (DaoException e) {
-            LOGGER.error("Exception when update international name. id="+idString+", new name = "+name + e);
-            throw new ServiceException("Exception when find all international names. id="+idString+", new name = "+name, e);
+            LOGGER.error("Exception when update international name. id=" + idString + ", new name = " + name + e);
+            throw new ServiceException("Exception when update international name. id=" + idString + ", new name = " +
+                    name, e);
         }
     }
 

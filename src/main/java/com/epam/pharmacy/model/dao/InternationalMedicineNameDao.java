@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface InternationalMedicineNameDao {
 
+    boolean existInternationalName(String name) throws DaoException;
 }

@@ -7,7 +7,6 @@ import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Map;
 
 public class DataValidatorImpl implements DataValidator {
@@ -16,7 +15,7 @@ public class DataValidatorImpl implements DataValidator {
     private static final String USER_STATE_REGEX = "(ACTIVE|BLOCKED)";
     private static final String SEX_REGEX = "(MALE|FEMALE)";
     private static final String USER_ROLE_REGEX = "(ADMIN|PHARMACIST|DOCTOR|CUSTOMER)";
-    private static final String USER_ADDRESS_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ/,_:;.'\"-]+";
+    private static final String ADDRESS_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ/,_:;.'\"-]+";
     private static final String USER_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ-]{0,44}";
     private static final String USER_LOGIN_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}";
     private static final String USER_PASSWORD_REGEX = "(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яё])(?=.*[A-ZА-ЯЁ])[A-ZА-ЯЁa-zа-яё0-9!@#$%^&*]{6,45}";
@@ -26,7 +25,11 @@ public class DataValidatorImpl implements DataValidator {
     private static final String INTEGER_REGEX = "[1-9]\\d{0,9}";
     private static final String DOSAGE_UNIT_REGEX = "(MILLILITER|MILLIGRAM|GRAM|MICROGRAM|ME|NANOGRAM)";
     private static final String PRICE_REGEX = "\\d{1,20}(.\\d{2})?";
-    private static final String INTERNATIONAL_NAME_REGEX = "[A-Z][a-zA-Z-]{0,99}";
+    private static final String INTERNATIONAL_NAME_REGEX = "[A-Z][a-zA-Z- ]{0,99}";
+    private static final String MANUFACTURER_NAME_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ/,_:;.'\"-&]{1,45}";
+    private static final String COUNTRY_REGEX = "[a-zA-Zа-яА-ЯёЁ.'-]{1,45}";
+    private static final String FORM_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁ/,_:;.'\"-]{1,100}";
+    private static final String FORM_UNIT_REGEX = "(PIECES|TABLES|MILLILITERS)";
 
     private DataValidatorImpl() {
     }
@@ -161,8 +164,9 @@ public class DataValidatorImpl implements DataValidator {
         return result;
     }
 
-    private boolean isCorrectAddress(String address) {
-        return address!=null && address.matches(USER_ADDRESS_REGEX);
+    @Override
+    public boolean isCorrectAddress(String address) {
+        return address != null && address.matches(ADDRESS_REGEX);
     }
 
     @Override
@@ -268,5 +272,23 @@ public class DataValidatorImpl implements DataValidator {
         return name != null && name.matches(INTERNATIONAL_NAME_REGEX);
     }
 
+    @Override
+    public boolean isCorrectManufacturerName(String name) {
+        return name != null && name.matches(MANUFACTURER_NAME_REGEX);
+    }
 
+    @Override
+    public boolean isCorrectCountry(String country) {
+        return country != null && country.matches(COUNTRY_REGEX);
+    }
+
+    @Override
+    public boolean isCorrectFormName(String name) {
+        return name != null && name.matches(FORM_NAME_REGEX);
+    }
+
+    @Override
+    public boolean isCorrectFormUnit(String unit) {
+        return unit != null && unit.matches(FORM_UNIT_REGEX);
+    }
 }

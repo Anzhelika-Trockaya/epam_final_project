@@ -125,3 +125,10 @@ tr:nth-child(even) {background-color: #f2f2f2}
 .uppercase{
     text-transform: uppercase;
 }
+.center_table{
+    margin: auto;
+}
+.data_table{
+    margin: 20px;
+}
+.data_table tr:nth-child(even) {background-color: lightgrey}

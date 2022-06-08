@@ -8,6 +8,9 @@
 <fmt:message key="international_names.enter_international_name" var="enter_international_name"/>
 <fmt:message key="action.add" var="add"/>
 <fmt:message key="action.edit" var="edit"/>
+<fmt:message key="action.delete" var="delete"/>
+<fmt:message key="international_names.incorrect_international_name" var="msg_text_incorrect_intern_name"/>
+<fmt:message key="international_names.international_name_already_exists" var="msg_text_intern_name_exists"/>
 <html>
 <head>
     <title>${page_title}</title>
@@ -29,27 +32,66 @@
         <h4>${empty_msg}</h4>
     </c:if>
     <br/>
-    <table class="table">
+    <table class="center_table">
         <tbody>
         <tr>
-            <form action="${context_path}/controller">
+            <form name="add_intern_name_form" action="${context_path}/controller" method="post"
+                  onsubmit="return validate(this['name'], 'incorrect_new_msg')">
                 <input type="hidden" name="command" value="add_international_name"/>
-                <input type="text" name="name" placeholder="${enter_international_name}"/>
-                <input type="submit" value="${add}">
+                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_international_name}"/></td>
+                <td><input type="submit" value="${add}"></td>
+                <td></td>
             </form>
+        </tr>
+        <tr>
+            <td colspan="3"><p id="incorrect_new_msg" class="incorrect_data_msg"></p><br/></td>
         </tr>
         <c:forEach var="international_name" items="${international_names_list}">
             <tr>
-                <form action="${context_path}/controller" method="post">
+                <form action="${context_path}/controller" method="post"
+                      onsubmit="return validate(this['name'], 'incorrect_msg_${international_name.id}')">
                     <input type="hidden" name="command" value="edit_international_name">
                     <input type="hidden" name="international_name_id" value="${international_name.id}"/>
-                    <input type="text" name="name" value="${international_name.internationalName}"/>
-                    <input type="submit" value="${edit}">
+                    <td><input type="text" style="width: 400px" name="name" value="${international_name.internationalName}"/></td>
+                    <td><input type="submit" value="${edit}"></td>
                 </form>
+                <form action="${context_path}/controller" method="post">
+                    <input type="hidden" name="command" value="delete_international_name">
+                    <input type="hidden" name="international_name_id" value="${international_name.id}"/>
+                    <td><input type="submit" value="${delete}"></td>
+                </form>
+            </tr>
+            <tr>
+                <td colspan="3"><p id='incorrect_msg_${international_name.id}' class="incorrect_data_msg"></p><br/></td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
 </div>
 </body>
+<script>
+    const internationalNamePattern = /^[A-Z][a-zA-Z-' ]{0,99}$/;
+
+    function validate(nameInput, msgPlaceId) {
+        return validatePatternMismatch(nameInput, internationalNamePattern, msgPlaceId, "${msg_text_incorrect_intern_name}");
+    }
+
+    function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
+        const value = input.value;
+        if (!pattern.test(value)) {
+            makeInputIncorrect(msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(msgPlaceId);
+        return true;
+    }
+
+    function makeInputIncorrect(msgPlaceId, msg) {
+        document.getElementById(msgPlaceId).innerHTML = msg;
+    }
+
+    function makeInputCorrect(msgPlaceId) {
+        document.getElementById(msgPlaceId).innerHTML = "";
+    }
+</script>
 </html>

@@ -9,24 +9,21 @@ public class Manufacturer extends CustomEntity implements Serializable {
     private final long id;
     private String name;
     private String country;
-    private String address;
 
     public Manufacturer() {
         id = DEFAULT_ID;
     }
 
-    public Manufacturer(String name, String country, String address) {
+    public Manufacturer(String name, String country) {
         id = DEFAULT_ID;
         this.name = name;
         this.country = country;
-        this.address = address;
     }
 
-    public Manufacturer(long id, String name, String country, String address) {
+    public Manufacturer(long id, String name, String country) {
         this.id = id;
         this.name = name;
         this.country = country;
-        this.address = address;
     }
 
     public long getId() {
@@ -49,25 +46,17 @@ public class Manufacturer extends CustomEntity implements Serializable {
         this.country = country;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Manufacturer that = (Manufacturer) o;
-        return id == that.id && Objects.equals(name, that.name) && Objects.equals(country, that.country) && Objects.equals(address, that.address);
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(country, that.country);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, country, address);
+        return Objects.hash(id, name, country);
     }
 
     @Override
@@ -76,7 +65,6 @@ public class Manufacturer extends CustomEntity implements Serializable {
                 append("id=").append(id).
                 append(", name='").append(name).append('\'').
                 append(", country='").append(country).append('\'').
-                append(", address='").append(address).append('\'').
                 append('}').toString();
     }
 }

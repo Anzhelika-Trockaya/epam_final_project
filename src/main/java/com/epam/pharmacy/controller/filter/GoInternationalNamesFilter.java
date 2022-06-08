@@ -2,20 +2,18 @@ package com.epam.pharmacy.controller.filter;
 
 import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.controller.RequestFiller;
-import com.epam.pharmacy.controller.command.CommandType;
-import com.epam.pharmacy.controller.command.GoHomePageCommand;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "GoHomeFilter", urlPatterns = "/jsp/home.jsp", dispatcherTypes = DispatcherType.REQUEST)
-public class GoHomeFilter implements Filter {
+@WebFilter(filterName = "GoInternationalNamesFilter", urlPatterns = "/jsp/pharmacist/international_names.jsp",
+        dispatcherTypes = DispatcherType.REQUEST)
+public class GoInternationalNamesFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
@@ -25,10 +23,11 @@ public class GoHomeFilter implements Filter {
         try {
             requestFiller.addInternationalNames(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page home.jsp" + e);
-            throw new ServletException("Exception when fill page home.jsp", e);
+            LOGGER.error("Exception when fill page international_names.jsp" + e);
+            throw new ServletException("Exception when fill page international_names.jsp", e);
         }
-        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_ADDED);
+        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_CHANGE_MESSAGE);
+        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.FAILED_CHANGE_MESSAGE);
         chain.doFilter(request, response);
     }
 }

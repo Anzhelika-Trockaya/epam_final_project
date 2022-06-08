@@ -36,8 +36,7 @@ public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
             long id = resultSet.getLong(MANUFACTURER_ID);
             String name = resultSet.getString(MANUFACTURER_NAME);
             String country = resultSet.getString(MANUFACTURER_COUNTRY);
-            String address = resultSet.getString(MANUFACTURER_ADDRESS);
-            Manufacturer manufacturer=new Manufacturer(id, name, country, address);
+            Manufacturer manufacturer=new Manufacturer(id, name, country);
             optionalManufacturer = Optional.of(manufacturer);
         } catch (SQLException e) {
             LOGGER.warn("Exception when map manufacturer row. ", e);

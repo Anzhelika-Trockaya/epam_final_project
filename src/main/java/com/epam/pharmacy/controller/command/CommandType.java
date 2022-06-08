@@ -24,6 +24,7 @@ public enum CommandType {
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
     EDIT_INTERNATIONAL_NAME(new EditInternationalNameCommand()),
     DELETE_USER(new DeleteUserCommand()),
+    DELETE_INTERNATIONAL_NAME(new DeleteInternationalNameCommand()),
     DEFAULT(new DefaultCommand()),
     LOGOUT(new LogoutCommand()),
     REGISTER(new RegisterCommand()),

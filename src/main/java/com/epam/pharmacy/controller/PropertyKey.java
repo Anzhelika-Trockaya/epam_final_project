@@ -31,6 +31,8 @@ public final class PropertyKey {
     public static final String INTERNATIONAL_NAMES_NOT_ADDED="international_names.not_added";
     public static final String INTERNATIONAL_NAMES_EDITED= "international_names.edited";
     public static final String INTERNATIONAL_NAMES_NOT_EDITED="international_names.not_edited";
+    public static final String INTERNATIONAL_NAMES_DELETED = "international_names.deleted";
+    public static final Object INTERNATIONAL_NAMES_NOT_DELETED = "international_names.not_deleted";
 
     private PropertyKey(){}
 }

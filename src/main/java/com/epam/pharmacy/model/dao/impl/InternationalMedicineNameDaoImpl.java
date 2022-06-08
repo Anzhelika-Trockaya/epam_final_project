@@ -29,8 +29,14 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
             "SELECT international_medicine_name_id, international_medicine_name FROM international_medicines_names " +
                     "WHERE international_medicine_name_id = ?";
     private static final String SQL_UPDATE_INTERNATIONAL_NAME_BY_ID =
-            "UPDATE international_medicines_names SET international_medicine_name = (?) " +
-                    "WHERE international_medicine_name_id = (?)";
+            "UPDATE international_medicines_names SET international_medicine_name = ? " +
+                    "WHERE international_medicine_name_id = ?";
+    private static final String SQL_SELECT_INTERNATIONAL_NAME_BY_NAME =
+            "SELECT international_medicine_name_id, international_medicine_name FROM international_medicines_names " +
+                    "WHERE international_medicine_name = ?";
+    private static final String SQL_DELETE_INTERNATIONAL_NAME_BY_ID =
+            "DELETE FROM international_medicines_names WHERE international_medicine_name_id = ?";
+
 
     @Override
     public boolean create(InternationalMedicineName internationalMedicineName) throws DaoException {
@@ -46,7 +52,13 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
 
     @Override
     public boolean deleteById(Long id) throws DaoException {
-        return false;
+        try (PreparedStatement statement = connection.prepareStatement(SQL_DELETE_INTERNATIONAL_NAME_BY_ID)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Delete international name by id exception. id="+id + e.getMessage());
+            throw new DaoException("Delete international name by id exception. id="+id, e);
+        }
     }
 
     @Override
@@ -89,14 +101,32 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
 
     @Override
     public Optional<InternationalMedicineName> update(InternationalMedicineName internationalMedicineName) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_INTERNATIONAL_NAME_BY_ID)) {
-            Optional<InternationalMedicineName> medicineName = findById(internationalMedicineName.getId());
+        Optional<InternationalMedicineName> oldMedicineName = findById(internationalMedicineName.getId());
+        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_INTERNATIONAL_NAME_BY_ID)) {
             statement.setString(1, internationalMedicineName.getInternationalName());
             statement.setLong(2, internationalMedicineName.getId());
-            return statement.executeUpdate() == ONE_UPDATED ? medicineName : Optional.empty();
+            return statement.executeUpdate() == ONE_UPDATED ? oldMedicineName : Optional.empty();
         } catch (SQLException e) {
             LOGGER.error("Update international name by id exception. " + e.getMessage());
             throw new DaoException("Update international name by id exception. ", e);
+        }
+    }
+
+    @Override
+    public boolean existInternationalName(String name) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_INTERNATIONAL_NAME_BY_NAME)) {
+            statement.setString(1, name);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                InternationalNameRowMapper mapper = InternationalNameRowMapper.getInstance();
+                Optional<InternationalMedicineName> currentInternationalNameOptional = Optional.empty();
+                if (resultSet.next()) {
+                    currentInternationalNameOptional = mapper.mapRow(resultSet);
+                }
+                return currentInternationalNameOptional.isPresent();
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Checking exists international name exception. " + e.getMessage());
+            throw new DaoException("Checking exists international name exception. ", e);
         }
     }
 }

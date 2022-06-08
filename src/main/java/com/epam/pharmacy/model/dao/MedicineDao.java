@@ -10,5 +10,9 @@ public interface MedicineDao {
 
     List<Medicine> findByInternationalNameId(long id) throws DaoException;
 
+    List<Medicine> findByManufacturerId(long id) throws DaoException;
+
+    List<Medicine> findByFormId(long id) throws DaoException;
+
     boolean updateTotalParts();
 }

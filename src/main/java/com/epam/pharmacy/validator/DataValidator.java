@@ -23,6 +23,8 @@ public interface DataValidator {
 
     boolean isCorrectRegisterData(Map<String, String> userData);
 
+    boolean isCorrectAddress(String address);
+
     boolean isCorrectId(String id);
 
     boolean isCorrectState(String state);
@@ -36,4 +38,12 @@ public interface DataValidator {
     boolean isCorrectPrice(String price);
 
     boolean isCorrectInternationalName(String name);
+
+    boolean isCorrectManufacturerName(String name);
+
+    boolean isCorrectCountry(String country);
+
+    boolean isCorrectFormName(String name);
+
+    boolean isCorrectFormUnit(String unit);
 }
