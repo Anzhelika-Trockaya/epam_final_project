@@ -2,13 +2,10 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.CommandType;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineService;
 import com.epam.pharmacy.model.service.ServiceProvider;
-import com.epam.pharmacy.validator.DataValidator;
-import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +31,7 @@ public class AddMedicineCommand implements Command {
         try {
             medicineData.put(MEDICINE_IMAGE_LINK, link);
             boolean isCreated = medicineService.create(medicineData);
-            router = new Router(PagePath.ADD_MEDICINES);
+            router = new Router(PagePath.ADD_MEDICINE);
             if (isCreated) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.SUCCESSFUL_ADDED, Boolean.TRUE.toString());
@@ -47,7 +44,7 @@ public class AddMedicineCommand implements Command {
                 requestFiller.addInternationalNames(request);
             }
         } catch (ServiceException e) {
-            LOGGER.error("Exception in the AddMedicineCommand" + e);
+            LOGGER.error("Exception in the AddMedicineCommand", e);
             throw new CommandException("Exception in the AddMedicineCommand", e);
         }
         return router;

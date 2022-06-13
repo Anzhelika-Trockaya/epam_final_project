@@ -25,7 +25,7 @@ public class GoHomeFilter implements Filter {
         try {
             requestFiller.addInternationalNames(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page home.jsp" + e);
+            LOGGER.error("Exception when fill page home.jsp", e);
             throw new ServletException("Exception when fill page home.jsp", e);
         }
         requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_ADDED);

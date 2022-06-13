@@ -22,7 +22,7 @@ public class GoUsersFilter implements Filter {
         try {
             requestFiller.addUsers(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page users.jsp" + e);
+            LOGGER.error("Exception when fill page users.jsp", e);
             throw new ServletException("Exception when fill page users.jsp", e);
         }
         requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_CHANGE_MESSAGE);

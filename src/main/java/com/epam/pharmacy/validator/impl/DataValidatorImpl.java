@@ -22,12 +22,12 @@ public class DataValidatorImpl implements DataValidator {
     private static final String DATE_REGEX = "[1-2]\\d{3}-[0-1]\\d-[0-3]\\d";
     private static final String PHONE_REGEX = "\\+375(33|29|25|44)\\d{7}";
     private static final String LANGUAGE_REGEX = "(be_BY|en_US)";
-    private static final String INTEGER_REGEX = "[1-9]\\d{0,9}";
+    private static final String QUANTITY_REGEX = "[1-9]\\d{0,8}";
     private static final String DOSAGE_UNIT_REGEX = "(MILLILITER|MILLIGRAM|GRAM|MICROGRAM|ME|NANOGRAM)";
     private static final String PRICE_REGEX = "\\d{1,20}(.\\d{2})?";
-    private static final String INTERNATIONAL_NAME_REGEX = "[A-Z][a-zA-Z- ]{0,99}";
-    private static final String MANUFACTURER_NAME_REGEX = "[a-zA-Z0-9а-яА-ЯёЁ/,_:;.'\"-&]{1,45}";
-    private static final String COUNTRY_REGEX = "[a-zA-Zа-яА-ЯёЁ.'-]{1,45}";
+    private static final String INTERNATIONAL_NAME_REGEX = "[A-Z][a-zA-Z-\\s]{0,99}";
+    private static final String MANUFACTURER_NAME_REGEX = "[A-ZА-ЯЁ][a-zA-Z0-9а-яА-ЯёЁ/,_:;.'\"-&\\s]{0,44}";
+    private static final String COUNTRY_REGEX = "[A-ZА-ЯЁ][a-zA-Zа-яА-ЯёЁ.'\\s-]{0,44}";
     private static final String FORM_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁ/,_:;.'\"-]{1,100}";
     private static final String FORM_UNIT_REGEX = "(PIECES|TABLES|MILLILITERS)";
 
@@ -214,19 +214,19 @@ public class DataValidatorImpl implements DataValidator {
             result = false;
             medicineData.put(INCORRECT_FORM, ADDING_MEDICINE_INCORRECT_FORM);
         }
-        if (!isCorrectInteger(dosage)) {
+        if (!isCorrectQuantity(dosage)) {
             result = false;
             medicineData.put(INCORRECT_DOSAGE, ADDING_MEDICINE_INCORRECT_NOT_INTEGER);
         }
-        if (!isCorrectInteger(amountInPart)) {
+        if (!isCorrectQuantity(amountInPart)) {
             result = false;
             medicineData.put(INCORRECT_AMOUNT_IN_PART, ADDING_MEDICINE_INCORRECT_NOT_INTEGER);
         }
-        if (!isCorrectInteger(partsInPackage)) {
+        if (!isCorrectQuantity(partsInPackage)) {
             result = false;
             medicineData.put(INCORRECT_PARTS_IN_PACKAGE, ADDING_MEDICINE_INCORRECT_NOT_INTEGER);
         }
-        if (!isCorrectInteger(totalParts)) {
+        if (!isCorrectQuantity(totalParts)) {
             result = false;
             medicineData.put(INCORRECT_TOTAL_PARTS, ADDING_MEDICINE_INCORRECT_NOT_INTEGER);
         }
@@ -253,8 +253,8 @@ public class DataValidatorImpl implements DataValidator {
     }
 
     @Override
-    public boolean isCorrectInteger(String value) {
-        return value != null && value.matches(INTEGER_REGEX);
+    public boolean isCorrectQuantity(String value) {
+        return value != null && value.matches(QUANTITY_REGEX);
     }
 
     @Override

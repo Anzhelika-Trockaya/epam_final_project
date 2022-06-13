@@ -37,7 +37,7 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
             statement.setString(2, medicineForm.getUnit().name());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding medicine form exception. " + e.getMessage());
+            LOGGER.error("Adding medicine form exception. ", e);
             throw new DaoException("Adding medicine form exception. ", e);
         }
     }
@@ -48,7 +48,7 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
             statement.setLong(1, id);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Delete form by id exception. id=" + id + e.getMessage());
+            LOGGER.error("Delete form by id exception. id=" + id, e);
             throw new DaoException("Delete form by id exception. id=" + id, e);
         }
     }
@@ -65,8 +65,8 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
                 currentFormOptional.ifPresent(forms::add);
             }
         } catch (SQLException e) {
-            LOGGER.error("Find all medicine forms exception. " + e.getMessage());
-            throw new DaoException("Find all medicine forms exception. ", e);
+            LOGGER.error("Find all medicine forms exception.", e);
+            throw new DaoException("Find all medicine forms exception.", e);
         }
         return forms;
     }
@@ -86,8 +86,8 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
                 return formOptional;
             }
         } catch (SQLException e) {
-            LOGGER.error("Find form by id exception. " + e.getMessage());
-            throw new DaoException("Find form by id exception. ", e);
+            LOGGER.error("Find form by id exception.", e);
+            throw new DaoException("Find form by id exception.", e);
         }
     }
 
@@ -97,10 +97,11 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
         try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_FORM_BY_NAME)) {
             statement.setString(1, medicineForm.getName());
             statement.setString(2, medicineForm.getUnit().name());
+            statement.setLong(3, medicineForm.getId());
             return statement.executeUpdate() == ONE_UPDATED ? oldMedicineForm : Optional.empty();
         } catch (SQLException e) {
-            LOGGER.error("Update form by id exception. " + e.getMessage());
-            throw new DaoException("Update form by id exception. ", e);
+            LOGGER.error("Update form by id exception.", e);
+            throw new DaoException("Update form by id exception.", e);
         }
     }
 
@@ -117,7 +118,7 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
                 return currentFormOptional.isPresent();
             }
         } catch (SQLException e) {
-            LOGGER.error("Checking exists form name exception. name=" + name + e.getMessage());
+            LOGGER.error("Checking exists form name exception. name=" + name, e);
             throw new DaoException("Checking exists form name exception. name=" + name, e);
         }
     }

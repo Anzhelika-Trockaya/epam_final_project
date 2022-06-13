@@ -1,5 +1,6 @@
 package com.epam.pharmacy.controller.filter;
 
+import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.controller.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.*;
@@ -10,10 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-import static com.epam.pharmacy.controller.AttributeName.*;
-
-@WebFilter(filterName = "GoToAddingMedicineFilter", urlPatterns = "/jsp/pharmacist/adding_medicine.jsp", dispatcherTypes = DispatcherType.REQUEST)
-public class GoAddingMedicineFilter implements Filter {
+@WebFilter(filterName = "GoManufacturersFilter", urlPatterns = "/jsp/pharmacist/manufacturers.jsp",
+        dispatcherTypes = DispatcherType.REQUEST)
+public class GoManufacturersFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
@@ -22,13 +22,12 @@ public class GoAddingMedicineFilter implements Filter {
         RequestFiller requestFiller = RequestFiller.getInstance();
         try {
             requestFiller.addManufacturers(httpServletRequest);
-            requestFiller.addForms(httpServletRequest);
-            requestFiller.addInternationalNames(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page adding_medicine.jsp", e);
-            throw new ServletException("Exception when fill page adding_medicine.jsp", e);
+            LOGGER.error("Exception when fill page manufacturers.jsp", e);
+            throw new ServletException("Exception when fill page manufacturers.jsp", e);
         }
-        requestFiller.moveSessionAttributeToRequest(httpServletRequest,  SUCCESSFUL_ADDED);
+        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_CHANGE_MESSAGE);
+        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.FAILED_CHANGE_MESSAGE);
         chain.doFilter(request, response);
     }
 }

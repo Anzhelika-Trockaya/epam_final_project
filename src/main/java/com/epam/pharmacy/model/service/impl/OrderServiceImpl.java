@@ -26,17 +26,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public boolean addToCart(long customerId, String medicineIdString, String quantityString) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        if (!validator.isCorrectId(medicineIdString) || !validator.isCorrectInteger(quantityString)) {
+        if (!validator.isCorrectQuantity(quantityString)) {
             return false;
         }
-        long medicineId;
-        int quantity;
-        try {
-            medicineId = Long.parseLong(medicineIdString);
-            quantity = Integer.parseInt(quantityString);
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        long medicineId = Long.parseLong(medicineIdString);
+        int quantity = Integer.parseInt(quantityString);
         boolean result = false;
         UserDaoImpl userDao = new UserDaoImpl();
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
@@ -59,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
             }
         } catch (DaoException e) {
             LOGGER.error("Adding to cart exception. customerId=" + customerId +
-                    " medicineId=" + medicineIdString + " quantity=" + quantityString + e.getMessage());
+                    " medicineId=" + medicineIdString + " quantity=" + quantityString, e);
             throw new ServiceException("Adding to cart exception. customerId=" + customerId +
                     " medicineId=" + medicineIdString + " quantity=" + quantityString, e);
         }
@@ -73,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
             long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
             return orderDao.findOrderPositions(cartOrderId);
         }catch (DaoException e) {
-            LOGGER.error("Finding cart positions exception. customerId=" + customerId + e.getMessage());
+            LOGGER.error("Finding cart positions exception. customerId=" + customerId, e);
             throw new ServiceException("Finding cart positions exception. customerId=" + customerId, e);
         }
     }
@@ -86,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
             long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
             return orderDao.findOrderMedicineIdAndQuantity(cartOrderId);
         }catch (DaoException e) {
-            LOGGER.error("Finding cart content exception. customerId=" + customerId + e.getMessage());
+            LOGGER.error("Finding cart content exception. customerId=" + customerId, e);
             throw new ServiceException("Finding cart content exception. customerId=" + customerId, e);
         }
     }

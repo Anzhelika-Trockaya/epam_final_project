@@ -29,12 +29,15 @@ public class SearchMedicineCommand implements Command {
         String name = request.getParameter(SEARCH_MEDICINE_NAME);
         try {
             List<Medicine> medicines = medicineService.findByName(name);
-            RequestFiller.getInstance().addInternationalNames(request);
+            RequestFiller requestFiller = RequestFiller.getInstance();
+            requestFiller.addInternationalNames(request);
+            requestFiller.addForms(request);
+            requestFiller.addManufacturers(request);
             request.setAttribute(AttributeName.MEDICINES_LIST, medicines);
             request.setAttribute(AttributeName.SHOW_SEARCH_RESULT, true);
             return new Router(PagePath.HOME);
         } catch (ServiceException e) {
-            LOGGER.error("Exception in the SearchMedicineCommand" + e);
+            LOGGER.error("Exception in the SearchMedicineCommand", e);
             throw new CommandException("Exception in the SearchMedicineCommand", e);
         }
     }

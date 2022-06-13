@@ -32,7 +32,7 @@ public class RequestFiller {
             List<MedicineForm> formsList = formService.findAll();
             request.setAttribute(AttributeName.FORMS_LIST, formsList);
         } catch (ServiceException e) {
-            LOGGER.error("Exception when fill forms " + e);
+            LOGGER.error("Exception when fill forms ", e);
             throw new CommandException("Exception when fill forms  ", e);
         }
     }
@@ -44,7 +44,7 @@ public class RequestFiller {
             List<InternationalMedicineName> internationalNamesList = internationalNameService.findAll();
             request.setAttribute(AttributeName.INTERNATIONAL_NAMES_LIST, internationalNamesList);
         } catch (ServiceException e) {
-            LOGGER.error("Exception when fill international names " + e);
+            LOGGER.error("Exception when fill international names " , e);
             throw new CommandException("Exception when fill international names ", e);
         }
     }
@@ -56,7 +56,7 @@ public class RequestFiller {
             List<Medicine> medicinesList = medicineService.findAll();
             request.setAttribute(AttributeName.MEDICINES_LIST, medicinesList);
         } catch (ServiceException e) {
-            LOGGER.error("Exception when fill medicines " + e);
+            LOGGER.error("Exception when fill medicines " , e);
             throw new CommandException("Exception when fill medicines ", e);
         }
     }
@@ -68,7 +68,7 @@ public class RequestFiller {
             List<Manufacturer> manufacturersList = manufacturerService.findAll();
             request.setAttribute(AttributeName.MANUFACTURERS_LIST, manufacturersList);
         } catch (ServiceException e) {
-            LOGGER.error("Exception when fill manufacturers " + e);
+            LOGGER.error("Exception when fill manufacturers " , e);
             throw new CommandException("Exception when fill manufacturers", e);
         }
     }
@@ -80,7 +80,7 @@ public class RequestFiller {
             List<User> listUsers = userService.findAll();
             request.setAttribute(AttributeName.USERS_LIST, listUsers);
         } catch (ServiceException e) {
-            LOGGER.error("Exception when fill users " + e);
+            LOGGER.error("Exception when fill users " , e);
             throw new CommandException("Exception when fill users ", e);
         }
     }

@@ -3,18 +3,18 @@
         <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-        <a href="${pageContext.request.contextPath}/controller?command=go_change_medicines_page">
+        <a href="${pageContext.request.contextPath}/controller?command=go_medicines_page">
             ${edit_medicines_nav_title}
         </a>
-        <a href="${pageContext.request.contextPath}/controller?command=go_change_international_names_page">
+        <a href="${pageContext.request.contextPath}/controller?command=go_international_names_page">
             ${edit_international_names_nav_title}
         </a>
-        <a href="${pageContext.request.contextPath}/controller?command=go_change_manufacturers_page">
+        <a href="${pageContext.request.contextPath}/controller?command=go_manufacturers_page">
             ${edit_manufacturers_nav_title}
         </a>
-        <a href="${pageContext.request.contextPath}/controller?command=go_change_forms_page">
+        <a href="${pageContext.request.contextPath}/controller?command=go_forms_page">
             ${edit_forms_nav_title}
         </a>
     </div>
 </div>
-<a href="${pageContext.request.contextPath}/controller?command=go_change_orders_page">${orders_nav_title}</a>
+<a href="${pageContext.request.contextPath}/controller?command=go_orders_page">${orders_nav_title}</a>

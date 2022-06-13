@@ -22,12 +22,12 @@ public class MedicineServiceImpl implements MedicineService {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public boolean create(Map<String, String> medicineData) throws ServiceException {
+    public boolean create(Map<String, String> data) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        if (!validator.isCorrectMedicineData(medicineData)) {
+        if (!validator.isCorrectMedicineData(data)) {
             return false;
         }
-        Medicine medicine = buildMedicine(medicineData);
+        Medicine medicine = buildMedicine(data);
         InternationalMedicineNameDaoImpl internationalMedicineNameDao = new InternationalMedicineNameDaoImpl();
         ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
         MedicineFormDaoImpl medicineFormDao = new MedicineFormDaoImpl();
@@ -36,15 +36,15 @@ public class MedicineServiceImpl implements MedicineService {
             transaction.beginWithAutoCommit(internationalMedicineNameDao, manufacturerDao, medicineFormDao, medicineDao);
             boolean result = true;
             if (!internationalMedicineNameDao.findById(medicine.getInternationalNameId()).isPresent()) {
-                medicineData.put(INCORRECT_INTERNATIONAL_NAME, ADDING_MEDICINE_INCORRECT_INTERNATIONAL_NAME);
+                data.put(INCORRECT_INTERNATIONAL_NAME, ADDING_MEDICINE_INCORRECT_INTERNATIONAL_NAME);
                 result = false;
             }
             if (!manufacturerDao.findById(medicine.getManufacturerId()).isPresent()) {
-                medicineData.put(INCORRECT_MANUFACTURER, ADDING_MEDICINE_INCORRECT_MANUFACTURER);
+                data.put(INCORRECT_MANUFACTURER, ADDING_MEDICINE_INCORRECT_MANUFACTURER);
                 result = false;
             }
             if (!medicineFormDao.findById(medicine.getFormId()).isPresent()) {
-                medicineData.put(INCORRECT_FORM, ADDING_MEDICINE_INCORRECT_FORM);
+                data.put(INCORRECT_FORM, ADDING_MEDICINE_INCORRECT_FORM);
                 result = false;
             }
             if (result) {
@@ -52,7 +52,7 @@ public class MedicineServiceImpl implements MedicineService {
             }
             return result;
         } catch (DaoException e) {
-            LOGGER.error("Exception when create medicine" + e);
+            LOGGER.error("Exception when create medicine", e);
             throw new ServiceException("Exception when create medicine", e);
         }
     }
@@ -65,24 +65,12 @@ public class MedicineServiceImpl implements MedicineService {
     @Override
     public Optional<Medicine> findById(String medicineIdString) throws ServiceException {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
-        DataValidator validator = DataValidatorImpl.getInstance();
-        Optional<Medicine> optionalMedicine = Optional.empty();
-        if (!validator.isCorrectId(medicineIdString)) {
-            LOGGER.error("Exception when checked medicine quantity. Incorrect id=" + medicineIdString);
-            return optionalMedicine;
-        }
-        long idValue;
-        try {
-            idValue = Long.parseLong(medicineIdString);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when checked medicine quantity. Incorrect id=" + medicineIdString);
-            return optionalMedicine;
-        }
+        long idValue = Long.parseLong(medicineIdString);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(medicineDao);
             return medicineDao.findById(idValue);
         } catch (DaoException e) {
-            LOGGER.error("Exception when checked medicine quantity." + e);
+            LOGGER.error("Exception when checked medicine quantity.", e);
             throw new ServiceException("Exception when checked medicine quantity.", e);
         }
     }
@@ -92,14 +80,13 @@ public class MedicineServiceImpl implements MedicineService {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isNotEmpty(medicineName)) {
-            LOGGER.error("Exception when finding medicines by name. Incorrect name=" + medicineName);
             return new ArrayList<>();
         }
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(medicineDao);
             return medicineDao.findByName(medicineName.trim().toUpperCase());
         } catch (DaoException e) {
-            LOGGER.error("Exception when checked medicine quantity." + e);
+            LOGGER.error("Exception when checked medicine quantity.", e);
             throw new ServiceException("Exception when checked medicine quantity.", e);
         }
     }
@@ -111,7 +98,7 @@ public class MedicineServiceImpl implements MedicineService {
             transaction.beginWithAutoCommit(medicineDao);
             return medicineDao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("Exception when find all medicines." + e);
+            LOGGER.error("Exception when find all medicines.", e);
             throw new ServiceException("Exception when find all medicines.", e);
         }
     }

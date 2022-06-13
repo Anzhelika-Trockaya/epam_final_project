@@ -32,6 +32,11 @@ public final class ParameterName {
     public static final String IMAGE_PATH = "image_path";
     public static final String SEARCH_MEDICINE_NAME = "search_medicine_name";
     public static final String INTERNATIONAL_NAME_ID="international_name_id";
+    public static final String FORM_UNIT = "form_unit";
+    public static final String FORM_ID = "form_id";
+    public static final String COUNTRY = "country";
+    public static final String MANUFACTURER_ID = "manufacturer_id";
+    public static final String MEDICINE_ID = "medicine_id";
 
     private ParameterName() {
     }

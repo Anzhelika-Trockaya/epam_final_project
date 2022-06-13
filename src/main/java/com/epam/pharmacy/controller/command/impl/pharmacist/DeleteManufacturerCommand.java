@@ -7,36 +7,37 @@ import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
-import com.epam.pharmacy.model.service.InternationalNameService;
+import com.epam.pharmacy.model.service.ManufacturerService;
+import com.epam.pharmacy.model.service.MedicineFormService;
 import com.epam.pharmacy.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.epam.pharmacy.controller.ParameterName.INTERNATIONAL_NAME_ID;
+import static com.epam.pharmacy.controller.ParameterName.MANUFACTURER_ID;
 
-public class DeleteInternationalNameCommand implements Command {
+public class DeleteManufacturerCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String idString = request.getParameter(INTERNATIONAL_NAME_ID);
+        String idString = request.getParameter(MANUFACTURER_ID);
         ServiceProvider provider = ServiceProvider.getInstance();
-        InternationalNameService internationalNameService = provider.getInternationalNameService();
+        ManufacturerService manufacturerService = provider.getManufacturerService();
         try {
-            boolean deleted = internationalNameService.delete(idString);
-            Router router = new Router(PagePath.INTERNATIONAL_NAMES, Router.Type.REDIRECT);
+            boolean deleted = manufacturerService.delete(idString);
+            Router router = new Router(PagePath.MANUFACTURERS, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_DELETED);
+                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_DELETED);
             } else {
-                session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_NOT_DELETED);
+                session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_NOT_DELETED);
             }
             return router;
         } catch (ServiceException e) {
-            LOGGER.error("Exception in the DeleteInternationalNameCommand", e);
-            throw new CommandException("Exception in the DeleteInternationalNameCommand", e);
+            LOGGER.error("Exception in the DeleteManufacturerCommand", e);
+            throw new CommandException("Exception in the DeleteManufacturerCommand", e);
         }
     }
 }

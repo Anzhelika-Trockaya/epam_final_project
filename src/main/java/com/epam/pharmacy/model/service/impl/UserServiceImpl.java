@@ -71,17 +71,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean deleteById(String idString) throws ServiceException {
-        DataValidator validator = DataValidatorImpl.getInstance();
-        if (!validator.isCorrectId(idString)) {
-            return false;
-        }
         UserDaoImpl userDao = new UserDaoImpl();
-        long idValue;
-        try {
-            idValue = Long.parseLong(idString);
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        long idValue = Long.parseLong(idString);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
             return userDao.deleteById(idValue);
@@ -94,16 +85,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changeState(String idString, String stateString) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        if (!validator.isCorrectId(idString) || !validator.isCorrectState(stateString)) {
+        if (!validator.isCorrectState(stateString)) {
             return false;
         }
         UserDaoImpl userDao = new UserDaoImpl();
-        long idValue;
-        try {
-            idValue = Long.parseLong(idString);
-        } catch (NumberFormatException e) {
-            return false;
-        }
+        long idValue = Long.parseLong(idString);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
             Optional<User> optionalUser = userDao.findById(idValue);
@@ -127,7 +113,7 @@ public class UserServiceImpl implements UserService {
             transaction.beginWithAutoCommit(userDao);
             return userDao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("Exception when find all users." + e);
+            LOGGER.error("Exception when find all users.", e);
             throw new ServiceException("Exception when find all users.", e);
         }
     }

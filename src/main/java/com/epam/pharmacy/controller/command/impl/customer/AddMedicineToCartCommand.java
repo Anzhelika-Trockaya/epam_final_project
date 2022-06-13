@@ -41,7 +41,7 @@ public class AddMedicineToCartCommand implements Command {
                 request.setAttribute(AttributeName.FAILED, Boolean.TRUE);
             }
         } catch(ServiceException e){
-            LOGGER.error("Exception in the AddMedicineToCartCommand" + e);
+            LOGGER.error("Exception in the AddMedicineToCartCommand", e);
             throw new CommandException("Exception in the AddMedicineToCartCommand", e);
         }
         return router;

@@ -20,6 +20,7 @@ import java.util.Optional;
 public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
+    private static final char PERCENT = '%';
     private static final String SQL_INSERT_MEDICINE =
             "INSERT INTO medicines (medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
                     "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
@@ -35,20 +36,21 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
                     "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
                     "medicine_instruction, medicine_image_path FROM medicines WHERE medicine_id = ?";
-    private static final String SQL_SELECT_MEDICINE_BY_PART_OF_NAME = "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
-            "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
-            "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
-            "medicine_instruction, medicine_image_path FROM medicines WHERE medicine_name LIKE %?%";
+    private static final String SQL_SELECT_MEDICINE_BY_PART_OF_NAME =
+            "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
+                    "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
+                    "medicine_instruction, medicine_image_path FROM medicines WHERE medicine_name LIKE ?";
     private static final String SQL_SELECT_MEDICINE_BY_INTERNATIONAL_NAME_ID =
             "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
-            "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
-            "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
-            "medicine_instruction, medicine_image_path FROM medicines WHERE international_name_id = ?";
+                    "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
+                    "medicine_instruction, medicine_image_path FROM medicines WHERE international_name_id = ?";
     private static final String SQL_SELECT_MEDICINE_BY_MANUFACTURER_ID =
             "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
-            "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
-            "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
-            "medicine_instruction, medicine_image_path FROM medicines WHERE manufacturer_id = ?";
+                    "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, manufacturer_id, " +
+                    "medicine_instruction, medicine_image_path FROM medicines WHERE manufacturer_id = ?";
     private static final String SQL_SELECT_MEDICINE_BY_FORM_ID =
             "SELECT medicine_id, medicine_name, international_name_id, medicine_price, medicine_total_number_of_parts, " +
                     "medicine_parts_amount_in_package, medicine_amount_in_part, form_id, medicine_dosage, " +
@@ -75,8 +77,8 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             statement.setString(14, medicine.getImagePath());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding medicine exception. " + e.getMessage());
-            throw new DaoException("Adding medicine exception. ", e);
+            LOGGER.error("Adding medicine exception.", e);
+            throw new DaoException("Adding medicine exception.", e);
         }
     }
 
@@ -97,8 +99,8 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                 currentMedicineOptional.ifPresent(medicines::add);
             }
         } catch (SQLException e) {
-            LOGGER.error("Find all medicines exception. " + e.getMessage());
-            throw new DaoException("Find all medicines exception. ", e);
+            LOGGER.error("Find all medicines exception.", e);
+            throw new DaoException("Find all medicines exception.", e);
         }
         return medicines;
     }
@@ -118,7 +120,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                 return medicineOptional;
             }
         } catch (SQLException e) {
-            LOGGER.error("Find medicine by id exception. id=" + id + e.getMessage());
+            LOGGER.error("Find medicine by id exception. id=" + id, e);
             throw new DaoException("Find medicine by id exception. id=" + id, e);
         }
     }
@@ -127,7 +129,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     public List<Medicine> findByName(String name) throws DaoException {
         List<Medicine> medicines = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_PART_OF_NAME)) {
-            statement.setString(1, name);
+            statement.setString(1, PERCENT + name + PERCENT);
             try (ResultSet resultSet = statement.executeQuery()) {
                 MedicineRowMapper mapper = MedicineRowMapper.getInstance();
                 Optional<Medicine> currentMedicineOptional;
@@ -137,7 +139,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("Find medicine by name exception. name=" + name + e.getMessage());
+            LOGGER.error("Find medicine by name exception. name=" + name, e);
             throw new DaoException("Find medicine by name exception. name=" + name, e);
         }
         return medicines;
@@ -149,29 +151,29 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             statement.setLong(1, id);
             return findMedicines(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find medicine by international name exception. international name id =" + id + e.getMessage());
+            LOGGER.error("Find medicine by international name exception. international name id =" + id, e);
             throw new DaoException("Find medicine by international name exception. international name id =" + id, e);
         }
     }
 
     @Override
-    public List<Medicine> findByManufacturerId(long id) throws DaoException{
+    public List<Medicine> findByManufacturerId(long id) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_MANUFACTURER_ID)) {
             statement.setLong(1, id);
             return findMedicines(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find medicine by manufacturer exception. international name id =" + id + e.getMessage());
+            LOGGER.error("Find medicine by manufacturer exception. international name id =" + id, e);
             throw new DaoException("Find medicine by manufacturer exception. international name id =" + id, e);
         }
     }
 
     @Override
-    public List<Medicine> findByFormId(long id) throws DaoException{
+    public List<Medicine> findByFormId(long id) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_FORM_ID)) {
             statement.setLong(1, id);
             return findMedicines(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find medicine by form exception. international name id =" + id + e.getMessage());
+            LOGGER.error("Find medicine by form exception. international name id =" + id, e);
             throw new DaoException("Find medicine by form exception. international name id =" + id, e);
         }
     }
@@ -182,7 +184,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     }
 
     @Override
-    public boolean updateTotalParts(){
+    public boolean updateTotalParts() {
         return false;//fixme
     }
 

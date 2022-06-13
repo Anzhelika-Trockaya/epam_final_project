@@ -6,9 +6,12 @@ public final class PagePath {
     public static final String REGISTRATION = "jsp/common/registration.jsp";
     public static final String ERROR_500 = "jsp/error/error_500.jsp";
     public static final String USERS = "jsp/admin/users.jsp";
-    public static final String ADD_MEDICINES = "jsp/pharmacist/adding_medicine.jsp";
+    public static final String ADD_MEDICINE = "jsp/pharmacist/adding_medicine.jsp";
     public static final String MEDICINES = "jsp/pharmacist/medicines.jsp";
     public static final String INTERNATIONAL_NAMES = "jsp/pharmacist/international_names.jsp";
+    public static final String FORMS = "jsp/pharmacist/forms.jsp";
+    public static final String MANUFACTURERS = "jsp/pharmacist/manufacturers.jsp";
+    public static final String EDIT_MEDICINE = "jsp/pharmacist/edit_medicine.jsp";
 
     private PagePath(){}
 }

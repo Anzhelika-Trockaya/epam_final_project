@@ -32,7 +32,7 @@ public class DeleteUserCommand implements Command {
             }
             return router;
         } catch (ServiceException e) {
-            LOGGER.error("Exception in the DeleteUserCommand" + e);
+            LOGGER.error("Exception in the DeleteUserCommand", e);
             throw new CommandException("Exception in the DeleteUserCommand", e);
         }
     }

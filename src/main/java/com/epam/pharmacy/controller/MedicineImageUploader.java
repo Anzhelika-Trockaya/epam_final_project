@@ -63,7 +63,7 @@ public class MedicineImageUploader {
                 return pathString;
             }
         } catch (IOException | ServletException e) {
-            LOGGER.error("Upload photo failed " + e);
+            LOGGER.error("Upload photo failed ", e);
             throw new CommandException("Upload photo failed ", e);
         }
     }

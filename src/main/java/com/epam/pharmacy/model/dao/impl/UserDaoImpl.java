@@ -53,8 +53,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setString(11, user.getState().name());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding user exception. " + e.getMessage());
-            throw new DaoException("Adding user exception. ", e);
+            LOGGER.error("Adding user exception.", e);
+            throw new DaoException("Adding user exception.", e);
         }
     }
 
@@ -64,7 +64,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setLong(1, id);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Exception when remove user id=" + id + e);
+            LOGGER.error("Exception when remove user id=" + id, e);
             throw new DaoException("Exception when remove user id=" + id, e);
         }
     }
@@ -76,7 +76,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setLong(2, id);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Exception when change state user id=" + id + " state=" + state + e);
+            LOGGER.error("Exception when change state user id=" + id + " state=" + state, e);
             throw new DaoException("Exception when change state user id=" + id + " state=" + state, e);
         }
     }
@@ -93,7 +93,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 currentUserOptional.ifPresent(users::add);
             }
         } catch (SQLException e) {
-            LOGGER.error("Find all users exception. " + e.getMessage());
+            LOGGER.error("Find all users exception. ", e);
             throw new DaoException("Find all users exception. ", e);
         }
         return users;
@@ -120,8 +120,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("Authentication exception. " + e.getMessage());
-            throw new DaoException("Authentication exception. ", e);
+            LOGGER.error("Authentication exception.", e);
+            throw new DaoException("Authentication exception.", e);
         }
         return Optional.empty();
     }
@@ -132,8 +132,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setString(1, login);
             return findUser(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find user by id exception. " + e.getMessage());
-            throw new DaoException("Find user by id exception. ", e);
+            LOGGER.error("Find user by id exception.", e);
+            throw new DaoException("Find user by id exception.", e);
         }
     }
 
@@ -143,8 +143,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setLong(1, id);
             return findUser(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find user by id exception. " + e.getMessage());
-            throw new DaoException("Find user by id exception. ", e);
+            LOGGER.error("Find user by id exception.", e);
+            throw new DaoException("Find user by id exception.", e);
         }
     }
 

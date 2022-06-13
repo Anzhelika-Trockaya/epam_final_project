@@ -4,6 +4,7 @@
 <%@include file="../header/header.jsp" %>
 
 <fmt:message key="adding_medicine.title" var="adding_page_title"/>
+<fmt:message key="edit_medicine.title" var="edit_page_title"/>
 <fmt:message key="adding_medicine.name" var="label_name"/>
 <fmt:message key="adding_medicine.international_name" var="label_international_name"/>
 <fmt:message key="adding_medicine.form" var="label_form"/>
@@ -19,6 +20,7 @@
 <fmt:message key="adding_medicine.image" var="label_image"/>
 <fmt:message key="adding_medicine.successful_msg" var="successful_added_msg"/>
 <fmt:message key="action.add" var="adding_btn_value"/>
+<fmt:message key="action.edit" var="edit_btn_value"/>
 <fmt:message key="medicines.milliliter" var="unit_name_ml"/>
 <fmt:message key="medicines.milligram" var="unit_name_mg"/>
 <fmt:message key="medicines.gram" var="unit_name_g"/>
@@ -31,16 +33,47 @@
 <fmt:message key="adding_medicine.incorrect_file_size" var="incorrect_file_size_msg_text"/>
 <fmt:message key="adding_medicine.incorrect_file_type" var="incorrect_file_type_msg_text"/>
 <fmt:message key="adding_medicine.choose_file" var="choose_file"/>
+<c:set value="${medicine.id}" var="medicine_id"/>
+<c:set value="${medicine.name}" var="medicine_name"/>
+<c:set value="${medicine.internationalNameId}" var="medicine_international_name_id"/>
+<c:set value="${medicine.price}" var="medicine_price"/>
+<c:set value="${medicine.totalNumberOfParts}" var="medicine_total_parts"/>
+<c:set value="${medicine.partsInPackage}" var="medicine_parts_in_package"/>
+<c:set value="${medicine.amountInPart}" var="medicine_amount_in_part"/>
+<c:set value="${medicine.formId}" var="medicine_form_id"/>
+<c:set value="${medicine.dosage}" var="medicine_dosage"/>
+<c:set value="${medicine.dosageUnit}" var="medicine_dosage_unit"/>
+<c:set value="${medicine.ingredients}" var="medicine_ingredients"/>
+<c:set value="${medicine.needPrescription()}" var="medicine_need_prescription"/>
+<c:set value="${medicine.manufacturerId}" var="medicine_manufacturer_id"/>
+<c:set value="${medicine.instruction}" var="medicine_instruction"/>
+<c:set value="${medicine.imagePath}" var="medicine_image_path"/>
 <html>
 <head>
-    <title>${adding_page_title}</title>
+    <title>
+        <c:choose>
+            <c:when test="${empty medicine}">
+                ${adding_page_title}
+            </c:when>
+            <c:otherwise>
+                ${edit_page_title}
+            </c:otherwise>
+        </c:choose>
+    </title>
     <c:set var="current_page" value="jsp/pharmacist/adding_medicine.jsp" scope="session"/>
 </head>
 <body>
 <div class="medicine_form">
     <form name="medicine_form" id="medicine_form" action="${context_path}/controller" method="post"
           enctype="multipart/form-data" onsubmit="return validate()">
-        <input type="hidden" name="command" value="add_medicine"/>
+        <c:if test="${not empty successful_change_message}">
+            <p class="successful_msg"><fmt:message key="${successful_change_message}"/></p>
+            <br/>
+        </c:if>
+        <c:if test="${not empty failed_change_message}">
+            <p class="failed_msg"><fmt:message key="${failed_change_message}"/></p>
+            <br/>
+        </c:if>
         <c:if test="${not empty successful_added}">
             <p class="successful_msg">${successful_added_msg}</p>
             <br/>
@@ -70,7 +103,7 @@
         <br/>
         <label for="need_prescription">${label_need_prescription}</label>
         <input type="checkbox" id="need_prescription" name="need_prescription"
-               <c:if test="${medicine_need_prescription}">checked</c:if> value="true"/>
+               <c:if test="${medicine_need_prescription eq 'true'}">checked</c:if> value="true"/>
         <br/>
         <br/>
         <label for="form">${label_form}</label>
@@ -185,14 +218,24 @@
         <input type="button" id="loadFileXml" value="${choose_file}"
                onclick="document.getElementById('image').click();"/>
         <input type="file" style="display:none;" onchange="checkFile()" id="image" name="image">
-        <p id="file_path_msg" class="successful_msg"></p>
+        <p id="file_path_msg" class="successful_msg">${medicine_image_path}</p>
         <div id="imagePreview" style="margin-top: 20px"></div>
         <p id="incorrect_file_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_file}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_file}"/></p>
         </c:if>
         <br/>
-        <input type="submit" name="sub" value="${adding_btn_value}"/>
+        <c:choose>
+            <c:when test="${not empty medicine_id}">
+                <input type="hidden" name="command" value="edit_medicine"/>
+                <input type="hidden" name="medicine_id" value="${medicine_id}"/>
+                <input type="submit" name="edit_sub" value="${edit_btn_value}"/>
+            </c:when>
+            <c:otherwise>
+                <input type="hidden" name="command" value="add_medicine"/>
+                <input type="submit" name="add_sub" value="${adding_btn_value}"/>
+            </c:otherwise>
+        </c:choose>
         <br/>
     </form>
 </div>
@@ -206,6 +249,7 @@
             showPreview(fileInput);
         }
     }
+
     function validateFile() {
         const fileInput = document.forms["medicine_form"]["image"];
         const allowedExtensionsPattern = /.+(\.jpg|\.jpeg|\.png|\.bmp|\.JPG|\.JPEG|\.PNG|\.BMP)$/;
@@ -225,12 +269,14 @@
         }
         return true;
     }
+
     function makeFileInputIncorrect(fileInput, msg) {
         document.getElementById("imagePreview").innerHTML = "";
         document.getElementById("file_path_msg").innerHTML = "";
         makeInputIncorrect("incorrect_file_msg", msg);
         fileInput.value = '';
     }
+
     function showPreview(fileInput) {
         if (fileInput.files && fileInput.files[0]) {
             const reader = new FileReader();
@@ -241,6 +287,7 @@
             reader.readAsDataURL(fileInput.files[0]);
         }
     }
+
     function validate() {
         const intPattern = /^[1-9]\d{0,9}$/;
         const pricePattern = /^\d{1,20}(.\d{2})?$/;
@@ -301,6 +348,7 @@
         }
         return result;
     }
+
     function validateRequired(input, msgPlaceId, msg) {
         const value = input.value;
         if (value === "") {
@@ -310,6 +358,7 @@
         makeInputCorrect(msgPlaceId);
         return true;
     }
+
     function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
         const value = input.value;
         if (!pattern.test(value)) {
@@ -319,9 +368,11 @@
         makeInputCorrect(msgPlaceId);
         return true;
     }
+
     function makeInputIncorrect(msgPlaceId, msg) {
         document.getElementById(msgPlaceId).innerHTML = msg;
     }
+
     function makeInputCorrect(msgPlaceId) {
         document.getElementById(msgPlaceId).innerHTML = "";
     }

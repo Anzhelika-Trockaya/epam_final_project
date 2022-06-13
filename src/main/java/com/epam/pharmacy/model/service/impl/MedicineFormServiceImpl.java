@@ -34,20 +34,14 @@ public class MedicineFormServiceImpl implements MedicineFormService {
             }
             return formDao.create(form);
         } catch (DaoException e) {
-            LOGGER.error("Exception when create form. Form = " + form + e);
+            LOGGER.error("Exception when create form. Form = " + form, e);
             throw new ServiceException("Exception when create form. Form = " + form, e);
         }
     }
 
     @Override
     public boolean delete(String idString) throws ServiceException {
-        long id;
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when delete form. Incorrect id=" + idString);
-            return false;
-        }
+        long id = Long.parseLong(idString);
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
@@ -58,7 +52,7 @@ public class MedicineFormServiceImpl implements MedicineFormService {
             }
             return formDao.deleteById(id);
         } catch (DaoException e) {
-            LOGGER.error("Exception when delete form. id = " + id + e);
+            LOGGER.error("Exception when delete form. id = " + id, e);
             throw new ServiceException("Exception when delete form. id = " + id, e);
         }
     }
@@ -67,27 +61,20 @@ public class MedicineFormServiceImpl implements MedicineFormService {
     public Optional<MedicineForm> update(String id, String name, String unit) throws ServiceException {
         DataValidator dataValidator = DataValidatorImpl.getInstance();
         if (!dataValidator.isCorrectFormName(name) || !dataValidator.isCorrectFormUnit(unit)) {
-            LOGGER.error("Exception when update form. Incorrect data: id=" + id + " name=" + name + " unit=" + unit);
             return Optional.empty();
         }
         FormUnit formUnit = FormUnit.valueOf(unit);
-        long idValue;
-        try {
-            idValue = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when update form. Incorrect id=" + id);
-            return Optional.empty();
-        }
+        long idValue = Long.parseLong(id);
         MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
         MedicineForm form = new MedicineForm(idValue, name, formUnit);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(formDao);
-            if (formDao.existFormName(name)) {
+            if (!formDao.existFormName(name)) {
                 return Optional.empty();
             }
             return formDao.update(form);
         } catch (DaoException e) {
-            LOGGER.error("Exception when update form." + form + e);
+            LOGGER.error("Exception when update form." + form, e);
             throw new ServiceException("Exception when update form. " + form, e);
         }
     }
@@ -99,7 +86,7 @@ public class MedicineFormServiceImpl implements MedicineFormService {
             transaction.beginWithAutoCommit(medicineFormDao);
             return medicineFormDao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("Exception when find all medicine forms." + e);
+            LOGGER.error("Exception when find all medicine forms.", e);
             throw new ServiceException("Exception when find all medicine forms.", e);
         }
     }

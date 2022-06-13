@@ -25,7 +25,7 @@ class ProxyConnectionFactory {
         try (InputStream inputStream = ProxyConnectionFactory.class.getClassLoader().getResourceAsStream(POOL_PROPERTIES_FILE_NAME)) {
             poolProperties.load(inputStream);
         } catch (IOException exception) {
-            LOGGER.fatal("ConnectionPool properties not loaded. " + exception);
+            LOGGER.fatal("ConnectionPool properties not loaded.", exception);
             throw new ExceptionInInitializerError(exception);
         }
         URL = poolProperties.getProperty(URL_KEY);
@@ -33,7 +33,7 @@ class ProxyConnectionFactory {
         try (InputStream inputStream = ProxyConnectionFactory.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME)) {
             properties.load(inputStream);
         } catch (IOException exception) {
-            LOGGER.fatal("ConnectionPool properties not loaded. " + exception);
+            LOGGER.fatal("ConnectionPool properties not loaded.", exception);
             throw new ExceptionInInitializerError(exception);
         }
     }

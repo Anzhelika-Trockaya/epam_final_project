@@ -7,13 +7,14 @@ import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
 
-public class GoChangeMedicinesPageCommand implements Command {
+public class GoMedicinesPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         RequestFiller requestFiller = RequestFiller.getInstance();
         requestFiller.addForms(request);
         requestFiller.addInternationalNames(request);
         requestFiller.addMedicines(request);
+        requestFiller.addManufacturers(request);
         return new Router(PagePath.MEDICINES);
     }
 }

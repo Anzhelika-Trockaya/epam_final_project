@@ -48,7 +48,7 @@ public class EntityTransaction implements AutoCloseable {
                     connection.setAutoCommit(true);
                 }
             } catch (SQLException e) {
-                LOGGER.error("Exception when change autoCommit to false" + e);
+                LOGGER.error("Exception when change autoCommit to false", e);
             } finally {
                 ConnectionPool connectionPool = ConnectionPool.getInstance();
                 connectionPool.releaseConnection(connection);
@@ -61,7 +61,7 @@ public class EntityTransaction implements AutoCloseable {
         try {
             connection.commit();
         } catch (SQLException e) {
-            LOGGER.error("Exception when commit transaction" + e);
+            LOGGER.error("Exception when commit transaction", e);
             throw new DaoException("Exception when commit transaction", e);
         }
     }
@@ -70,7 +70,7 @@ public class EntityTransaction implements AutoCloseable {
         try {
             connection.rollback();
         } catch (SQLException e) {
-            LOGGER.error("Exception when rollback transaction" + e);
+            LOGGER.error("Exception when rollback transaction", e);
         }
     }
 
@@ -84,7 +84,7 @@ public class EntityTransaction implements AutoCloseable {
                 connection.setAutoCommit(autoCommit);
             }
         } catch (SQLException e) {
-            LOGGER.error("Exception when setting autoCommit in Connection. Value=" + autoCommit + " " + e);
+            LOGGER.error("Exception when setting autoCommit in Connection. Value=" + autoCommit, e);
             throw new DaoException("Exception when setting autoCommit in Connection. Value=" + autoCommit, e);
         }
     }

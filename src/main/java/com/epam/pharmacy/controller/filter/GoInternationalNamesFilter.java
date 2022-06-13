@@ -23,7 +23,7 @@ public class GoInternationalNamesFilter implements Filter {
         try {
             requestFiller.addInternationalNames(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page international_names.jsp" + e);
+            LOGGER.error("Exception when fill page international_names.jsp", e);
             throw new ServletException("Exception when fill page international_names.jsp", e);
         }
         requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_CHANGE_MESSAGE);

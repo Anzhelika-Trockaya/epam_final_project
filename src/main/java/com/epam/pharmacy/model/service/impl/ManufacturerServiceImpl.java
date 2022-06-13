@@ -29,22 +29,19 @@ public class ManufacturerServiceImpl implements ManufacturerService {
         ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(manufacturerDao);
+            if (manufacturerDao.findByName(name).isPresent()) {
+                return false;
+            }
             return manufacturerDao.create(manufacturer);
         } catch (DaoException e) {
-            LOGGER.error("Exception when create manufacturer. Manufacturer = " + manufacturer + e);
+            LOGGER.error("Exception when create manufacturer. Manufacturer = " + manufacturer, e);
             throw new ServiceException("Exception when create manufacturer. Manufacturer = " + manufacturer, e);
         }
     }
 
     @Override
     public boolean delete(String idString) throws ServiceException {
-        long id;
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when delete manufacturer. Incorrect id=" + idString);
-            return false;
-        }
+        long id = Long.parseLong(idString);
         ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
@@ -55,7 +52,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
             }
             return manufacturerDao.deleteById(id);
         } catch (DaoException e) {
-            LOGGER.error("Exception when delete manufacturer. id = " + id + e);
+            LOGGER.error("Exception when delete manufacturer. id = " + id, e);
             throw new ServiceException("Exception when delete manufacturer. id = " + id, e);
         }
     }
@@ -66,20 +63,18 @@ public class ManufacturerServiceImpl implements ManufacturerService {
         if (!dataValidator.isCorrectManufacturerName(name) || !dataValidator.isCorrectCountry(country)) {
             return Optional.empty();
         }
-        long idValue;
-        try {
-            idValue = Long.parseLong(id);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when update manufacturer. Incorrect id=" + id);
-            return Optional.empty();
-        }
+        long idValue = Long.parseLong(id);
         Manufacturer manufacturer = new Manufacturer(idValue, name, country);
         ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(manufacturerDao);
+            Optional<Manufacturer> manufacturerWithName = manufacturerDao.findByName(name);
+            if (manufacturerWithName.isPresent() && manufacturerWithName.get().getId() != idValue) {
+                return Optional.empty();
+            }
             return manufacturerDao.update(manufacturer);
         } catch (DaoException e) {
-            LOGGER.error("Exception when update manufacturer. Manufacturer = " + manufacturer + e);
+            LOGGER.error("Exception when update manufacturer. Manufacturer = " + manufacturer, e);
             throw new ServiceException("Exception when update manufacturer. Manufacturer = " + manufacturer, e);
         }
     }
@@ -91,7 +86,7 @@ public class ManufacturerServiceImpl implements ManufacturerService {
             transaction.beginWithAutoCommit(manufacturerDao);
             return manufacturerDao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("Exception when find all manufacturers." + e);
+            LOGGER.error("Exception when find all manufacturers.", e);
             throw new ServiceException("Exception when find all manufacturers.", e);
         }
     }

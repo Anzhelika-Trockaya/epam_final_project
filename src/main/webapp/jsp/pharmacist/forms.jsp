@@ -11,6 +11,7 @@
 <fmt:message key="forms.milliliters" var="ml"/>
 <fmt:message key="forms.tables" var="tables"/>
 <fmt:message key="forms.pieces" var="pieces"/>
+<fmt:message key="forms.choose_unit" var="choose_unit"/>
 <fmt:message key="action.add" var="add"/>
 <fmt:message key="action.edit" var="edit"/>
 <fmt:message key="action.delete" var="delete"/>
@@ -40,7 +41,7 @@
         <tbody>
         <tr>
             <form name="add_medicine_form_form" action="${context_path}/controller" method="post"
-                  onsubmit="return validate(this['name'],this['form_unit'], 'incorrect_new_msg')">
+                  onsubmit="return validate(this, 'incorrect_name_msg', 'incorrect_unit_msg')">
                 <input type="hidden" name="command" value="add_medicine_form"/>
                 <td><input type="text" style="width: 400px" name="name" placeholder="${enter_form_name}"/></td>
                 <td>
@@ -56,13 +57,16 @@
             </form>
         </tr>
         <tr>
-            <td colspan="4"><p id="incorrect_new_msg" class="incorrect_data_msg"></p><br/></td>
+            <td colspan="4">
+                <p id="incorrect_name_msg" class="incorrect_data_msg"></p>
+                <p id="incorrect_unit_msg" class="incorrect_data_msg"></p>
+            </td>
         </tr>
         <c:forEach var="form" items="${forms_list}">
             <tr>
                 <form action="${context_path}/controller" method="post"
-                      onsubmit="return validate(this['name'], this['form_unit'], 'incorrect_msg_${form.id}')">
-                    <input type="hidden" name="command" value="edit_form">
+                      onsubmit="return validate(this, 'incorrect_name_${form.id}', 'incorrect_unit_${form.id}')">
+                    <input type="hidden" name="command" value="edit_medicine_form">
                     <input type="hidden" name="form_id" value="${form.id}"/>
                     <td><input type="text" style="width: 400px" name="name" value="${form.name}"/></td>
                     <td>
@@ -82,17 +86,55 @@
                     <td><input type="submit" value="${edit}"></td>
                 </form>
                 <form action="${context_path}/controller" method="post">
-                    <input type="hidden" name="command" value="delete_form">
+                    <input type="hidden" name="command" value="delete_medicine_form">
                     <input type="hidden" name="form_id" value="${form.id}"/>
                     <td><input type="submit" value="${delete}"></td>
                 </form>
             </tr>
             <tr>
-                <td colspan="4"><p id='incorrect_msg_${form.id}' class="incorrect_data_msg"></p><br/></td>
+                <td colspan="4">
+                    <p id='incorrect_name_${form.id}' class="incorrect_data_msg"></p>
+                    <p id='incorrect_unit_${form.id}' class="incorrect_data_msg"></p>
+                </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
 </div>
 </body>
+<script>
+    function validate(form, nameMsgPlaceId, unitMsgPlaceId) {
+        const formNamePattern = /^[a-zA-Zа-яА-ЯёЁ/,_:;.'"-]{1,100}$/;
+        return (validatePatternMismatch(form["name"], formNamePattern, nameMsgPlaceId, "${msg_text_incorrect_form}") &&
+            validateRequired(form["form_unit"], unitMsgPlaceId, "${choose_unit}"));
+    }
+
+    function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
+        const value = input.value;
+        if (!pattern.test(value)) {
+            makeInputIncorrect(msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(msgPlaceId);
+        return true;
+    }
+
+    function validateRequired(input, msgPlaceId, msg) {
+        const value = input.value;
+        if (value === "") {
+            makeInputIncorrect(input, msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(input, msgPlaceId);
+        return true;
+    }
+
+    function makeInputIncorrect(msgPlaceId, msg) {
+        document.getElementById(msgPlaceId).innerHTML = msg;
+    }
+
+    function makeInputCorrect(msgPlaceId) {
+        document.getElementById(msgPlaceId).innerHTML = "";
+    }
+</script>
 </html>

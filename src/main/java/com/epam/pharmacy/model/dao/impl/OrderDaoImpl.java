@@ -78,7 +78,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             statement.setInt(3, quantity);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Updating orders position exception. orderId=" + orderId + " medicineId=" + medicineId + e.getMessage());
+            LOGGER.error("Updating orders position exception. orderId=" + orderId + " medicineId=" + medicineId, e);
             throw new DaoException("Updating orders position exception. orderId=" + orderId + " medicineId=" + medicineId, e);
         }
     }
@@ -92,7 +92,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             statement.setInt(3, quantity);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding new orders position exception. orderId=" + orderId + " medicineId=" + medicineId + e.getMessage());
+            LOGGER.error("Adding new orders position exception. orderId=" + orderId + " medicineId=" + medicineId, e);
             throw new DaoException("Adding new orders position exception. orderId=" + orderId + " medicineId=" + medicineId, e);
         }
     }
@@ -113,7 +113,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             }
             return orderContent;
         } catch (SQLException e) {
-            LOGGER.error("Finding order positions exception. orderId=" + orderId + e.getMessage());
+            LOGGER.error("Finding order positions exception. orderId=" + orderId, e);
             throw new DaoException("Finding order positions exception. orderId=" + orderId, e);
         }
     }
@@ -137,7 +137,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             }
             return orderPositions;
         } catch (SQLException e) {
-            LOGGER.error("Finding order positions exception. orderId=" + orderId + e.getMessage());
+            LOGGER.error("Finding order positions exception. orderId=" + orderId, e);
             throw new DaoException("Finding order positions exception. orderId=" + orderId, e);
         }
     }
@@ -156,7 +156,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
                 return id;
             }
         } catch (SQLException e) {
-            LOGGER.error("Finding order without payment exception. CustomerId=" + customerId + e.getMessage());
+            LOGGER.error("Finding order without payment exception. CustomerId=" + customerId, e);
             throw new DaoException("Finding order without payment exception. CustomerId=" + customerId, e);
         }
     }
@@ -168,8 +168,8 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             statement.setString(2, Order.State.CREATED.name());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding new order exception. " + e.getMessage());
-            throw new DaoException("Adding new order exception. ", e);
+            LOGGER.error("Adding new order exception.", e);
+            throw new DaoException("Adding new order exception.", e);
         }
     }
 
@@ -182,7 +182,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
                 return resultSet.next();
             }
         } catch (SQLException e) {
-            LOGGER.error("Check existing position in cart exception. orderId=" + orderId + " medicineId=" + medicineId + e.getMessage());
+            LOGGER.error("Check existing position in cart exception. orderId=" + orderId + " medicineId=" + medicineId, e);
             throw new DaoException("Check existing position in cart exception. orderId=" + orderId + " medicineId=" + medicineId, e);
         }
     }
@@ -196,7 +196,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
             LOGGER.error("Increasing medicine quantity in order exception. orderId=" + orderId +
-                    " medicineId=" + medicineId + " quantity=" + quantity + e.getMessage());
+                    " medicineId=" + medicineId + " quantity=" + quantity, e);
             throw new DaoException("Increasing medicine quantity in order exception. orderId=" + orderId +
                     " medicineId=" + medicineId + " quantity=" + quantity, e);
         }

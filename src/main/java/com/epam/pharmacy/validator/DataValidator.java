@@ -31,7 +31,7 @@ public interface DataValidator {
 
     boolean isCorrectMedicineData(Map<String, String> medicineData);
 
-    boolean isCorrectInteger(String value);
+    boolean isCorrectQuantity(String value);
 
     boolean isCorrectDosageUnit(String unit);
 

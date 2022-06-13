@@ -11,6 +11,12 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.epam.pharmacy.controller.AttributeName.*;
+import static com.epam.pharmacy.controller.ParameterName.INTERNATIONAL_NAME;
+import static com.epam.pharmacy.controller.ParameterName.NAME;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_ADDED;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_NOT_ADDED;
 
@@ -19,7 +25,7 @@ public class AddInternationalNameCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(ParameterName.NAME);
+        String name = request.getParameter(NAME);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         InternationalNameService internationalNameService = serviceProvider.getInternationalNameService();
         Router router;
@@ -35,9 +41,16 @@ public class AddInternationalNameCommand implements Command {
                 RequestFiller.getInstance().addInternationalNames(request);
             }
         } catch (ServiceException e) {
-            LOGGER.error("Exception in the AddInternationalNameCommand" + e);
+            LOGGER.error("Exception in the AddInternationalNameCommand", e);
             throw new CommandException("Exception in the AddInternationalNameCommand", e);
         }
         return router;
+    }
+
+    private Map<String, String> createInternationalNameDataMap(HttpServletRequest request) {
+        Map<String, String> internationalNameData = new HashMap<>();
+        String name = request.getParameter(NAME);
+        internationalNameData.put(INTERNATIONAL_NAME, name);
+        return internationalNameData;
     }
 }

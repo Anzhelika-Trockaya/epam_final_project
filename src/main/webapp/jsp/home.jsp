@@ -1,14 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@include file="header/header.jsp" %>
-<fmt:message key="home.add_to_basket" var="add_to_basket"/>
-<fmt:message key="home.dosage" var="dosage"/>
-<fmt:message key="home.in_part" var="in_part"/>
-<fmt:message key="home.parts_in_package" var="parts_in_package"/>
-<fmt:message key="home.medicines_not_found" var="not_found_msg"/>
 <fmt:message key="home.title" var="home_title"/>
-<fmt:message key="home.enter_medicine_name" var="enter_medicine_name"/>
-<fmt:message key="home.search" var="search"/>
+<fmt:message key="home.empty_msg" var="empty_msg"/>
 <html>
 <head>
     <meta charset="utf-8">
@@ -19,12 +13,7 @@
 <div>
     <br/>
     <c:if test="${current_user_role eq 'CUSTOMER'}">
-        <form class="searchForm" action="controller">
-            <input type="hidden" name="command" value="search_medicine"/>
-            <input type="text" name="search_medicine_name" placeholder="${enter_medicine_name}"/>
-            <input type="submit" name="sub" value="${search}"/>
-            <br/>
-        </form>
+        <%@include file="fragment/search_medicine_form.jspf" %>
     </c:if>
     <c:choose>
         <c:when test="${current_user_role != 'CUSTOMER' or(empty show_search_result)}">
@@ -73,13 +62,7 @@
                     <p class="successful_msg">${not_found_msg}</p>
                 </c:when>
                 <c:otherwise>
-                    <div>
-                        <table>
-                            <tbody>
-                            <%@include file="fragment/show_medicines_list_fragment.jspf" %>
-                            </tbody>
-                        </table>
-                    </div>
+                    <%@include file="fragment/show_medicines_list_fragment.jspf" %>
                 </c:otherwise>
             </c:choose>
         </c:otherwise>

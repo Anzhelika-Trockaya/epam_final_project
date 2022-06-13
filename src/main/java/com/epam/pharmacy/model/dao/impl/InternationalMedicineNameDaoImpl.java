@@ -45,7 +45,7 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
             statement.setString(1, internationalMedicineName.getInternationalName());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding international name exception. " + e.getMessage());
+            LOGGER.error("Adding international name exception. ", e);
             throw new DaoException("Adding international name exception. ", e);
         }
     }
@@ -56,7 +56,7 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
             statement.setLong(1, id);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Delete international name by id exception. id="+id + e.getMessage());
+            LOGGER.error("Delete international name by id exception. id="+id, e);
             throw new DaoException("Delete international name by id exception. id="+id, e);
         }
     }
@@ -73,7 +73,7 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
                 currentInternationalNameOptional.ifPresent(internationalMedicineNames::add);
             }
         } catch (SQLException e) {
-            LOGGER.error("Find all international medicines names exception. " + e.getMessage());
+            LOGGER.error("Find all international medicines names exception.", e);
             throw new DaoException("Find all international medicines names exception. ", e);
         }
         return internationalMedicineNames;
@@ -94,8 +94,8 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
                 return internationalMedicineNameOptional;
             }
         } catch (SQLException e) {
-            LOGGER.error("Find international name by id exception. " + e.getMessage());
-            throw new DaoException("Find international name by id exception. ", e);
+            LOGGER.error("Find international name by id exception.", e);
+            throw new DaoException("Find international name by id exception.", e);
         }
     }
 
@@ -107,8 +107,8 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
             statement.setLong(2, internationalMedicineName.getId());
             return statement.executeUpdate() == ONE_UPDATED ? oldMedicineName : Optional.empty();
         } catch (SQLException e) {
-            LOGGER.error("Update international name by id exception. " + e.getMessage());
-            throw new DaoException("Update international name by id exception. ", e);
+            LOGGER.error("Update international name by id exception.", e);
+            throw new DaoException("Update international name by id exception.", e);
         }
     }
 
@@ -125,8 +125,8 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
                 return currentInternationalNameOptional.isPresent();
             }
         } catch (SQLException e) {
-            LOGGER.error("Checking exists international name exception. " + e.getMessage());
-            throw new DaoException("Checking exists international name exception. ", e);
+            LOGGER.error("Checking exists international name exception.", e);
+            throw new DaoException("Checking exists international name exception.", e);
         }
     }
 }

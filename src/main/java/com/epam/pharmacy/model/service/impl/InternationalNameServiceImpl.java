@@ -34,20 +34,14 @@ public class InternationalNameServiceImpl implements InternationalNameService {
             InternationalMedicineName internationalMedicineName = new InternationalMedicineName(name);
             return internationalNameDao.create(internationalMedicineName);
         } catch (DaoException e) {
-            LOGGER.error("Exception when create international name. Name = " + name + e);
+            LOGGER.error("Exception when create international name. Name = " + name, e);
             throw new ServiceException("Exception when create international name. Name = " + name, e);
         }
     }
 
     @Override
     public boolean delete(String idString) throws ServiceException {
-        long id;
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when delete international name. Incorrect id=" + idString);
-            return false;
-        }
+        long id = Long.parseLong(idString);
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
@@ -58,7 +52,7 @@ public class InternationalNameServiceImpl implements InternationalNameService {
             }
             return internationalNameDao.deleteById(id);
         } catch (DaoException e) {
-            LOGGER.error("Exception when delete international name. id = " + id + e);
+            LOGGER.error("Exception when delete international name. id = " + id, e);
             throw new ServiceException("Exception when delete international name. id = " + id, e);
         }
     }
@@ -66,17 +60,10 @@ public class InternationalNameServiceImpl implements InternationalNameService {
     @Override
     public Optional<InternationalMedicineName> update(String idString, String name) throws ServiceException {
         DataValidator dataValidator = DataValidatorImpl.getInstance();
-        if (!dataValidator.isCorrectInternationalName(name) || !dataValidator.isCorrectId(idString)) {
-            LOGGER.error("Exception when update international name. Incorrect data: id=" + idString + " name=" + name);
+        if (!dataValidator.isCorrectInternationalName(name)) {
             return Optional.empty();
         }
-        long id;
-        try {
-            id = Long.parseLong(idString);
-        } catch (NumberFormatException e) {
-            LOGGER.error("Exception when update international name. Incorrect data: id=" + idString + " name=" + name);
-            return Optional.empty();
-        }
+        long id = Long.parseLong(idString);
         InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(internationalNameDao);
@@ -86,7 +73,7 @@ public class InternationalNameServiceImpl implements InternationalNameService {
             InternationalMedicineName internationalMedicineName = new InternationalMedicineName(id, name);
             return internationalNameDao.update(internationalMedicineName);
         } catch (DaoException e) {
-            LOGGER.error("Exception when update international name. id=" + idString + ", new name = " + name + e);
+            LOGGER.error("Exception when update international name. id=" + idString + ", new name = " + name, e);
             throw new ServiceException("Exception when update international name. id=" + idString + ", new name = " +
                     name, e);
         }
@@ -99,7 +86,7 @@ public class InternationalNameServiceImpl implements InternationalNameService {
             transaction.beginWithAutoCommit(internationalNameDao);
             return internationalNameDao.findAll();
         } catch (DaoException e) {
-            LOGGER.error("Exception when find all international names." + e);
+            LOGGER.error("Exception when find all international names.", e);
             throw new ServiceException("Exception when find all international names.", e);
         }
     }

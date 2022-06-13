@@ -33,14 +33,14 @@ public class ConnectionPool {
         try (InputStream inputStream = ConnectionPool.class.getClassLoader().getResourceAsStream(PROPERTY_FILE_NAME)) {
             properties.load(inputStream);
         } catch (IOException exception) {
-            LOGGER.fatal("ConnectionPool properties not loaded. " + exception);
-            throw new ExceptionInInitializerError("ConnectionPool properties not loaded. " + exception.getMessage());
+            LOGGER.fatal("ConnectionPool properties not loaded.", exception);
+            throw new ExceptionInInitializerError("ConnectionPool properties not loaded." + exception.getMessage());
         }
         DEFAULT_POOL_SIZE = Integer.parseInt(properties.getProperty(DEFAULT_POOL_SIZE_KEY));
         try {
             DriverManager.registerDriver(new Driver());
         } catch (SQLException exception) {
-            LOGGER.fatal("Driver not registered. " + exception);
+            LOGGER.fatal("Driver not registered.", exception);
             throw new ExceptionInInitializerError("Driver not registered. " + exception.getMessage());
         }
     }
@@ -52,7 +52,7 @@ public class ConnectionPool {
                 connection = createConnection();
                 availableConnections.add(connection);
             } catch (SQLException e) {
-                LOGGER.warn("Exception when creating connection" + e);
+                LOGGER.warn("Exception when creating connection", e);
             }
         }
         if (availableConnections.size() < DEFAULT_POOL_SIZE) {
@@ -62,7 +62,7 @@ public class ConnectionPool {
                     connection = createConnection();
                     availableConnections.add(connection);
                 } catch (SQLException e) {
-                    LOGGER.fatal("Connection was not created!" + e);
+                    LOGGER.fatal("Connection was not created!", e);
                     throw new ExceptionInInitializerError("Connection was not created!" + e.getMessage());
                 }
             }
@@ -90,7 +90,7 @@ public class ConnectionPool {
             connection = availableConnections.take();
             busyConnections.put(connection);
         } catch (InterruptedException e) {
-            LOGGER.error("Thread was interrupted. " + e);
+            LOGGER.error("Thread was interrupted. ", e);
             Thread.currentThread().interrupt();
         }
         return connection;
@@ -106,7 +106,7 @@ public class ConnectionPool {
         try {
             availableConnections.put((ProxyConnection) connection);
         } catch (InterruptedException e) {
-            LOGGER.error("Thread was interrupted. " + e);
+            LOGGER.error("Thread was interrupted.", e);
             Thread.currentThread().interrupt();
         }
         return released;
@@ -118,7 +118,7 @@ public class ConnectionPool {
                 availableConnections.take().reallyClose();
                 LOGGER.info("Connection closed.");
             } catch (SQLException | InterruptedException e) {
-                LOGGER.error("Exception when destroying pool." + e);
+                LOGGER.error("Exception when destroying pool.", e);
             }
         }
         deregisterDrivers();
@@ -138,7 +138,7 @@ public class ConnectionPool {
                 DriverManager.deregisterDriver(drivers.nextElement());
                 LOGGER.debug("Driver deregistered.");
             } catch (SQLException e) {
-                LOGGER.error("Exception when deregister driver" + e);
+                LOGGER.error("Exception when deregister driver", e);
             }
         }
     }
