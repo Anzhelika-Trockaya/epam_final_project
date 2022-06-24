@@ -63,7 +63,7 @@ public class UserRowMapper implements CustomRowMapper<User> {
             optionalUser = Optional.of(user);
         } catch (SQLException e) {
             LOGGER.warn("Exception when map user row. ", e);
-            optionalUser = Optional.empty();//fixme maybe throw daoException
+            optionalUser = Optional.empty();
         }
         return optionalUser;
     }

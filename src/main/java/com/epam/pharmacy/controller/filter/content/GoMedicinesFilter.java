@@ -1,6 +1,6 @@
-package com.epam.pharmacy.controller.filter;
+package com.epam.pharmacy.controller.filter.content;
 
-import com.epam.pharmacy.controller.RequestFiller;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
@@ -10,10 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-import static com.epam.pharmacy.controller.AttributeName.FAILED;
-import static com.epam.pharmacy.controller.AttributeName.SUCCESSFUL_ADDED;
-
-@WebFilter(filterName = "GoMedicinesFilter", urlPatterns = "/jsp/pharmacist/medicines.jsp", dispatcherTypes = DispatcherType.REQUEST)
+@WebFilter(filterName = "GoMedicinesFilter", urlPatterns = "/jsp/common/medicines.jsp",
+        dispatcherTypes = DispatcherType.REQUEST)
 public class GoMedicinesFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
 
@@ -22,18 +20,13 @@ public class GoMedicinesFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         RequestFiller requestFiller = RequestFiller.getInstance();
         try {
-            requestFiller.addForms(httpServletRequest);
+            requestFiller.addMedicinesData(httpServletRequest);
             requestFiller.addInternationalNames(httpServletRequest);
-            requestFiller.addMedicines(httpServletRequest);
+            requestFiller.addForms(httpServletRequest);
         } catch (CommandException e) {
             LOGGER.error("Exception when fill page medicines.jsp", e);
             throw new ServletException("Exception when fill page medicines.jsp", e);
         }
-
-
-        //fixme deleted!!! added!! not_added.....
-        requestFiller.moveSessionAttributeToRequest(httpServletRequest, SUCCESSFUL_ADDED);
-        requestFiller.moveSessionAttributeToRequest(httpServletRequest, FAILED);
         chain.doFilter(request, response);
     }
 }

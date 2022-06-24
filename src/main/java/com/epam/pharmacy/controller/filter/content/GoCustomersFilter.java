@@ -1,7 +1,6 @@
-package com.epam.pharmacy.controller.filter;
+package com.epam.pharmacy.controller.filter.content;
 
-import com.epam.pharmacy.controller.AttributeName;
-import com.epam.pharmacy.controller.RequestFiller;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
@@ -11,9 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "GoFormsFilter", urlPatterns = "/jsp/pharmacist/forms.jsp",
+@WebFilter(filterName = "GoCustomersFilter", urlPatterns = "/jsp/doctor/customers.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
-public class GoFormsFilter implements Filter {
+public class GoCustomersFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
@@ -21,13 +20,11 @@ public class GoFormsFilter implements Filter {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         RequestFiller requestFiller = RequestFiller.getInstance();
         try {
-            requestFiller.addForms(httpServletRequest);
+            requestFiller.addActiveCustomers(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page forms.jsp", e);
-            throw new ServletException("Exception when fill page forms.jsp", e);
+            LOGGER.error("Exception when fill page customers.jsp", e);
+            throw new ServletException("Exception when fill page customers.jsp", e);
         }
-        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.SUCCESSFUL_CHANGE_MESSAGE);
-        requestFiller.moveSessionAttributeToRequest(httpServletRequest, AttributeName.FAILED_CHANGE_MESSAGE);
         chain.doFilter(request, response);
     }
 }

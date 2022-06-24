@@ -11,9 +11,8 @@
 <fmt:message key="adding_medicine.dosage" var="label_dosage"/>
 <fmt:message key="adding_medicine.need_prescription" var="label_need_prescription"/>
 <fmt:message key="adding_medicine.manufacturer" var="label_manufacturer"/>
-<fmt:message key="adding_medicine.amount_in_part" var="label_amount_in_part"/>
-<fmt:message key="adding_medicine.parts_amount_in_package" var="label_parts_in_package"/>
-<fmt:message key="adding_medicine.total_number_of_parts" var="label_total_parts"/>
+<fmt:message key="adding_medicine.number_in_package" var="label_number_in_package"/>
+<fmt:message key="adding_medicine.total_packages" var="label_total_packages"/>
 <fmt:message key="adding_medicine.price" var="label_price"/>
 <fmt:message key="adding_medicine.ingredients" var="label_ingredients"/>
 <fmt:message key="adding_medicine.instruction" var="label_instruction"/>
@@ -33,26 +32,31 @@
 <fmt:message key="adding_medicine.incorrect_file_size" var="incorrect_file_size_msg_text"/>
 <fmt:message key="adding_medicine.incorrect_file_type" var="incorrect_file_type_msg_text"/>
 <fmt:message key="adding_medicine.choose_file" var="choose_file"/>
-<c:set value="${medicine.id}" var="medicine_id"/>
-<c:set value="${medicine.name}" var="medicine_name"/>
-<c:set value="${medicine.internationalNameId}" var="medicine_international_name_id"/>
-<c:set value="${medicine.price}" var="medicine_price"/>
-<c:set value="${medicine.totalNumberOfParts}" var="medicine_total_parts"/>
-<c:set value="${medicine.partsInPackage}" var="medicine_parts_in_package"/>
-<c:set value="${medicine.amountInPart}" var="medicine_amount_in_part"/>
-<c:set value="${medicine.formId}" var="medicine_form_id"/>
-<c:set value="${medicine.dosage}" var="medicine_dosage"/>
-<c:set value="${medicine.dosageUnit}" var="medicine_dosage_unit"/>
-<c:set value="${medicine.ingredients}" var="medicine_ingredients"/>
-<c:set value="${medicine.needPrescription()}" var="medicine_need_prescription"/>
-<c:set value="${medicine.manufacturerId}" var="medicine_manufacturer_id"/>
-<c:set value="${medicine.instruction}" var="medicine_instruction"/>
-<c:set value="${medicine.imagePath}" var="medicine_image_path"/>
+<fmt:message key="edit_medicine.change_total_title" var="change_total_title"/>
+<c:if test="${not empty medicine}">
+    <c:set value="${medicine.id}" var="medicine_id"/>
+    <c:set value="${medicine.name}" var="medicine_name"/>
+    <c:set value="${medicine.internationalNameId}" var="medicine_international_name_id"/>
+    <c:set value="${medicine.price}" var="medicine_price"/>
+    <c:set value="${medicine.totalPackages}" var="medicine_total_packages"/>
+    <c:set value="${medicine.numberInPackage}" var="medicine_number_in_package"/>
+    <c:set value="${medicine.formId}" var="medicine_form_id"/>
+    <c:set value="${medicine.dosage}" var="medicine_dosage"/>
+    <c:set value="${medicine.dosageUnit}" var="medicine_dosage_unit"/>
+    <c:set value="${medicine.ingredients}" var="medicine_ingredients"/>
+    <c:set value="${medicine.needPrescription()}" var="medicine_need_prescription"/>
+    <c:set value="${medicine.manufacturerId}" var="medicine_manufacturer_id"/>
+    <c:set value="${medicine.instruction}" var="medicine_instruction"/>
+    <c:set value="${medicine.imagePath}" var="medicine_image_link"/>
+</c:if>
+<c:if test="${empty medicine_change_total_value}">
+    <c:set value="0" var="medicine_change_total_value"/>
+</c:if>
 <html>
 <head>
     <title>
         <c:choose>
-            <c:when test="${empty medicine}">
+            <c:when test="${empty medicine_id}">
                 ${adding_page_title}
             </c:when>
             <c:otherwise>
@@ -63,20 +67,13 @@
     <c:set var="current_page" value="jsp/pharmacist/adding_medicine.jsp" scope="session"/>
 </head>
 <body>
+<br>
 <div class="medicine_form">
     <form name="medicine_form" id="medicine_form" action="${context_path}/controller" method="post"
           enctype="multipart/form-data" onsubmit="return validate()">
-        <c:if test="${not empty successful_change_message}">
-            <p class="successful_msg"><fmt:message key="${successful_change_message}"/></p>
-            <br/>
-        </c:if>
-        <c:if test="${not empty failed_change_message}">
-            <p class="failed_msg"><fmt:message key="${failed_change_message}"/></p>
-            <br/>
-        </c:if>
-        <c:if test="${not empty successful_added}">
+        <c:if test="${temp_successful_added}">
             <p class="successful_msg">${successful_added_msg}</p>
-            <br/>
+            <br>
         </c:if>
         <label for="name">${label_name}</label>
         <input type="text" class="uppercase" id="name" name="name" value="${medicine_name}"/>
@@ -173,27 +170,35 @@
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_manufacturer}"/></p>
         </c:if>
         <br/>
-        <label for="parts_in_package">${label_parts_in_package}</label>
-        <input type="text" id="parts_in_package" name="parts_in_package" value="${medicine_parts_in_package}"/>
-        <p id="incorrect_parts_in_package_msg" class="incorrect_data_msg"></p>
-        <c:if test="${not empty incorrect_parts_in_package}">
-            <p class="incorrect_data_msg"><fmt:message key="${incorrect_parts_in_package}"/></p>
+        <label for="number_in_package">${label_number_in_package}</label>
+        <input type="text" id="number_in_package" name="number_in_package" value="${medicine_number_in_package}"/>
+        <p id="incorrect_number_in_package_msg" class="incorrect_data_msg"></p>
+        <c:if test="${not empty incorrect_number_in_package}">
+            <p class="incorrect_data_msg"><fmt:message key="${incorrect_number_in_package}"/></p>
         </c:if>
         <br/>
-        <label for="amount_in_part">${label_amount_in_part}</label>
-        <input type="text" id="amount_in_part" name="amount_in_part" value="${medicine_amount_in_part}"/>
-        <p id="incorrect_amount_in_part_msg" class="incorrect_data_msg"></p>
-        <c:if test="${not empty incorrect_amount_in_part}">
-            <p class="incorrect_data_msg"><fmt:message key="${incorrect_amount_in_part}"/></p>
-        </c:if>
-        <br/>
-        <label for="total_parts">${label_total_parts}</label>
-        <input type="text" id="total_parts" name="total_parts" value="${medicine_total_parts}"/>
-        <p id="incorrect_total_parts_msg" class="incorrect_data_msg"></p>
-        <c:if test="${not empty incorrect_total_parts}">
-            <p class="incorrect_data_msg"><fmt:message key="${incorrect_total_parts}"/></p>
-        </c:if>
-        <br/>
+        <c:choose>
+            <c:when test="${empty medicine_id}">
+                <label for="total_packages">${label_total_packages}</label>
+                <input type="text" id="total_packages" name="total_packages" value="${medicine_total_packages}"/>
+                <p id="incorrect_total_packages_msg" class="incorrect_data_msg"></p>
+                <c:if test="${not empty incorrect_total_packages}">
+                    <p class="incorrect_data_msg"><fmt:message key="${incorrect_total_packages}"/></p>
+                </c:if>
+                <br/>
+            </c:when>
+            <c:otherwise>
+                <p>${label_total_packages}: ${medicine_total_packages}
+                    <label for="change_total_value">${change_total_title}</label>
+                    <input type="text" id="change_total_value" name="change_total_value"
+                           value="${medicine_change_total_value}" onclick="this.select()"
+                           onkeyup="validateOnKeyUpChangeTotalValue()" onchange="validateOnChangeChangeTotalValue()"/>
+                </p>
+                <c:if test="${not empty incorrect_change_total_value}">
+                    <p class="incorrect_data_msg"><fmt:message key="${incorrect_change_total_value}"/></p>
+                </c:if>
+            </c:otherwise>
+        </c:choose>
         <label for="price">${label_price}</label>
         <input type="text" id="price" name="price" value="${medicine_price}"/>
         <p id="incorrect_price_msg" class="incorrect_data_msg"></p>
@@ -217,14 +222,21 @@
         <br/>
         <input type="button" id="loadFileXml" value="${choose_file}"
                onclick="document.getElementById('image').click();"/>
-        <input type="file" style="display:none;" onchange="checkFile()" id="image" name="image">
-        <p id="file_path_msg" class="successful_msg">${medicine_image_path}</p>
-        <div id="imagePreview" style="margin-top: 20px"></div>
+        <input type="file" style="display:none;" onchange="onChangeFile()" id="image" name="image"
+               accept=".jpg, .jpeg, .png, .bmp" value="${medicine_image_link}">
+        <p id="file_path_msg" class="successful_msg">${medicine_image_link}</p>
+        <div id="imagePreview" style="margin-top: 20px">
+            <c:if test="${not empty medicine_image_link}">
+                <img src="${context_path}/uploadImage?image_path=${medicine_image_link}" height="216" width="297"
+                     alt="no image">
+            </c:if>
+        </div>
         <p id="incorrect_file_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_file}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_file}"/></p>
         </c:if>
         <br/>
+        <input type="hidden" name="old_image_path" value="${medicine_image_link}">
         <c:choose>
             <c:when test="${not empty medicine_id}">
                 <input type="hidden" name="command" value="edit_medicine"/>
@@ -241,8 +253,11 @@
 </div>
 </body>
 <script>
-    function checkFile() {
-        const fileInput = document.forms["medicine_form"]["image"];
+    const fileInput = document.forms["medicine_form"]["image"];
+    const allowedExtensionsPattern = /.+(\.jpg|\.jpeg|\.png|\.bmp|\.JPG|\.JPEG|\.PNG|\.BMP)$/;
+
+    function onChangeFile() {
+        document.forms["medicine_form"]["old_image_path"].value = "";
         if (validateFile()) {
             document.getElementById("file_path_msg").innerHTML = fileInput.value;
             makeInputCorrect("incorrect_file_msg");
@@ -251,8 +266,6 @@
     }
 
     function validateFile() {
-        const fileInput = document.forms["medicine_form"]["image"];
-        const allowedExtensionsPattern = /.+(\.jpg|\.jpeg|\.png|\.bmp|\.JPG|\.JPEG|\.PNG|\.BMP)$/;
         const filePath = fileInput.value;
         if (filePath === "") {
             makeFileInputIncorrect(fileInput, "${incorrect_required_msg_text}");
@@ -289,7 +302,7 @@
     }
 
     function validate() {
-        const intPattern = /^[1-9]\d{0,9}$/;
+        const intPattern = /^[1-9]\d{0,8}$/;
         const pricePattern = /^\d{1,20}(.\d{2})?$/;
         const nameInput = document.forms["medicine_form"]["name"];
         const internationalNameInput = document.forms["medicine_form"]["international_name"];
@@ -297,13 +310,18 @@
         const dosageInput = document.forms["medicine_form"]["dosage"];
         const unitInput = document.forms["medicine_form"]["dosage_unit"];
         const manufacturerInput = document.forms["medicine_form"]["manufacturer"];
-        const partsInPackageInput = document.forms["medicine_form"]["parts_in_package"];
-        const amountInPartInput = document.forms["medicine_form"]["amount_in_part"];
-        const totalPartsInput = document.forms["medicine_form"]["total_parts"];
+        const numberInPackageInput = document.forms["medicine_form"]["number_in_package"];
         const priceInput = document.forms["medicine_form"]["price"];
         const ingredientsInput = document.forms["medicine_form"]["ingredients"];
         const instructionInput = document.forms["medicine_form"]["instruction"];
         let result = true;
+        if (${empty medicine_id}) {
+            const totalPackagesInput = document.forms["medicine_form"]["total_packages"];
+            if (!(validateRequired(totalPackagesInput, "incorrect_total_packages_msg", "${incorrect_required_msg_text}") &&
+                validatePatternMismatch(totalPackagesInput, intPattern, "incorrect_total_packages_msg", "${incorrect_integer_msg_text}"))) {
+                result = false;
+            }
+        }
         if (!validateRequired(nameInput, "incorrect_name_msg", "${incorrect_required_msg_text}")) {
             result = false;
         }
@@ -321,16 +339,8 @@
         if (!validateRequired(manufacturerInput, "incorrect_manufacturer_msg", "${incorrect_required_msg_text}")) {
             result = false;
         }
-        if (!(validateRequired(partsInPackageInput, "incorrect_parts_in_package_msg", "${incorrect_required_msg_text}") &&
-            validatePatternMismatch(partsInPackageInput, intPattern, "incorrect_parts_in_package_msg", "${incorrect_integer_msg_text}"))) {
-            result = false;
-        }
-        if (!(validateRequired(amountInPartInput, "incorrect_amount_in_part_msg", "${incorrect_required_msg_text}") &&
-            validatePatternMismatch(amountInPartInput, intPattern, "incorrect_amount_in_part_msg", "${incorrect_integer_msg_text}"))) {
-            result = false;
-        }
-        if (!(validateRequired(totalPartsInput, "incorrect_total_parts_msg", "${incorrect_required_msg_text}") &&
-            validatePatternMismatch(totalPartsInput, intPattern, "incorrect_total_parts_msg", "${incorrect_integer_msg_text}"))) {
+        if (!(validateRequired(numberInPackageInput, "incorrect_number_in_package_msg", "${incorrect_required_msg_text}") &&
+            validatePatternMismatch(numberInPackageInput, intPattern, "incorrect_number_in_package_msg", "${incorrect_integer_msg_text}"))) {
             result = false;
         }
         if (!(validateRequired(priceInput, "incorrect_price_msg", "${incorrect_required_msg_text}") &&
@@ -343,10 +353,41 @@
         if (!validateRequired(instructionInput, "incorrect_instruction_msg", "${incorrect_required_msg_text}")) {
             result = false;
         }
-        if (!validateFile()) {
+        if (document.getElementById("file_path_msg").innerText === "") {
+            makeFileInputIncorrect(fileInput, "${incorrect_required_msg_text}");
             result = false;
         }
         return result;
+    }
+
+    function validateOnKeyUpChangeTotalValue() {
+        const numberPattern = /^-|(-?[1-9]\d{0,8})$/;
+        var changeTotalValue = document.getElementById('change_total_value');
+        if (!numberPattern.test(changeTotalValue.value)) {
+            changeTotalValue.value = '0';
+        } else {
+            var value = parseInt(changeTotalValue.value);
+            var totalValue = parseInt(${medicine_total_packages});
+            var minValue = -totalValue;
+            var maxValue = 999999999 - totalValue;
+            if (value < minValue) {
+                changeTotalValue.value = minValue;
+            } else if (value > maxValue) {
+                changeTotalValue.value = maxValue;
+            }
+        }
+    }
+
+    function validateOnChangeChangeTotalValue() {
+        const numberPattern = /^-?[1-9]\d{0,8}$/;
+        var changeTotalValue = document.getElementById('change_total_value');
+        if (!numberPattern.test(changeTotalValue.value)) {
+            changeTotalValue.value = '0';
+        }
+    }
+
+    function validateFileRequired() {
+        return document.getElementById("file_path_msg").innerText !== "";
     }
 
     function validateRequired(input, msgPlaceId, msg) {

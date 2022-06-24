@@ -11,5 +11,9 @@ public interface UserDao {
 
     Optional<User> findByLogin(String s) throws DaoException;
 
-    boolean changeState(long id, User.State state) throws DaoException;
+    boolean updateState(long id, User.State state) throws DaoException;
+
+    boolean updatePassword(long id, String password) throws DaoException;
+
+    List<User> findActiveCustomers() throws DaoException;
 }

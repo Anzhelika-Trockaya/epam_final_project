@@ -1,9 +1,0 @@
-<fmt:message key="home.medicines_not_found" var="not_found_msg"/>
-<fmt:message key="home.enter_medicine_name" var="enter_medicine_name"/>
-<fmt:message key="home.search" var="search"/>
-<form class="searchForm" action="${context_path}/controller">
-    <input type="hidden" name="command" value="search_medicine"/>
-    <input type="text" name="search_medicine_name" placeholder="${enter_medicine_name}"/>
-    <input type="submit" name="sub" value="${search}"/>
-    <br/>
-</form>

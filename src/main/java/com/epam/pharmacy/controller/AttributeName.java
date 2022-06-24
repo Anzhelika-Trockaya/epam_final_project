@@ -4,7 +4,7 @@ public final class AttributeName {
     public static final String LOGIN = "login";
     public static final String CURRENT_USER_ROLE = "current_user_role";
     public static final String CURRENT_PAGE = "current_page";
-    public static final String SUCCESSFUL_REGISTRATION = "successful_registration";
+    public static final String TEMP_SUCCESSFUL_REGISTRATION = "temp_successful_registration";
     public static final String USERS_LIST = "users_list";
     public static final String FAILED = "failed";
     public static final String USER_ID = "user_id";
@@ -32,7 +32,7 @@ public final class AttributeName {
     public static final String INCORRECT_REPEAT_PASSWORD = "incorrect_repeat_password";
     public static final String CURRENT_USER_ID = "current_user_id";
     public static final String PASSWORD = "password";
-    public static final String SUCCESSFUL_CHANGE_MESSAGE = "successful_change_message";
+    public static final String TEMP_SUCCESSFUL_CHANGE_MESSAGE = "temp_successful_change_message";
     public static final String FAILED_CHANGE_MESSAGE = "failed_change_message";
     public static final String FORMS_LIST = "forms_list";
     public static final String ERROR_MSG = "error_msg";
@@ -43,9 +43,9 @@ public final class AttributeName {
     public static final String INCORRECT_DOSAGE = "incorrect_dosage";
     public static final String INCORRECT_DOSAGE_UNIT = "incorrect_dosage_unit";
     public static final String INCORRECT_MANUFACTURER = "incorrect_manufacturer";
-    public static final String INCORRECT_PARTS_IN_PACKAGE = "incorrect_parts_in_package";
-    public static final String INCORRECT_AMOUNT_IN_PART = "incorrect_amount_in_part";
-    public static final String INCORRECT_TOTAL_PARTS = "incorrect_total_parts";
+    public static final String INCORRECT_NUMBER_IN_PACKAGE = "incorrect_number_in_package";
+    public static final String INCORRECT_TOTAL_PACKAGES = "incorrect_total_packages";
+    public static final String INCORRECT_CHANGE_TOTAL_VALUE = "incorrect_change_total_value";
     public static final String INCORRECT_PRICE = "incorrect_price";
     public static final String INCORRECT_INGREDIENTS = "incorrect_ingredients";
     public static final String INCORRECT_INSTRUCTION = "incorrect_instruction";
@@ -56,19 +56,33 @@ public final class AttributeName {
     public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
     public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
     public static final String MEDICINE_MANUFACTURER_ID="medicine_manufacturer_id";
-    public static final String MEDICINE_AMOUNT_IN_PART="medicine_amount_in_part";
-    public static final String MEDICINE_PARTS_IN_PACKAGE="medicine_parts_in_package";
-    public static final String MEDICINE_TOTAL_PARTS="medicine_total_parts";
+    public static final String MEDICINE_AMOUNT_IN_PACKAGE ="medicine_amount_in_package";
+    public static final String MEDICINE_NUMBER_IN_PACKAGE ="medicine_number_in_package";
+    public static final String MEDICINE_TOTAL_PACKAGES ="medicine_total_packages";
     public static final String MEDICINE_PRICE="medicine_price";
     public static final String MEDICINE_INGREDIENTS="medicine_ingredients";
     public static final String MEDICINE_INSTRUCTION="medicine_instruction";
     public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
-    public static final String SUCCESSFUL_ADDED = "successful_added";
+    public static final String TEMP_SUCCESSFUL_ADDED = "temp_successful_added";
     public static final String INCORRECT_FILE ="incorrect_file" ;
     public static final String MEDICINES_LIST = "medicines_list";
     public static final String CURRENT_USER_CART_CONTENT = "current_user_cart_content";
     public static final String SHOW_SEARCH_RESULT = "show_search_result";
     public static final String MEDICINE = "medicine";
+    public static final String INCORRECT_DATA = "incorrect_data";
+    public static final String BLOCKED = "blocked";
+    public static final String RENEWAL_REQUESTS_QUANTITY = "renewal_requests_quantity";
+    public static final String PRESCRIPTIONS_MAP = "prescriptions_map";
+    public static final String CUSTOMERS_LIST = "customers_list";
+    public static final String PRESCRIPTION_CUSTOMER_ID = "prescription_customer_id";
+    public static final String CUSTOMER_LASTNAME = "customer_lastname";
+    public static final String CUSTOMER_NAME = "customer_name";
+    public static final String CUSTOMER_PATRONYMIC = "customer_patronymic";
+    public static final String CUSTOMER_BIRTHDAY_DATE = "customer_birthday";
+    public static final String CUSTOMER_SEX = "customer_sex";
+    public static final String SHOW_RENEWAL_REQUESTS = "show_renewal_requests";
+    public static final String MEDICINES_DATA_MAP = "medicines_data_map";
+    public static final String MEDICINE_CHANGE_TOTAL_VALUE = "medicine_change_total_value";
 
     private AttributeName() {
     }

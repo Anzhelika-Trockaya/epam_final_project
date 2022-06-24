@@ -4,40 +4,58 @@ body {
     width: 100%;
     font-family: Arial
 }
+
 div {
     display: block;
 }
+
 .header {
     position: relative;
     background-color: #14a647;
     width: 100%;
-    line-height: 80px;
     height: 80px;
     top: -30px;
+}
+
+.header table{
+    width: 100%;
 }
 
 .header a {
     position: relative;
     text-decoration: none;
     text-align: left;
-    left: 5%;
+    padding-left: 5%;
     color: azure;
-    top: 15px
 }
-.menu{
+
+.header span {
+    text-align: right;
+    padding-right: 5%;
+}
+
+.menu {
     list-style: none;
     margin: 0;
     padding: 10px
 }
-.menu_li {display: inline; text-decoration: none;}
-.menu_a{text-decoration: none; }
 
-.sign_in{
+.menu_li {
+    display: inline;
+    text-decoration: none;
+}
+
+.menu_a {
+    text-decoration: none;
+}
+
+.sign_in {
     position: relative;
     text-align: right;
     rigth: 10%
 }
-.login_form{
+
+.login_form {
     position: center;
     width: 300px;
     height: 300px;
@@ -45,29 +63,35 @@ div {
     padding: 10px;
     border-radius: 10px;
 }
-.incorrect_data_msg{
+
+.incorrect_data_msg {
     color: red;
     font-size: 12px;
 }
-.failed_msg{
+
+.failed_msg {
     color: red;
     font-size: 14px;
     left: 5%;
 }
-.successful_msg{
+
+.successful_msg {
     color: indigo;
     font-size: 14px;
     left: 5%;
 }
+
 .table {
     width: 100%;
     table-layout: auto;
 }
+
 .navbar {
     overflow: hidden;
     background-color: #14a647;
     font-family: Arial;
 }
+
 .navbar a {
     float: left;
     font-size: 16px;
@@ -76,10 +100,12 @@ div {
     padding: 14px 16px;
     text-decoration: none;
 }
+
 .dropdown {
     float: left;
     overflow: hidden;
 }
+
 .dropdown .dropbtn {
     font-size: 16px;
     border: none;
@@ -90,17 +116,20 @@ div {
     font-family: inherit;
     margin: 0;
 }
+
 .navbar a:hover, .dropdown:hover .dropbtn {
     background-color: green;
 }
+
 .dropdown-content {
     display: none;
     position: absolute;
     background-color: #f9f9f9;
     min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
 }
+
 .dropdown-content a {
     float: none;
     color: black;
@@ -109,26 +138,52 @@ div {
     display: block;
     text-align: left;
 }
+
 .dropdown-content a:hover {
     background-color: #ddd;
 }
+
 .dropdown:hover .dropdown-content {
     display: block;
 }
-.numbers button input{
+
+.numbers button input {
     width: 10px
 }
-tr:nth-child(even) {background-color: #f2f2f2}
-.searchForm input[type=text]{
+
+tr:nth-child(even) {
+    background-color: #f2f2f2
+}
+
+.searchForm input[type=text] {
     width: 50%;
 }
-.uppercase{
+
+.uppercase {
     text-transform: uppercase;
 }
-.center_table{
+
+.center_table {
     margin: auto;
 }
-.data_table{
+
+.data_table {
     margin: 20px;
 }
-.data_table tr:nth-child(even) {background-color: lightgrey}
+
+.data_table tr:nth-child(even) {
+    background-color: lightgrey
+}
+
+.medicine_name_link a {
+    padding-right: 30px;
+    color: black;
+}
+
+.medicine_name_link span {
+    background: red;
+    color: #efefef;
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+}

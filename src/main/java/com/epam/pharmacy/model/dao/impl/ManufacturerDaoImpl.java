@@ -35,8 +35,7 @@ public class ManufacturerDaoImpl extends AbstractDao<Manufacturer> implements Ma
 
     @Override
     public boolean create(Manufacturer manufacturer) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_MANUFACTURER)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INSERT_MANUFACTURER)) {
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getCountry());
             return statement.executeUpdate() == ONE_UPDATED;
@@ -118,8 +117,7 @@ public class ManufacturerDaoImpl extends AbstractDao<Manufacturer> implements Ma
     @Override
     public Optional<Manufacturer> update(Manufacturer manufacturer) throws DaoException {
         Optional<Manufacturer> oldManufacturer = findById(manufacturer.getId());
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_MANUFACTURER_BY_ID)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_MANUFACTURER_BY_ID)) {
             statement.setString(1, manufacturer.getName());
             statement.setString(2, manufacturer.getCountry());
             statement.setLong(3, manufacturer.getId());

@@ -40,7 +40,7 @@ public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
             optionalManufacturer = Optional.of(manufacturer);
         } catch (SQLException e) {
             LOGGER.warn("Exception when map manufacturer row. ", e);
-            optionalManufacturer = Optional.empty();//fixme maybe throw daoException
+            optionalManufacturer = Optional.empty();
         }
         return optionalManufacturer;
     }

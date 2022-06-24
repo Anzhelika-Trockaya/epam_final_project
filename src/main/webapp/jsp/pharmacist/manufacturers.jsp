@@ -19,12 +19,13 @@
     <title>${page_title}</title>
 </head>
 <body>
+<c:set var="current_page" value="jsp/pharmacist/manufacturers.jsp" scope="session"/>
 <div>
     <h3>${title}</h3>
     <hr>
     <br/>
-    <c:if test="${not empty successful_change_message}">
-        <div><p class="successful_msg"><fmt:message key="${successful_change_message}"/></p></div>
+    <c:if test="${not empty temp_successful_change_message}">
+        <div><p class="successful_msg"><fmt:message key="${temp_successful_change_message}"/></p></div>
         <br/>
     </c:if>
     <c:if test="${not empty failed_change_message}">
@@ -83,8 +84,8 @@
 </div>
 </body>
 <script>
-    const namePattern = /^[A-ZА-ЯЁ][a-zA-Z0-9а-яА-ЯёЁ/,_:;.'"-&\s]{0,44}$/;
-    const countryPattern = /^[A-ZА-ЯЁ][a-zA-Zа-яА-ЯёЁ.'\s-]{0,44}$/;
+    const namePattern = /^[A-ZА-ЯЁІЎ][a-zA-Z0-9а-яА-ЯёЁіІўЎ/,_:;.'"-&\s]{0,44}$/;
+    const countryPattern = /^[A-ZА-ЯЁІЎ][a-zA-Zа-яА-ЯёЁіІўЎ.'\s-]{0,44}$/;
     function validateName(input, msgPlace) {
         return validatePatternMismatch(input, namePattern, msgPlace, "${msg_text_incorrect_name}");
     }

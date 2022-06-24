@@ -37,7 +37,7 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.setContentType("text/html");//todo to filter
+        //response.setContentType("text/html");//todo to filter
         String commandStr = request.getParameter(ParameterName.COMMAND);
         Command command = CommandType.commandOf(commandStr);
         try {
@@ -54,7 +54,7 @@ public class Controller extends HttpServlet {
                     break;
             }
         } catch (CommandException e) {
-            request.setAttribute(AttributeName.ERROR_MSG, e.getCause());
+            request.setAttribute(AttributeName.ERROR_MSG, e.getMessage());
             request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);
         }
     }

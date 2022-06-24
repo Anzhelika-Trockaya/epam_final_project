@@ -30,7 +30,7 @@ public class DeleteMedicineFormCommand implements Command {
             Router router = new Router(PagePath.FORMS, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.FORMS_DELETED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.FORMS_DELETED);
             } else {
                 session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.FORMS_NOT_DELETED);
             }

@@ -7,5 +7,13 @@ import java.sql.ResultSet;
 import java.util.Optional;
 
 public interface CustomRowMapper<T extends CustomEntity> {
+    /**
+     * Map row optional.
+     *
+     * @param resultSet the result set
+     * @return the optional
+     * @throws DaoException the dao exception
+     */
+//fixme doc
     Optional<T> mapRow(ResultSet resultSet) throws DaoException;
 }

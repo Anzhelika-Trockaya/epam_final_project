@@ -30,7 +30,7 @@ public class DeleteManufacturerCommand implements Command {
             Router router = new Router(PagePath.MANUFACTURERS, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_DELETED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_DELETED);
             } else {
                 session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_NOT_DELETED);
             }

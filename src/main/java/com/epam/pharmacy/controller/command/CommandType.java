@@ -2,13 +2,12 @@ package com.epam.pharmacy.controller.command;
 
 import com.epam.pharmacy.controller.command.impl.*;
 import com.epam.pharmacy.controller.command.impl.admin.ChangeUserStateCommand;
-import com.epam.pharmacy.controller.command.impl.admin.GoChangeUsersPageCommand;
 import com.epam.pharmacy.controller.command.impl.admin.DeleteUserCommand;
-import com.epam.pharmacy.controller.command.impl.common.ChangeLanguageCommand;
-import com.epam.pharmacy.controller.command.impl.common.RegisterCommand;
-import com.epam.pharmacy.controller.command.impl.common.SignInCommand;
+import com.epam.pharmacy.controller.command.impl.admin.SearchUserCommand;
+import com.epam.pharmacy.controller.command.impl.common.*;
 import com.epam.pharmacy.controller.command.impl.customer.AddMedicineToCartCommand;
-import com.epam.pharmacy.controller.command.impl.customer.SearchMedicineCommand;
+import com.epam.pharmacy.controller.command.impl.customer.RequestRenewalPrescriptionCommand;
+import com.epam.pharmacy.controller.command.impl.doctor.*;
 import com.epam.pharmacy.controller.command.impl.pharmacist.*;
 
 public enum CommandType {
@@ -17,17 +16,17 @@ public enum CommandType {
     ADD_MEDICINE_FORM(new AddMedicineFormCommand()),
     ADD_MANUFACTURER(new AddManufacturerCommand()),
     ADD_MEDICINE_TO_CART(new AddMedicineToCartCommand()),
-    GO_CHANGE_USERS_PAGE(new GoChangeUsersPageCommand()),
-    GO_ADD_MEDICINE_PAGE(new GoAddMedicinePageCommand()),
+    ADD_PRESCRIPTION(new AddPrescriptionCommand()),
+    GO_CUSTOMERS_PAGE(new GoCustomersPageCommand()),
+    GO_ADD_PRESCRIPTION_PAGE(new GoAddPrescriptionPageCommand()),
     GO_HOME_PAGE(new GoHomePageCommand()),
-    GO_MEDICINES_PAGE(new GoMedicinesPageCommand()),
-    GO_INTERNATIONAL_NAMES_PAGE(new GoInternationalNamesPageCommand()),
-    GO_FORMS_PAGE(new GoFormsPageCommand()),
-    GO_MANUFACTURERS_PAGE(new GoManufacturersPageCommand()),
     GO_EDIT_MEDICINE_PAGE(new GoEditMedicinePageCommand()),
+    GO_PRESCRIPTIONS_PAGE(new GoPrescriptionsPageCommand()),
+    GO_USER_PAGE(new GoUserPageCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
     EDIT_INTERNATIONAL_NAME(new EditInternationalNameCommand()),
+    EDIT_MEDICINE(new EditMedicineCommand()),
     EDIT_MEDICINE_FORM(new EditMedicineFormCommand()),
     EDIT_MANUFACTURER(new EditManufacturerCommand()),
     DELETE_USER(new DeleteUserCommand()),
@@ -35,10 +34,14 @@ public enum CommandType {
     DELETE_MEDICINE_FORM(new DeleteMedicineFormCommand()),
     DELETE_MANUFACTURER(new DeleteManufacturerCommand()),
     DEFAULT(new DefaultCommand()),
+    RENEWAL_PRESCRIPTION(new RenewalPrescriptionCommand()),
+    REQUEST_RENEWAL_PRESCRIPTION(new RequestRenewalPrescriptionCommand()),
     LOGOUT(new LogoutCommand()),
     REGISTER(new RegisterCommand()),
-    SEARCH_MEDICINE(new SearchMedicineCommand()),
-    SIGN_IN(new SignInCommand());
+    SEARCH_MEDICINES(new SearchMedicinesCommand()),
+    SEARCH_USER(new SearchUserCommand()),
+    SIGN_IN(new SignInCommand()),
+    UPDATE_PASSWORD(new UpdatePasswordCommand());
 
     private final Command command;
 

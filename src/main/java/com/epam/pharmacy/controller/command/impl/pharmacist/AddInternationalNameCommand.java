@@ -2,6 +2,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.InternationalNameService;
@@ -14,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.INTERNATIONAL_NAME;
 import static com.epam.pharmacy.controller.ParameterName.NAME;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_ADDED;
@@ -34,7 +34,7 @@ public class AddInternationalNameCommand implements Command {
             router = new Router(PagePath.INTERNATIONAL_NAMES);
             if (isCreated) {
                 HttpSession session = request.getSession();
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, INTERNATIONAL_NAMES_ADDED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, INTERNATIONAL_NAMES_ADDED);
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, INTERNATIONAL_NAMES_NOT_ADDED);

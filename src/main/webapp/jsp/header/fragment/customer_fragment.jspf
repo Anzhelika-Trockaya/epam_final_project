@@ -1,2 +1,3 @@
+<a class="menu_a" href="${pageContext.request.contextPath}/jsp/common/medicines.jsp">${medicines_nav_title}</a>
 <a class="menu_a" href="${pageContext.request.contextPath}/controller?command=go_orders_page">${orders_nav_title}</a>
 <a class="menu_a" href="${pageContext.request.contextPath}/controller?command=go_prescriptions_page">${prescriptions_nav_title}</a>

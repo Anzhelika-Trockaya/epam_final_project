@@ -2,12 +2,11 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Manufacturer;
-import com.epam.pharmacy.model.entity.MedicineForm;
 import com.epam.pharmacy.model.service.ManufacturerService;
-import com.epam.pharmacy.model.service.MedicineFormService;
 import com.epam.pharmacy.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -34,7 +33,7 @@ public class EditManufacturerCommand implements Command {
             router = new Router(PagePath.MANUFACTURERS);
             if (manufacturerOptional.isPresent()) {
                 HttpSession session = request.getSession();
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, MANUFACTURERS_EDITED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, MANUFACTURERS_EDITED);
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, MANUFACTURERS_NOT_EDITED);

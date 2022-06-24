@@ -40,8 +40,7 @@ public class InternationalMedicineNameDaoImpl extends AbstractDao<InternationalM
 
     @Override
     public boolean create(InternationalMedicineName internationalMedicineName) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_INTERNATIONAL_NAME)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INSERT_INTERNATIONAL_NAME)) {
             statement.setString(1, internationalMedicineName.getInternationalName());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {

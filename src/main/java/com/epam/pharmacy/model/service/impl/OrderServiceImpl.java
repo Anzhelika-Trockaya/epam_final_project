@@ -6,6 +6,7 @@ import com.epam.pharmacy.model.dao.EntityTransaction;
 import com.epam.pharmacy.model.dao.OrderDao;
 import com.epam.pharmacy.model.dao.impl.MedicineDaoImpl;
 import com.epam.pharmacy.model.dao.impl.OrderDaoImpl;
+import com.epam.pharmacy.model.dao.impl.PrescriptionDaoImpl;
 import com.epam.pharmacy.model.dao.impl.UserDaoImpl;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.User;
@@ -37,17 +38,20 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao, medicineDao, orderDao);
-            if (existsCustomer(customerId, userDao)) {
-                Optional<Medicine> medicineOptional = medicineDao.findById(medicineId);
-                if (medicineOptional.isPresent()) {
-                    int totalQuantity = medicineOptional.get().getTotalNumberOfParts();
-                    if (quantity <= totalQuantity) {
-                        long orderId = getCartOrderId(customerId, orderDao);
-                        if (!orderDao.existsPositionInCart(orderId, medicineId)) {
-                            result = orderDao.addToCart(orderId, medicineId, quantity);
-                        } else {
-                            result = orderDao.increaseMedicineQuantityInOrder(orderId, medicineId, quantity);
-                        }
+            if (!existsCustomer(customerId, userDao)) {
+                LOGGER.warn("Customer not exists. id="+customerId);
+                return result;
+            }
+            Optional<Medicine> medicineOptional = medicineDao.findById(medicineId);
+            if (medicineOptional.isPresent()) {
+                Medicine medicine = medicineOptional.get();
+                int totalQuantity = medicine.getTotalPackages();
+                if (quantity <= totalQuantity) {
+                    long orderId = getCartOrderId(customerId, orderDao);
+                    if (!orderDao.existsPositionInCart(orderId, medicineId)) {
+                        result = orderDao.addToCart(orderId, medicineId, quantity);
+                    } else {
+                        result = orderDao.increaseMedicineQuantityInOrder(orderId, medicineId, quantity);
                     }
                 }
             }
@@ -66,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
             transaction.beginWithAutoCommit(orderDao);
             long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
             return orderDao.findOrderPositions(cartOrderId);
-        }catch (DaoException e) {
+        } catch (DaoException e) {
             LOGGER.error("Finding cart positions exception. customerId=" + customerId, e);
             throw new ServiceException("Finding cart positions exception. customerId=" + customerId, e);
         }
@@ -79,7 +83,7 @@ public class OrderServiceImpl implements OrderService {
             transaction.beginWithAutoCommit(orderDao);
             long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
             return orderDao.findOrderMedicineIdAndQuantity(cartOrderId);
-        }catch (DaoException e) {
+        } catch (DaoException e) {
             LOGGER.error("Finding cart content exception. customerId=" + customerId, e);
             throw new ServiceException("Finding cart content exception. customerId=" + customerId, e);
         }

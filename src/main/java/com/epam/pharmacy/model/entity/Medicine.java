@@ -11,9 +11,8 @@ public class Medicine extends CustomEntity implements Serializable {
     private String name;
     private long internationalNameId;
     private BigDecimal price;
-    private int totalNumberOfParts;
-    private int partsInPackage;
-    private int amountInPart;
+    private int totalPackages;
+    private int numberInPackage;
     private long formId;
     private int dosage;
     private DosageUnit dosageUnit;
@@ -59,28 +58,20 @@ public class Medicine extends CustomEntity implements Serializable {
         this.price = price;
     }
 
-    public int getTotalNumberOfParts() {
-        return totalNumberOfParts;
+    public int getTotalPackages() {
+        return totalPackages;
     }
 
-    public void setTotalNumberOfParts(int totalNumberOfParts) {
-        this.totalNumberOfParts = totalNumberOfParts;
+    public void setTotalPackages(int totalPackages) {
+        this.totalPackages = totalPackages;
     }
 
-    public int getPartsInPackage() {
-        return partsInPackage;
+    public int getNumberInPackage() {
+        return numberInPackage;
     }
 
-    public void setPartsInPackage(int partsInPackage) {
-        this.partsInPackage = partsInPackage;
-    }
-
-    public int getAmountInPart() {
-        return amountInPart;
-    }
-
-    public void setAmountInPart(int amountInPart) {
-        this.amountInPart = amountInPart;
+    public void setNumberInPackage(int numberInPackage) {
+        this.numberInPackage = numberInPackage;
     }
 
     public long getFormId() {
@@ -153,8 +144,8 @@ public class Medicine extends CustomEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Medicine medicine = (Medicine) o;
         return id == medicine.id && internationalNameId == medicine.internationalNameId &&
-                totalNumberOfParts == medicine.totalNumberOfParts && partsInPackage == medicine.partsInPackage &&
-                amountInPart == medicine.amountInPart && formId == medicine.formId && dosage == medicine.dosage &&
+                totalPackages == medicine.totalPackages && numberInPackage == medicine.numberInPackage &&
+                formId == medicine.formId && dosage == medicine.dosage &&
                 needPrescription == medicine.needPrescription && manufacturerId == medicine.manufacturerId &&
                 Objects.equals(name, medicine.name) && Objects.equals(price, medicine.price) &&
                 dosageUnit == medicine.dosageUnit && Objects.equals(ingredients, medicine.ingredients) &&
@@ -163,8 +154,8 @@ public class Medicine extends CustomEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, internationalNameId, price, totalNumberOfParts, partsInPackage, amountInPart,
-                formId, dosage, dosageUnit, ingredients, needPrescription, manufacturerId, instruction, imagePath);
+        return Objects.hash(id, name, internationalNameId, price, totalPackages, numberInPackage, formId, dosage,
+                dosageUnit, ingredients, needPrescription, manufacturerId, instruction, imagePath);
     }
 
     @Override
@@ -174,9 +165,8 @@ public class Medicine extends CustomEntity implements Serializable {
                 ", name='" + name + '\'' +
                 ", internationalNameId=" + internationalNameId +
                 ", price=" + price +
-                ", totalNumberOfParts=" + totalNumberOfParts +
-                ", partsInPackage=" + partsInPackage +
-                ", amountInPart=" + amountInPart +
+                ", totalPackages=" + totalPackages +
+                ", numberInPackage=" + numberInPackage +
                 ", formId=" + formId +
                 ", dosage=" + dosage +
                 ", dosageUnit=" + dosageUnit +
@@ -214,18 +204,13 @@ public class Medicine extends CustomEntity implements Serializable {
             return this;
         }
 
-        public Builder buildTotalNumberOfParts(int quantity) {
-            medicine.setTotalNumberOfParts(quantity);
+        public Builder buildTotalPackages(int quantity) {
+            medicine.setTotalPackages(quantity);
             return this;
         }
 
-        public Builder buildPartsInPackage(int amount) {
-            medicine.setPartsInPackage(amount);
-            return this;
-        }
-
-        public Builder buildAmountInPart(int amount) {
-            medicine.setAmountInPart(amount);
+        public Builder buildNumberInPackage(int amount) {
+            medicine.setNumberInPackage(amount);
             return this;
         }
 

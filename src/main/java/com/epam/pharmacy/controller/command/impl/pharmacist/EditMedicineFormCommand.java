@@ -2,11 +2,10 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
-import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.MedicineForm;
-import com.epam.pharmacy.model.service.InternationalNameService;
 import com.epam.pharmacy.model.service.MedicineFormService;
 import com.epam.pharmacy.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,7 +34,7 @@ public class EditMedicineFormCommand implements Command {
             router = new Router(PagePath.FORMS);
             if (formOptional.isPresent()) {
                 HttpSession session = request.getSession();
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, FORMS_EDITED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, FORMS_EDITED);
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, FORMS_NOT_EDITED);

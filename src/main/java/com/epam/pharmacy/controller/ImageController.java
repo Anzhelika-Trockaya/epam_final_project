@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 
 import static com.epam.pharmacy.controller.ParameterName.IMAGE_PATH;
 
-@WebServlet(name="imageController", urlPatterns = {"/uploadImage"})
+@WebServlet(name="ImageController", urlPatterns = {"/uploadImage"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 5,
         maxRequestSize = 1024 * 1024 * 25)

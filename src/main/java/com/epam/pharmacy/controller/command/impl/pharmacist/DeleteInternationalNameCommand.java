@@ -29,7 +29,7 @@ public class DeleteInternationalNameCommand implements Command {
             Router router = new Router(PagePath.INTERNATIONAL_NAMES, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_DELETED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_DELETED);
             } else {
                 session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_NOT_DELETED);
             }

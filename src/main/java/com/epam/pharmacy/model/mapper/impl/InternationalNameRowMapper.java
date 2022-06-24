@@ -37,7 +37,7 @@ public class InternationalNameRowMapper implements CustomRowMapper<International
             optionalInternationalName = Optional.of(internationalName);
         } catch (SQLException e) {
             LOGGER.warn("Exception when map International medicine name row. ", e);
-            optionalInternationalName = Optional.empty();//fixme maybe throw daoException
+            optionalInternationalName = Optional.empty();
         }
         return optionalInternationalName;
     }

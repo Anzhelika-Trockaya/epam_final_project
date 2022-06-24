@@ -1,14 +1,12 @@
 <%@ page isErrorPage="true" contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@include file="../header/header.jsp" %>
 <html>
 <head>
-    <title>500</title>
+    <title>Error 500</title>
+    <c:set var="current_page" value="jsp/error/error_500.jsp" scope="session"/>
 </head>
 <body>
-Request from: ${pageContext.errorData.requestURI} is failed <br/>
-Servlet name: ${pageContext.errorData.servletName} <br/>
-Status code: ${pageContext.errorData.statusCode} <br/>
-Exception: ${pageContext.exception} <br/>
-<br/><br/><br/>
-Message from exception: ${pageContext.exception.printStackTrace()}
+<h1>Error 500</h1>
 </body>
 </html>

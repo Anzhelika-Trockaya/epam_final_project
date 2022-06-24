@@ -1,9 +1,5 @@
 package com.epam.pharmacy.model.dao;
 
-import com.epam.pharmacy.model.entity.DosageUnit;
-
-import java.math.BigDecimal;
-
 public final class ColumnName {
     public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "user_login";
@@ -28,21 +24,34 @@ public final class ColumnName {
     public static final String INTERNATIONAL_MEDICINE_NAME="international_medicine_name";
     public static final String MEDICINE_ID="medicine_id";
     public static final String MEDICINE_NAME="medicine_name";
-    public static final String MEDICINE_INTERNATIONAL_NAME_ID="international_name_id";
+    public static final String MEDICINE_INTERNATIONAL_NAME_ID="medicine_international_name_id";
     public static final String MEDICINE_PRICE="medicine_price";
-    public static final String MEDICINE_TOTAL_NUMBER="medicine_total_number_of_parts";
-    public static final String MEDICINE_PARTS_AMOUNT_IN_PACKAGE="medicine_parts_amount_in_package";
-    public static final String MEDICINE_AMOUNT_IN_PART="medicine_amount_in_part";
-    public static final String MEDICINE_FORM_ID="form_id";
+    public static final String MEDICINE_TOTAL_PACKAGES ="medicine_total_packages";
+    public static final String MEDICINE_NUMBER_IN_PACKAGE ="medicine_number_in_package";
+    public static final String MEDICINE_AMOUNT_IN_PACKAGE ="medicine_amount_in_package";
+    public static final String MEDICINE_FORM_ID="medicine_form_id";
     public static final String MEDICINE_DOSAGE="medicine_dosage";
     public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
     public static final String MEDICINE_INGREDIENTS="medicine_ingredients";
     public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
-    public static final String MEDICINE_MANUFACTURER_ID="manufacturer_id";
+    public static final String MEDICINE_MANUFACTURER_ID="medicine_manufacturer_id";
     public static final String MEDICINE_INSTRUCTION="medicine_instruction";
     public static final String MEDICINE_IMAGE_PATH="medicine_image_path";
     public static final String ORDER_ID = "order_id";
     public static final String ORDER_MEDICINE_QUANTITY = "order_medicine_quantity";
+    public static final String PRESCRIPTION_ID = "prescription_id";
+    public static final String PRESCRIPTION_INTERNATIONAL_NAME_ID = "prescription_international_name_id";
+    public static final String PRESCRIPTION_DOCTOR_ID = "prescription_doctor_id";
+    public static final String PRESCRIPTION_CUSTOMER_ID = "prescription_customer_id";
+    public static final String PRESCRIPTION_QUANTITY = "prescription_quantity";
+    public static final String PRESCRIPTION_SOLD_QUANTITY = "prescription_sold_quantity";
+    public static final String PRESCRIPTION_EXPIRATION_DATE = "prescription_expiration_date";
+    public static final String PRESCRIPTION_FORM_ID = "prescription_form_id";
+    public static final String PRESCRIPTION_DOSAGE = "prescription_dosage";
+    public static final String PRESCRIPTION_DOSAGE_UNIT = "prescription_dosage_unit";
+    public static final String PRESCRIPTION_NEED_RENEWAL = "prescription_need_renewal";
+    public static final String ROW_COUNT = "row_count";
+
     private ColumnName() {
     }
 }

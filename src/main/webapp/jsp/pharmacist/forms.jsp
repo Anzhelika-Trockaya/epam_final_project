@@ -21,12 +21,13 @@
     <title>${page_title}</title>
 </head>
 <body>
+<c:set var="current_page" value="jsp/pharmacist/forms.jsp" scope="session"/>
 <div>
     <h3>${title}</h3>
     <hr>
     <br/>
-    <c:if test="${not empty successful_change_message}">
-        <div><p class="successful_msg"><fmt:message key="${successful_change_message}"/></p></div>
+    <c:if test="${not empty temp_successful_change_message}">
+        <div><p class="successful_msg"><fmt:message key="${temp_successful_change_message}"/></p></div>
         <br/>
     </c:if>
     <c:if test="${not empty failed_change_message}">
@@ -104,7 +105,7 @@
 </body>
 <script>
     function validate(form, nameMsgPlaceId, unitMsgPlaceId) {
-        const formNamePattern = /^[a-zA-Zа-яА-ЯёЁ/,_:;.'"-]{1,100}$/;
+        const formNamePattern = /^[a-zA-Zа-яА-ЯёЁіІўЎ/,_:;.'"\s-]{1,100}$/;
         return (validatePatternMismatch(form["name"], formNamePattern, nameMsgPlaceId, "${msg_text_incorrect_form}") &&
             validateRequired(form["form_unit"], unitMsgPlaceId, "${choose_unit}"));
     }

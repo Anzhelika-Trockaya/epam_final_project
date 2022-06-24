@@ -51,12 +51,12 @@
           onsubmit="return validate()">
         <input type="hidden" name="command" value="register"/>
         <c:if test="${current_user_role eq 'ADMIN'}">
-            <c:if test="${not empty successful_registration}">
+            <c:if test="${not empty temp_successful_registration}">
                 <br/>
                 <p class="successful_msg"><fmt:message key="users.successful_msg"/></p>
                 <br/>
-                <br/>
             </c:if>
+            <br/>
             <label for="role">${label_role}</label>
             <select id="role" name="role" size="1">
                 <option id="default_role" selected value="">-</option>
@@ -164,11 +164,12 @@
 </body>
 <script>
     function validate() {
-        const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁ._-]{4,45}$/;
-        const passwordPattern = /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*]{6,45}$/;
-        const namePattern = /^[A-Za-zА-Яа-яёЁ][A-Za-zА-Яа-яёЁ-]{0,44}$/;
+        const loginPattern = /^[a-zA-Z0-9а-яА-ЯёЁІіЎў._-]{4,45}$/;
+        const passwordPattern =
+            /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яёіў])(?=.*[A-ZА-ЯЁІЎ])[0-9a-zA-Zа-яА-ЯёЁІіЎў!@#$%^&*]{6,45}$/;
+        const namePattern = /^[A-Za-zА-Яа-яёЁІіЎў][A-Za-zА-Яа-яёЁІіЎў-]{0,44}$/;
         const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
-        const addressPattern = /^[a-zA-Z0-9а-яА-ЯёЁ'"/.,_:;-]{1,100}$/;
+        const addressPattern = /^[a-zA-Z0-9а-яА-ЯёЁўІіЎ\s/,_:;.'"-]+$/;
         const loginInput = document.forms["registration_form"]["login"];
         const passwordInput = document.forms["registration_form"]["password"];
         const lastnameInput = document.forms["registration_form"]["lastname"];

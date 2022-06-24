@@ -3,7 +3,6 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.UserDao;
-import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.model.mapper.impl.UserRowMapper;
 import org.apache.logging.log4j.LogManager;
@@ -12,9 +11,12 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static com.epam.pharmacy.controller.AttributeName.USER_LASTNAME;
 import static com.epam.pharmacy.controller.AttributeName.USER_PASSWORD;
+import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_STATE;
 
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
@@ -28,14 +30,28 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final String SQL_SELECT_USER_BY_LOGIN =
             "SELECT user_id, user_login, user_password, user_lastname, user_name, user_patronymic, user_birthday_date, " +
                     "user_sex, user_role, user_phone, user_address, user_state FROM users WHERE user_login = ?";
+    private static final String SQL_SELECT_USER_WITH_ROLE_CUSTOMER_AND_STATE_ACTIVE =
+            "SELECT user_id, user_login, user_password, user_lastname, user_name, user_patronymic, user_birthday_date, " +
+                    "user_sex, user_role, user_phone, user_address, user_state FROM users " +
+                    "WHERE user_role = 'CUSTOMER' AND user_state = 'ACTIVE'";
     private static final String SQL_SELECT_USER_BY_ID =
             "SELECT user_id, user_login, user_password, user_lastname, user_name, user_patronymic, user_birthday_date, " +
                     "user_sex, user_role, user_phone, user_address, user_state FROM users WHERE user_id = ?";
     private static final String SQL_INSERT_USER =
             "INSERT INTO users (user_login, user_password, user_lastname, user_name, user_patronymic, " +
                     "user_birthday_date, user_sex, user_role, user_phone, user_address, user_state) values(?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_UPDATE_USER_DATA =
+            "UPDATE users SET user_lastname = ?, user_name = ?, user_patronymic = ?, user_birthday_date = ?, " +
+                    "user_sex = ?, user_phone = ?, user_address = ? WHERE user_id = ?";
     private static final String SQL_UPDATE_USER_STATE = "UPDATE users SET user_state = ? WHERE user_id = ?";
+    private static final String SQL_UPDATE_USER_PASSWORD = "UPDATE users SET user_password = ? WHERE user_id = ?";
     private static final String SQL_DELETE_USER = "DELETE FROM users WHERE user_id = ?";
+    private static final String SQL_SELECT_USER_BY_LASTNAME_NAME_PATRONYMIC_BIRTHDAY_DATE_USER_ROLE_USER_STATE =
+            "SELECT user_id, user_login, user_password, user_lastname, user_name, user_patronymic, user_birthday_date, " +
+                    "user_sex, user_role, user_phone, user_address, user_state FROM users " +
+                    "WHERE LOWER(user_lastname) LIKE LOWER(?) AND LOWER(user_name) LIKE LOWER(?) AND " +
+                    "LOWER(user_patronymic) LIKE LOWER(?) AND user_birthday_date LIKE ? AND " +
+                    "user_role LIKE ? AND user_state LIKE ?";
 
     @Override
     public boolean create(User user) throws DaoException {
@@ -70,7 +86,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
-    public boolean changeState(long id, User.State state) throws DaoException {
+    public boolean updateState(long id, User.State state) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_STATE)) {
             statement.setString(1, state.name());
             statement.setLong(2, id);
@@ -82,26 +98,57 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     }
 
     @Override
+    public boolean updatePassword(long id, String password) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_PASSWORD)) {
+            statement.setString(1, password);
+            statement.setLong(2, id);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when update password user id=" + id + " password=" + password, e);
+            throw new DaoException("Exception when update password user id=" + id + " password=" + password, e);
+        }
+    }
+
+    @Override
+    public List<User> findActiveCustomers() throws DaoException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_SELECT_USER_WITH_ROLE_CUSTOMER_AND_STATE_ACTIVE);
+             ResultSet resultSet = statement.executeQuery()) {
+            return extractUsersFromResultSet(resultSet);
+        } catch (SQLException e) {
+            LOGGER.error("Find active customers exception.", e);
+            throw new DaoException("Find active customers exception.", e);
+        }
+    }
+
+    @Override
     public List<User> findAll() throws DaoException {
-        List<User> users = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_USERS);
              ResultSet resultSet = statement.executeQuery()) {
-            UserRowMapper mapper = UserRowMapper.getInstance();
-            Optional<User> currentUserOptional;
-            while (resultSet.next()) {
-                currentUserOptional = mapper.mapRow(resultSet);
-                currentUserOptional.ifPresent(users::add);
-            }
+            return extractUsersFromResultSet(resultSet);
         } catch (SQLException e) {
             LOGGER.error("Find all users exception. ", e);
             throw new DaoException("Find all users exception. ", e);
         }
-        return users;
     }
 
     @Override
     public Optional<User> update(User user) throws DaoException {
-        return null;//fixme
+        Optional<User> oldUserOptional = findById(user.getId());
+        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_USER_DATA)) {
+            statement.setString(1, user.getLastname());
+            statement.setString(2, user.getName());
+            statement.setString(3, user.getPatronymic());
+            statement.setDate(4, Date.valueOf(user.getBirthdayDate()));
+            statement.setString(5, user.getSex().name());
+            statement.setString(6, user.getPhone());
+            statement.setString(7, user.getAddress());
+            statement.setLong(8, user.getId());
+            return statement.executeUpdate() == ONE_UPDATED ? oldUserOptional : Optional.empty();
+        } catch (SQLException e) {
+            LOGGER.error("Exception when update user." + user, e);
+            throw new DaoException("Exception when update user." + user, e);
+        }
     }
 
     @Override
@@ -148,6 +195,25 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
+
+    public List<User> findByParams(Map<String, String> paramsMap) throws DaoException {
+        try (PreparedStatement statement = connection.
+                prepareStatement(SQL_SELECT_USER_BY_LASTNAME_NAME_PATRONYMIC_BIRTHDAY_DATE_USER_ROLE_USER_STATE)) {
+            statement.setString(1, paramsMap.get(USER_LASTNAME));
+            statement.setString(2, paramsMap.get(USER_NAME));
+            statement.setString(3, paramsMap.get(USER_PATRONYMIC));
+            statement.setString(4, paramsMap.get(USER_BIRTHDAY_DATE));
+            statement.setString(5, paramsMap.get(USER_ROLE));
+            statement.setString(6, paramsMap.get(USER_STATE));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return extractUsersFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find users by params." + paramsMap, e);
+            throw new DaoException("Exception when find users by params." + paramsMap, e);
+        }
+    }
+
     private Optional<User> findUser(PreparedStatement statement) throws SQLException, DaoException {
         try (ResultSet resultSet = statement.executeQuery()) {
             UserRowMapper mapper = UserRowMapper.getInstance();
@@ -159,5 +225,16 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             }
             return userOptional;
         }
+    }
+
+    private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException, DaoException {
+        List<User> users = new ArrayList<>();
+        UserRowMapper mapper = UserRowMapper.getInstance();
+        Optional<User> currentUserOptional;
+        while (resultSet.next()) {
+            currentUserOptional = mapper.mapRow(resultSet);
+            currentUserOptional.ifPresent(users::add);
+        }
+        return users;
     }
 }

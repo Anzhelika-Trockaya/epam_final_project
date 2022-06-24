@@ -32,20 +32,31 @@ public final class PropertyKey {
     public static final String INTERNATIONAL_NAMES_EDITED = "international_names.edited";
     public static final String INTERNATIONAL_NAMES_NOT_EDITED = "international_names.not_edited";
     public static final String INTERNATIONAL_NAMES_DELETED = "international_names.deleted";
-    public static final Object INTERNATIONAL_NAMES_NOT_DELETED = "international_names.not_deleted";
+    public static final String INTERNATIONAL_NAMES_NOT_DELETED = "international_names.not_deleted";
     public static final String FORMS_ADDED = "forms.added";
     public static final String FORMS_NOT_ADDED = "forms.not_added";
     public static final String FORMS_EDITED = "forms.edited";
     public static final String FORMS_NOT_EDITED = "forms.not_edited";
     public static final String FORMS_DELETED = "forms.deleted";
-    public static final Object FORMS_NOT_DELETED = "forms.not_deleted";
+    public static final String FORMS_NOT_DELETED = "forms.not_deleted";
     public static final String MANUFACTURERS_ADDED = "manufacturers.added";
     public static final String MANUFACTURERS_NOT_ADDED = "manufacturers.not_added";
     public static final String MANUFACTURERS_EDITED = "manufacturers.edited";
     public static final String MANUFACTURERS_NOT_EDITED = "manufacturers.not_edited";
     public static final String MANUFACTURERS_DELETED = "manufacturers.deleted";
-    public static final Object MANUFACTURERS_NOT_DELETED = "manufacturers.not_deleted";
-    public static final Object MEDICINES_NOT_FOUND = "medicines.not_found";
+    public static final String MANUFACTURERS_NOT_DELETED = "manufacturers.not_deleted";
+    public static final String MEDICINES_NOT_FOUND = "medicines.not_found";
+    public static final String EDIT_MEDICINE_SUCCESSFUL_EDITED = "edit_medicine.successful_edited";
+    public static final String EDIT_MEDICINE_NOT_EDITED = "edit_medicine.not_edited";
+    public static final String PRESCRIPTIONS_SUCCESSFUL_RENEWAL_REQUEST = "prescriptions.successful_renewal_request";
+    public static final String PRESCRIPTIONS_FAILED_RENEWAL_REQUEST = "prescriptions.failed_renewal_request";
+    public static final String PRESCRIPTIONS_ADDED = "prescriptions.added";
+    public static final String ADD_PRESCRIPTION_NOT_ADDED = "add_prescription.not_added";
+    public static final String PRESCRIPTIONS_SUCCESSFUL_RENEWAL = "prescriptions.successful_renewal";
+    public static final String PRESCRIPTIONS_FAILED_RENEWAL = "prescriptions.failed_renewal";
+    public static final String MEDICINES_ADDED_TO_CART = "medicines.added_to_cart";
+    public static final String MEDICINES_NOT_ADDED_TO_CART = "medicines.not_added_to_cart";
+    public static final String EDIT_MEDICINE_INCORRECT_CHANGE_TOTAL_VALUE = "edit_medicine.incorrect_change_total_value";
 
     private PropertyKey() {
     }

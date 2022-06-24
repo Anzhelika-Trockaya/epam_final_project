@@ -20,13 +20,13 @@ public class ConnectionPool {
     private static final Logger LOGGER = LogManager.getLogger();
     private static ConnectionPool instance;
     private static final String PROPERTY_FILE_NAME = "connectionPoolProperties.properties";
-    private static final String DEFAULT_POOL_SIZE_KEY = "defaultPoolSize";
-    private static final int DEFAULT_POOL_SIZE;
+    private static final String POOL_SIZE_KEY = "poolSize";
+    private static final int POOL_SIZE;
     private static final ReentrantLock createLocker = new ReentrantLock(true);
     private static final AtomicBoolean isCreated = new AtomicBoolean(false);
     private static final Properties properties;
-    private final BlockingQueue<ProxyConnection> availableConnections = new LinkedBlockingQueue<>(DEFAULT_POOL_SIZE);
-    private final BlockingQueue<ProxyConnection> busyConnections = new LinkedBlockingQueue<>(DEFAULT_POOL_SIZE);
+    private final BlockingQueue<ProxyConnection> availableConnections = new LinkedBlockingQueue<>(POOL_SIZE);
+    private final BlockingQueue<ProxyConnection> busyConnections = new LinkedBlockingQueue<>(POOL_SIZE);
 
     static {
         properties = new Properties();
@@ -36,7 +36,7 @@ public class ConnectionPool {
             LOGGER.fatal("ConnectionPool properties not loaded.", exception);
             throw new ExceptionInInitializerError("ConnectionPool properties not loaded." + exception.getMessage());
         }
-        DEFAULT_POOL_SIZE = Integer.parseInt(properties.getProperty(DEFAULT_POOL_SIZE_KEY));
+        POOL_SIZE = Integer.parseInt(properties.getProperty(POOL_SIZE_KEY));
         try {
             DriverManager.registerDriver(new Driver());
         } catch (SQLException exception) {
@@ -47,7 +47,7 @@ public class ConnectionPool {
 
     private ConnectionPool() {
         ProxyConnection connection;
-        for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
+        for (int i = 0; i < POOL_SIZE; i++) {
             try {
                 connection = createConnection();
                 availableConnections.add(connection);
@@ -55,8 +55,8 @@ public class ConnectionPool {
                 LOGGER.warn("Exception when creating connection", e);
             }
         }
-        if (availableConnections.size() < DEFAULT_POOL_SIZE) {
-            int missingConnectionsNumber = DEFAULT_POOL_SIZE - availableConnections.size();
+        if (availableConnections.size() < POOL_SIZE) {
+            int missingConnectionsNumber = POOL_SIZE - availableConnections.size();
             for (int j = 0; j < missingConnectionsNumber; j++) {
                 try {
                     connection = createConnection();
@@ -113,7 +113,7 @@ public class ConnectionPool {
     }
 
     public void destroyPool() {
-        for (int i = 0; i < DEFAULT_POOL_SIZE; i++) {
+        for (int i = 0; i < POOL_SIZE; i++) {
             try {
                 availableConnections.take().reallyClose();
                 LOGGER.info("Connection closed.");

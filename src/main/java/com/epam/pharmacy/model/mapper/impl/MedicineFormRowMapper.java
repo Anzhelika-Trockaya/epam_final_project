@@ -41,7 +41,7 @@ public class MedicineFormRowMapper implements CustomRowMapper<MedicineForm> {
             optionalForm = Optional.of(form);
         } catch (SQLException e) {
             LOGGER.warn("Exception when map form row. ", e);
-            optionalForm = Optional.empty();//fixme maybe throw daoException
+            optionalForm = Optional.empty();
         }
         return optionalForm;
     }

@@ -80,7 +80,7 @@ public class EntityTransaction implements AutoCloseable {
             connection = connectionPool.getConnection();
         }
         try {
-            if (!connection.getAutoCommit()) {
+            if (connection.getAutoCommit() != autoCommit) {
                 connection.setAutoCommit(autoCommit);
             }
         } catch (SQLException e) {

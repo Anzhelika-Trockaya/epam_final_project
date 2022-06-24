@@ -1,9 +1,6 @@
 package com.epam.pharmacy.controller.command.impl.customer;
 
-import com.epam.pharmacy.controller.AttributeName;
-import com.epam.pharmacy.controller.PagePath;
-import com.epam.pharmacy.controller.RequestFiller;
-import com.epam.pharmacy.controller.Router;
+import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
@@ -32,13 +29,13 @@ public class AddMedicineToCartCommand implements Command {
         Router router;
         try {
             boolean isAdded = orderService.addToCart(customerId, medicineId, medicineQuantity);
-            router = new Router(PagePath.HOME);
+            router = new Router(PagePath.MEDICINES);
             if (isAdded) {
-                session.setAttribute(AttributeName.SUCCESSFUL_ADDED, Boolean.TRUE.toString());
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
                 router.setTypeRedirect();
             } else{
-                RequestFiller.getInstance().addInternationalNames(request);
-                request.setAttribute(AttributeName.FAILED, Boolean.TRUE);
+                //fixme if pagination
+                request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_NOT_ADDED_TO_CART);
             }
         } catch(ServiceException e){
             LOGGER.error("Exception in the AddMedicineToCartCommand", e);

@@ -26,7 +26,7 @@ public class DeleteUserCommand implements Command {
             Router router = new Router(PagePath.USERS, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.USERS_DELETED_MESSAGE);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.USERS_DELETED_MESSAGE);
             } else {
                 session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.USERS_NOT_DELETED_MESSAGE);
             }

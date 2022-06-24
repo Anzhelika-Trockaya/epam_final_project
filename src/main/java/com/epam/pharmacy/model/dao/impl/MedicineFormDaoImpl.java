@@ -3,6 +3,7 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.MedicineFormDao;
+import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.MedicineForm;
 import com.epam.pharmacy.model.mapper.impl.MedicineFormRowMapper;
 import com.epam.pharmacy.model.pool.ConnectionPool;
@@ -31,8 +32,7 @@ public class MedicineFormDaoImpl extends AbstractDao<MedicineForm> implements Me
 
     @Override
     public boolean create(MedicineForm medicineForm) throws DaoException {
-        try (Connection connection = ConnectionPool.getInstance().getConnection();
-             PreparedStatement statement = connection.prepareStatement(SQL_INSERT_FORM)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INSERT_FORM)) {
             statement.setString(1, medicineForm.getName());
             statement.setString(2, medicineForm.getUnit().name());
             return statement.executeUpdate() == ONE_UPDATED;

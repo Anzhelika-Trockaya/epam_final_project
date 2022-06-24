@@ -28,6 +28,8 @@
 <fmt:message key="registration.customer" var="title_customer"/>
 <fmt:message key="registration.male" var="title_male"/>
 <fmt:message key="registration.female" var="title_female"/>
+<fmt:message key="action.search" var="search"/>
+<fmt:message key="action.reset" var="reset_search_results"/>
 
 <html>
 <head>
@@ -37,23 +39,64 @@
 <body>
 <h3>${users_title}</h3>
 <hr>
-<br/>
 <div class="data_table">
-    <c:if test="${not empty successful_change_message}">
-        <div><p class="successful_msg"><fmt:message key="${successful_change_message}"/></p></div>
-        <br/>
+    <c:if test="${not empty temp_successful_change_message}">
+        <div><p class="successful_msg"><fmt:message key="${temp_successful_change_message}"/></p></div>
+        <br>
     </c:if>
     <c:if test="${not empty failed_change_message}">
         <div><p class="failed_msg"><fmt:message key="${failed_change_message}"/></p></div>
-        <br/>
+        <br>
     </c:if>
+    <form action="${context_path}/controller">
+        <input type="hidden" name="command" value="search_user"/>
+        <input type="text" name="lastname" placeholder="${lastname_title}" value="${user_lastname}"/>
+        <input type="text" name="name" placeholder="${name_title}" value="${user_name}"/>
+        <input type="text" name="patronymic" placeholder="${patronymic_title}" value="${user_patronymic}"/>
+        <input type="date" name="birthday_date" placeholder="${birthday_title}" value="${user_birthday_date}"/>
+        <br><br>
+        <label for="role">${role_title}</label>
+        <select id="role" name="role" size="1">
+            <option id="default_role" selected value="">-</option>
+            <option
+                    <c:if test="${user_role eq 'ADMIN'}">selected</c:if> value="ADMIN">${title_admin}
+            </option>
+            <option
+                    <c:if test="${user_role eq 'DOCTOR'}">selected</c:if> value="DOCTOR">${title_doctor}
+            </option>
+            <option
+                    <c:if test="${user_role eq 'PHARMACIST'}">selected</c:if>
+                    value="PHARMACIST">${title_pharmacist}
+            </option>
+            <option
+                    <c:if test="${user_role eq 'CUSTOMER'}">selected</c:if>
+                    value="CUSTOMER">${title_customer}
+            </option>
+        </select>
+        <label for="state">${state_title}</label>
+        <select id="state" name="state" size="1">
+            <option id="default_state" selected value="">-</option>
+            <option
+                    <c:if test="${user_state eq 'ACTIVE'}">selected</c:if> value="ACTIVE">${active_title}
+            </option>
+            <option
+                    <c:if test="${user_state eq 'BLOCKED'}">selected</c:if> value="BLOCKED">${blocked_title}
+            </option>
+        </select>
+        <br><br>
+        <input type="submit" value="${search}"/>
+        <input type="submit" form="reset_search_results_form" value="${reset_search_results}"/>
+    </form>
+    <form id="reset_search_results_form" action="${context_path}/jsp/admin/users.jsp"></form>
+    <hr>
+    <br>
     <c:if test="${empty users_list}">
         <h4>${empty_msg}</h4>
     </c:if>
     <form action="${context_path}/jsp/common/registration.jsp">
         <input type="submit" value="${add_user}"/>
     </form>
-    <br/>
+    <br>
     <table class="table">
         <thead>
         <tr>

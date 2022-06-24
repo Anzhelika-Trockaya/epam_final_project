@@ -2,6 +2,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.ManufacturerService;
@@ -30,7 +31,7 @@ public class AddManufacturerCommand implements Command {
             router = new Router(PagePath.MANUFACTURERS);
             if (isCreated) {
                 HttpSession session = request.getSession();
-                session.setAttribute(AttributeName.SUCCESSFUL_CHANGE_MESSAGE, MANUFACTURERS_ADDED);
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, MANUFACTURERS_ADDED);
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, MANUFACTURERS_NOT_ADDED);

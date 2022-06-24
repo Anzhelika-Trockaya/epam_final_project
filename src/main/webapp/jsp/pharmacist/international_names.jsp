@@ -16,12 +16,13 @@
     <title>${page_title}</title>
 </head>
 <body>
+<c:set var="current_page" value="jsp/pharmacist/international_names.jsp" scope="session"/>
 <div>
     <h3>${title}</h3>
     <hr>
     <br/>
-    <c:if test="${not empty successful_change_message}">
-        <div><p class="successful_msg"><fmt:message key="${successful_change_message}"/></p></div>
+    <c:if test="${not empty temp_successful_change_message}">
+        <div><p class="successful_msg"><fmt:message key="${temp_successful_change_message}"/></p></div>
         <br/>
     </c:if>
     <c:if test="${not empty failed_change_message}">

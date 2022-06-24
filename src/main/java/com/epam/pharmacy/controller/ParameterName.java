@@ -20,9 +20,9 @@ public final class ParameterName {
     public static final String DOSAGE_UNIT = "dosage_unit";
     public static final String NEED_PRESCRIPTION = "need_prescription";
     public static final String MANUFACTURER = "manufacturer";
-    public static final String AMOUNT_IN_PART = "amount_in_part";
-    public static final String PARTS_IN_PACKAGE = "parts_in_package";
-    public static final String TOTAL_PARTS = "total_parts";
+    public static final String AMOUNT_IN_PACKAGE = "amount_in_package";
+    public static final String NUMBER_IN_PACKAGE = "number_in_package";
+    public static final String TOTAL_PACKAGES = "total_packages";
     public static final String PRICE = "price";
     public static final String INGREDIENTS = "ingredients";
     public static final String INSTRUCTION = "instruction";
@@ -37,6 +37,47 @@ public final class ParameterName {
     public static final String COUNTRY = "country";
     public static final String MANUFACTURER_ID = "manufacturer_id";
     public static final String MEDICINE_ID = "medicine_id";
+    public static final String OLD_IMAGE_PATH = "old_image_path";
+    public static final String PRESCRIPTION_ID = "prescription_id";
+    public static final String PRESCRIPTION_INTERNATIONAL_NAME_ID = "prescription_international_name_id";
+    public static final String PRESCRIPTION_DOCTOR_ID = "prescription_doctor_id";
+    public static final String PRESCRIPTION_CUSTOMER_ID = "prescription_customer_id";
+    public static final String PRESCRIPTION_QUANTITY = "prescription_quantity";
+    public static final String PRESCRIPTION_SOLD_QUANTITY = "prescription_sold_quantity";
+    public static final String PRESCRIPTION_VALIDITY = "prescription_validity";
+    public static final String PRESCRIPTION_FORM_ID = "prescription_form_id";
+    public static final String PRESCRIPTION_DOSAGE = "prescription_dosage";
+    public static final String PRESCRIPTION_DOSAGE_UNIT = "prescription_dosage_unit";
+    public static final String PRESCRIPTION_NEED_RENEWAL = "prescription_need_renewal";
+    public static final String INCORRECT_QUANTITY = "incorrect_quantity";
+    public static final String INCORRECT_SOLD_QUANTITY = "incorrect_sold_quantity";
+    public static final String USER_FULL_NAME = "user_full_name";
+    public static final String SOLD_QUANTITY = "sold_quantity";
+    public static final String QUANTITY = "quantity";
+    public static final String EXPIRATION_DATE = "expiration_date";
+    public static final String CUSTOMER_ID = "customer_id";
+    public static final String CUSTOMER_LASTNAME = "customer_lastname";
+    public static final String CUSTOMER_NAME = "customer_name";
+    public static final String CUSTOMER_PATRONYMIC = "customer_patronymic";
+    public static final String CUSTOMER_BIRTHDAY_DATE = "customer_birthday";
+    public static final String CUSTOMER_SEX = "customer_sex";
+    public static final String SHOW_RENEWAL_REQUESTS = "show_renewal_requests";
+    public static final String NEED_RENEWAL = "need_renewal";
+    public static final String USER_ROLE = "user_role";
+    public static final String USER_LASTNAME = "user_lastname";
+    public static final String USER_NAME = "user_name";
+    public static final String USER_PATRONYMIC = "user_patronymic";
+    public static final String USER_BIRTHDAY_DATE = "user_birthday_date";
+    public static final String USER_STATE = "user_state";
+    public static final String STATE = "state";
+    public static final String MEDICINE = "medicine";
+    public static final String CHANGE_TOTAL_VALUE = "change_total_value";
+    public static final String MEDICINE_NAME = "medicine_name";
+    public static final String MEDICINE_INTERNATIONAL_NAME_ID = "medicine_international_name_id";
+    public static final String MEDICINE_FORM_ID = "medicine_form_id";
+    public static final String MEDICINE_DOSAGE = "medicine_dosage";
+    public static final String MEDICINE_DOSAGE_UNIT = "medicine_dosage_unit";
+
 
     private ParameterName() {
     }

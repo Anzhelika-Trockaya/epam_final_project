@@ -2,6 +2,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.RequestFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineService;
@@ -16,6 +17,11 @@ import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
+import static com.epam.pharmacy.controller.ParameterName.MEDICINE_DOSAGE;
+import static com.epam.pharmacy.controller.ParameterName.MEDICINE_DOSAGE_UNIT;
+import static com.epam.pharmacy.controller.ParameterName.MEDICINE_FORM_ID;
+import static com.epam.pharmacy.controller.ParameterName.MEDICINE_INTERNATIONAL_NAME_ID;
+import static com.epam.pharmacy.controller.ParameterName.MEDICINE_NAME;
 
 public class AddMedicineCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -34,11 +40,11 @@ public class AddMedicineCommand implements Command {
             router = new Router(PagePath.ADD_MEDICINE);
             if (isCreated) {
                 HttpSession session = request.getSession();
-                session.setAttribute(AttributeName.SUCCESSFUL_ADDED, Boolean.TRUE.toString());
+                session.setAttribute(AttributeName.TEMP_SUCCESSFUL_ADDED, true);
                 router.setTypeRedirect();
             } else {
-                addDataToRequest(request, medicineData);
                 RequestFiller requestFiller = RequestFiller.getInstance();
+                requestFiller.addDataToRequest(request, medicineData);
                 requestFiller.addManufacturers(request);
                 requestFiller.addForms(request);
                 requestFiller.addInternationalNames(request);
@@ -50,14 +56,10 @@ public class AddMedicineCommand implements Command {
         return router;
     }
 
-    private void addDataToRequest(HttpServletRequest request, Map<String, String> medicineData) {
-        for (String key : medicineData.keySet()) {
-            request.setAttribute(key, medicineData.get(key));
-        }
-    }
-
-    private Map<String, String> createMedicineDataMap(HttpServletRequest request) {
+    public Map<String, String> createMedicineDataMap(HttpServletRequest request) {
         Map<String, String> medicineData = new HashMap<>();
+        String id = request.getParameter(MEDICINE_ID);
+        medicineData.put(MEDICINE_ID, id);
         String name = request.getParameter(NAME);
         medicineData.put(MEDICINE_NAME, name);
         String internationalNameId = request.getParameter(INTERNATIONAL_NAME);
@@ -72,12 +74,10 @@ public class AddMedicineCommand implements Command {
         medicineData.put(MEDICINE_DOSAGE_UNIT, dosageUnit);
         String needPrescription = request.getParameter(NEED_PRESCRIPTION);
         medicineData.put(MEDICINE_NEED_PRESCRIPTION, needPrescription);
-        String amountInPart = request.getParameter(AMOUNT_IN_PART);
-        medicineData.put(MEDICINE_AMOUNT_IN_PART, amountInPart);
-        String partsInPackage = request.getParameter(PARTS_IN_PACKAGE);
-        medicineData.put(MEDICINE_PARTS_IN_PACKAGE, partsInPackage);
-        String totalParts = request.getParameter(TOTAL_PARTS);
-        medicineData.put(MEDICINE_TOTAL_PARTS, totalParts);
+        String numberInPackage = request.getParameter(NUMBER_IN_PACKAGE);
+        medicineData.put(MEDICINE_NUMBER_IN_PACKAGE, numberInPackage);
+        String totalPackages = request.getParameter(TOTAL_PACKAGES);
+        medicineData.put(MEDICINE_TOTAL_PACKAGES, totalPackages);
         String price = request.getParameter(PRICE);
         medicineData.put(MEDICINE_PRICE, price);
         String ingredients = request.getParameter(INGREDIENTS);
