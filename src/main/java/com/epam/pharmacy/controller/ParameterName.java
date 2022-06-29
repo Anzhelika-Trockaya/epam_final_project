@@ -45,7 +45,7 @@ public final class ParameterName {
     public static final String PRESCRIPTION_QUANTITY = "prescription_quantity";
     public static final String PRESCRIPTION_SOLD_QUANTITY = "prescription_sold_quantity";
     public static final String PRESCRIPTION_VALIDITY = "prescription_validity";
-    public static final String PRESCRIPTION_FORM_ID = "prescription_form_id";
+    public static final String PRESCRIPTION_UNIT = "prescription_unit";
     public static final String PRESCRIPTION_DOSAGE = "prescription_dosage";
     public static final String PRESCRIPTION_DOSAGE_UNIT = "prescription_dosage_unit";
     public static final String PRESCRIPTION_NEED_RENEWAL = "prescription_need_renewal";
@@ -77,6 +77,7 @@ public final class ParameterName {
     public static final String MEDICINE_FORM_ID = "medicine_form_id";
     public static final String MEDICINE_DOSAGE = "medicine_dosage";
     public static final String MEDICINE_DOSAGE_UNIT = "medicine_dosage_unit";
+    public static final String IS_ACTIVE = "is_active";
 
 
     private ParameterName() {

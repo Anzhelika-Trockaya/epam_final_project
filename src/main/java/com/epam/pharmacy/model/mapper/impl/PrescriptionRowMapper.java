@@ -2,6 +2,7 @@ package com.epam.pharmacy.model.mapper.impl;
 
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.DosageUnit;
+import com.epam.pharmacy.model.entity.FormUnit;
 import com.epam.pharmacy.model.entity.Prescription;
 import com.epam.pharmacy.model.mapper.CustomRowMapper;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +38,8 @@ public class PrescriptionRowMapper implements CustomRowMapper<Prescription> {
             long internationalNameId = resultSet.getLong(PRESCRIPTION_INTERNATIONAL_NAME_ID);
             long doctorId = resultSet.getLong(PRESCRIPTION_DOCTOR_ID);
             long customerId = resultSet.getLong(PRESCRIPTION_CUSTOMER_ID);
-            long form_id = resultSet.getLong(PRESCRIPTION_FORM_ID);
+            String unitString = resultSet.getString(PRESCRIPTION_UNIT);
+            FormUnit unit = FormUnit.valueOf(unitString);
             int quantity = resultSet.getInt(PRESCRIPTION_QUANTITY);
             int soldQuantity = resultSet.getInt(PRESCRIPTION_SOLD_QUANTITY);
             Date date = resultSet.getDate(PRESCRIPTION_EXPIRATION_DATE);
@@ -54,7 +56,7 @@ public class PrescriptionRowMapper implements CustomRowMapper<Prescription> {
                     buildQuantity(quantity).
                     buildSoldQuantity(soldQuantity).
                     buildExpirationDate(expirationDate).
-                    buildFormId(form_id).
+                    buildUnit(unit).
                     buildDosage(dosage).
                     buildDosageUnit(dosageUnit).
                     buildNeedRenewal(needRenewal).

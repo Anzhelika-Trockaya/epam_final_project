@@ -6,7 +6,6 @@ public final class AttributeName {
     public static final String CURRENT_PAGE = "current_page";
     public static final String TEMP_SUCCESSFUL_REGISTRATION = "temp_successful_registration";
     public static final String USERS_LIST = "users_list";
-    public static final String FAILED = "failed";
     public static final String USER_ID = "user_id";
     public static final String USER_LOGIN = "user_login";
     public static final String USER_LASTNAME = "user_lastname";
@@ -56,7 +55,6 @@ public final class AttributeName {
     public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
     public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
     public static final String MEDICINE_MANUFACTURER_ID="medicine_manufacturer_id";
-    public static final String MEDICINE_AMOUNT_IN_PACKAGE ="medicine_amount_in_package";
     public static final String MEDICINE_NUMBER_IN_PACKAGE ="medicine_number_in_package";
     public static final String MEDICINE_TOTAL_PACKAGES ="medicine_total_packages";
     public static final String MEDICINE_PRICE="medicine_price";
@@ -65,9 +63,7 @@ public final class AttributeName {
     public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
     public static final String TEMP_SUCCESSFUL_ADDED = "temp_successful_added";
     public static final String INCORRECT_FILE ="incorrect_file" ;
-    public static final String MEDICINES_LIST = "medicines_list";
-    public static final String CURRENT_USER_CART_CONTENT = "current_user_cart_content";
-    public static final String SHOW_SEARCH_RESULT = "show_search_result";
+    public static final String CART_CONTENT = "cart_content";
     public static final String MEDICINE = "medicine";
     public static final String INCORRECT_DATA = "incorrect_data";
     public static final String BLOCKED = "blocked";
@@ -83,6 +79,12 @@ public final class AttributeName {
     public static final String SHOW_RENEWAL_REQUESTS = "show_renewal_requests";
     public static final String MEDICINES_DATA_MAP = "medicines_data_map";
     public static final String MEDICINE_CHANGE_TOTAL_VALUE = "medicine_change_total_value";
+    public static final String SHOW_PRESCRIPTIONS_MEDICINES = "show_prescriptions_medicines";
+    public static final String PRESCRIPTION_ID = "prescription_id";
+    public static final String PRESCRIPTION_EXPIRATION_DATE = "prescription_expiration_date";
+    public static final String PRESCRIPTION_AVAILABLE_QUANTITY = "prescription_available_quantity";
+    public static final String SHOW_SEARCH_RESULT = "show_search_result";
+
 
     private AttributeName() {
     }

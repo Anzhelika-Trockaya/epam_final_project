@@ -1,10 +1,13 @@
 package com.epam.pharmacy.model.service.impl;
 
+import com.epam.pharmacy.controller.ParameterName;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.dao.EntityTransaction;
+import com.epam.pharmacy.model.dao.impl.OrderDaoImpl;
 import com.epam.pharmacy.model.dao.impl.PrescriptionDaoImpl;
 import com.epam.pharmacy.model.entity.DosageUnit;
+import com.epam.pharmacy.model.entity.FormUnit;
 import com.epam.pharmacy.model.entity.Prescription;
 import com.epam.pharmacy.model.service.PrescriptionService;
 import com.epam.pharmacy.validator.DataValidator;
@@ -14,17 +17,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Optional;
 
 import static com.epam.pharmacy.controller.ParameterName.*;
 
 public class PrescriptionServiceImpl implements PrescriptionService {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final int VALIDITY_MONTH_QUANTITY = 1;
+    private static final int RENEWAL_MONTH_QUANTITY = 1;
+    private static final int NOT_USING_PRESCRIPTION_SOLD_QUANTITY = 0;
 
     @Override
     public boolean renewalForAMonth(String prescriptionId) throws ServiceException {
         long id = Long.parseLong(prescriptionId);
-        LocalDate newDate = LocalDate.now().plusMonths(VALIDITY_MONTH_QUANTITY);
+        LocalDate newDate = LocalDate.now().plusMonths(RENEWAL_MONTH_QUANTITY);
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(prescriptionDao);
@@ -36,16 +41,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public boolean existsPrescriptionToOrderPosition(String medicineId, String quantity){
-        DataValidator dataValidator = DataValidatorImpl.getInstance();
-        if(!dataValidator.isCorrectQuantity(quantity)){
-            LOGGER.warn("");//fixme
-        }
-        long medicineIdValue = Long.parseLong(medicineId);
-    }
-
-    @Override
-    public Map<Long, Map<String, String>> findAllByDoctor(long doctorId) throws ServiceException {
+    public Map<Long, Map<String, Object>> findAllByDoctor(long doctorId) throws ServiceException {
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(prescriptionDao);
@@ -57,7 +53,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public Map<Long, Map<String, String>> findRenewalRequestsByDoctor(long doctorId) throws ServiceException {
+    public Map<Long, Map<String, Object>> findRenewalRequestsByDoctor(long doctorId) throws ServiceException {
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(prescriptionDao);
@@ -69,7 +65,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     @Override
-    public Map<Long, Map<String, String>> findAllByCustomer(long customerId) throws ServiceException {
+    public Map<Long, Map<String, Object>> findAllByCustomer(long customerId) throws ServiceException {
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(prescriptionDao);
@@ -113,6 +109,37 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         }
     }
 
+    @Override
+    public Optional<Prescription> findById(String prescriptionId) throws ServiceException {
+        PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(prescriptionDao);
+            long id = Long.parseLong(prescriptionId);
+            return prescriptionDao.findById(id);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find prescription. id=" + prescriptionId, e);
+            throw new ServiceException("Exception when find prescription. id=" + prescriptionId, e);
+        }
+    }
+
+    @Override
+    public boolean deleteIfIsNotUsed(String prescriptionId) throws ServiceException {
+        PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(prescriptionDao, orderDao);
+            long id = Long.parseLong(prescriptionId);
+            if (orderDao.existsPrescriptionInOrders(id)) {
+                return false;
+            } else {
+                return prescriptionDao.deleteById(id);
+            }
+        } catch (DaoException e) {
+            LOGGER.error("Exception when delete prescription. id=" + prescriptionId, e);
+            throw new ServiceException("Exception when delete prescription. id=" + prescriptionId, e);
+        }
+    }
+
     private Prescription buildPrescription(Map<String, String> data) {
         String internationalNameIdString = data.get(PRESCRIPTION_INTERNATIONAL_NAME_ID);
         long internationalNameId = Long.parseLong(internationalNameIdString);
@@ -123,20 +150,20 @@ public class PrescriptionServiceImpl implements PrescriptionService {
         String validityString = data.get(PRESCRIPTION_VALIDITY);
         int validityMonthQuantity = Integer.parseInt(validityString);
         LocalDate expirationDate = LocalDate.now().plusMonths(validityMonthQuantity);
-        String formIdString = data.get(PRESCRIPTION_FORM_ID);
-        long formId = Long.parseLong(formIdString);
+        String unitString = data.get(ParameterName.PRESCRIPTION_UNIT);
+        FormUnit unit = FormUnit.valueOf(unitString);
         String dosageString = data.get(PRESCRIPTION_DOSAGE);
         int dosage = Integer.parseInt(dosageString);
-        String unitString = data.get(PRESCRIPTION_DOSAGE_UNIT);
-        DosageUnit unit = DosageUnit.valueOf(unitString);
+        String dosageUnitString = data.get(PRESCRIPTION_DOSAGE_UNIT);
+        DosageUnit dosageUnit = DosageUnit.valueOf(dosageUnitString);
         Prescription.Builder prescriptionBuilder = new Prescription.Builder();
         return prescriptionBuilder.buildInternationalNameId(internationalNameId).
                 buildQuantity(quantity).
                 buildCustomerId(customerId).
                 buildExpirationDate(expirationDate).
-                buildFormId(formId).
+                buildUnit(unit).
                 buildDosage(dosage).
-                buildDosageUnit(unit).
+                buildDosageUnit(dosageUnit).
                 buildNeedRenewal(false).
                 build();
     }

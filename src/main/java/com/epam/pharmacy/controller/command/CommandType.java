@@ -7,6 +7,7 @@ import com.epam.pharmacy.controller.command.impl.admin.SearchUserCommand;
 import com.epam.pharmacy.controller.command.impl.common.*;
 import com.epam.pharmacy.controller.command.impl.customer.AddMedicineToCartCommand;
 import com.epam.pharmacy.controller.command.impl.customer.RequestRenewalPrescriptionCommand;
+import com.epam.pharmacy.controller.command.impl.customer.ShowMedicinesForPrescriptionCommand;
 import com.epam.pharmacy.controller.command.impl.doctor.*;
 import com.epam.pharmacy.controller.command.impl.pharmacist.*;
 
@@ -33,6 +34,7 @@ public enum CommandType {
     DELETE_INTERNATIONAL_NAME(new DeleteInternationalNameCommand()),
     DELETE_MEDICINE_FORM(new DeleteMedicineFormCommand()),
     DELETE_MANUFACTURER(new DeleteManufacturerCommand()),
+    DELETE_PRESCRIPTION(new DeletePrescriptionCommand()),
     DEFAULT(new DefaultCommand()),
     RENEWAL_PRESCRIPTION(new RenewalPrescriptionCommand()),
     REQUEST_RENEWAL_PRESCRIPTION(new RequestRenewalPrescriptionCommand()),
@@ -40,6 +42,7 @@ public enum CommandType {
     REGISTER(new RegisterCommand()),
     SEARCH_MEDICINES(new SearchMedicinesCommand()),
     SEARCH_USER(new SearchUserCommand()),
+    SHOW_MEDICINES_FOR_PRESCRIPTION(new ShowMedicinesForPrescriptionCommand()),
     SIGN_IN(new SignInCommand()),
     UPDATE_PASSWORD(new UpdatePasswordCommand());
 

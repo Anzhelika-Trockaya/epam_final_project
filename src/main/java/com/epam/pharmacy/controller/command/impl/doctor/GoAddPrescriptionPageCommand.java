@@ -33,7 +33,6 @@ public class GoAddPrescriptionPageCommand implements Command {
             User customer = customerOptional.get();
             RequestFiller requestFiller = RequestFiller.getInstance();
             requestFiller.addInternationalNames(request);
-            requestFiller.addForms(request);
             requestFiller.addCustomerPersonalData(request, customer);
         } else {
             LOGGER.warn("Customer with id=" + customerId + " not found.");

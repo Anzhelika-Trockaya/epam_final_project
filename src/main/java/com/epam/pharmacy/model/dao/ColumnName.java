@@ -46,11 +46,12 @@ public final class ColumnName {
     public static final String PRESCRIPTION_QUANTITY = "prescription_quantity";
     public static final String PRESCRIPTION_SOLD_QUANTITY = "prescription_sold_quantity";
     public static final String PRESCRIPTION_EXPIRATION_DATE = "prescription_expiration_date";
-    public static final String PRESCRIPTION_FORM_ID = "prescription_form_id";
     public static final String PRESCRIPTION_DOSAGE = "prescription_dosage";
     public static final String PRESCRIPTION_DOSAGE_UNIT = "prescription_dosage_unit";
     public static final String PRESCRIPTION_NEED_RENEWAL = "prescription_need_renewal";
-    public static final String ROW_COUNT = "row_count";
+    public static final String AVAILABLE_QUANTITY = "available_quantity";
+    public static final String NUMBER = "number";
+    public static final String PRESCRIPTION_UNIT = "prescription_unit";
 
     private ColumnName() {
     }

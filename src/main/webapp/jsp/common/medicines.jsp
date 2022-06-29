@@ -35,6 +35,11 @@
 <fmt:message key="medicines.me" var="unit_name_me"/>
 <fmt:message key="medicines.nanogram" var="unit_name_ng"/>
 <fmt:message key="medicines.not_available" var="not_available"/>
+<fmt:message key="medicines.go_to_prescriptions" var="go_to_prescriptions"/>
+<fmt:message key="medicines.prescription" var="prescription_title"/>
+<fmt:message key="medicines.expiration_date" var="expiration_date"/>
+<fmt:message key="medicines.available" var="available"/>
+<fmt:message key="medicines.tab_or_ml" var="tab_or_ml"/>
 <html>
 <head>
     <title>${medicines_page_title}</title>
@@ -61,68 +66,77 @@
             <div><p class="failed_msg"><fmt:message key="${failed_change_message}"/></p></div>
             <br>
         </c:if>
-        <form action="${context_path}/controller">
-            <input type="hidden" name="command" value="search_medicines"/>
-            <input type="text" name="medicine_name" placeholder="${enter_medicine_name}" value="${medicine_name}"/>
-            <label for="international_name">${label_international_name}</label>
-            <select id="international_name" name="medicine_international_name_id" size="1">
-                <option id="default_international_name" selected value="">-</option>
-                <c:forEach var="international_name" items="${international_names_list}">
-                    <option
-                            <c:if test="${medicine_international_name_id eq international_name.id}">selected</c:if>
-                            value="${international_name.id}">
-                            ${international_name.internationalName}
-                    </option>
-                </c:forEach>
-            </select>
-            <label for="form">${label_form}</label>
-            <select id="form" name="medicine_form_id" size="1">
-                <option id="default_form" selected value="">-</option>
-                <c:forEach var="form" items="${forms_list}">
-                    <option
-                            <c:if test="${medicine_form_id eq form.id}">selected</c:if> value="${form.id}">
-                            ${form.name}
-                    </option>
-                </c:forEach>
-            </select>
-            <br><br>
-            <label for="dosage">${label_dosage}</label>
-            <input type="text" id="dosage" name="medicine_dosage" value="${medicine_dosage}"/>
-            <select id="dosage_unit" name="medicine_dosage_unit" size="1">
-                <option id="default_dosage_unit" selected value="">-</option>
-                <option
-                        <c:if test="${medicine_dosage_unit eq 'MILLILITER'}">selected</c:if> value="MILLILITER">
-                    ${unit_name_ml}
-                </option>
-                <option
-                        <c:if test="${medicine_dosage_unit eq 'MILLIGRAM'}">selected</c:if> value="MILLIGRAM">
-                    ${unit_name_mg}
-                </option>
-                <option
-                        <c:if test="${medicine_dosage_unit eq 'GRAM'}">selected</c:if> value="GRAM">
-                    ${unit_name_g}
-                </option>
-                <option
-                        <c:if test="${medicine_dosage_unit eq 'MICROGRAM'}">selected</c:if> value="MICROGRAM">
-                    ${unit_name_mcg}
-                </option>
-                <option
-                        <c:if test="${medicine_dosage_unit eq 'ME'}">selected</c:if> value="ME">
-                    ${unit_name_me}
-                </option>
-                <option
-                        <c:if test="${medicine_dosage_unit eq 'NANOGRAM'}">selected</c:if> value="NANOGRAM">
-                    ${unit_name_ng}
-                </option>
-            </select>
-            <br><br>
-            <input type="submit" name="sub" value="${search}"/>
-            <input type="submit" form="reset_search_results_form" value="${reset_search_results}"/>
-            <br>
-        </form>
-        <form id="reset_search_results_form" action="${context_path}/jsp/common/medicines.jsp"></form>
-        <hr>
-        <br/>
+        <c:choose>
+            <c:when test="${empty show_prescriptions_medicines}">
+                <form action="${context_path}/controller">
+                    <input type="hidden" name="command" value="search_medicines"/>
+                    <input type="text" name="medicine_name" placeholder="${enter_medicine_name}"
+                           value="${medicine_name}"/>
+                    <label for="international_name">${label_international_name}</label>
+                    <select id="international_name" name="medicine_international_name_id" size="1">
+                        <option id="default_international_name" selected value="">-</option>
+                        <c:forEach var="international_name" items="${international_names_list}">
+                            <option
+                                    <c:if test="${medicine_international_name_id eq international_name.id}">selected</c:if>
+                                    value="${international_name.id}">
+                                    ${international_name.internationalName}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    <label for="form">${label_form}</label>
+                    <select id="form" name="medicine_form_id" size="1">
+                        <option id="default_form" selected value="">-</option>
+                        <c:forEach var="form" items="${forms_list}">
+                            <option
+                                    <c:if test="${medicine_form_id eq form.id}">selected</c:if> value="${form.id}">
+                                    ${form.name}
+                            </option>
+                        </c:forEach>
+                    </select>
+                    <br><br>
+                    <label for="dosage">${label_dosage}</label>
+                    <input type="text" id="dosage" name="medicine_dosage" value="${medicine_dosage}"/>
+                    <select id="dosage_unit" name="medicine_dosage_unit" size="1">
+                        <option id="default_dosage_unit" selected value="">-</option>
+                        <option
+                                <c:if test="${medicine_dosage_unit eq 'MILLILITER'}">selected</c:if> value="MILLILITER">
+                                ${unit_name_ml}
+                        </option>
+                        <option
+                                <c:if test="${medicine_dosage_unit eq 'MILLIGRAM'}">selected</c:if> value="MILLIGRAM">
+                                ${unit_name_mg}
+                        </option>
+                        <option
+                                <c:if test="${medicine_dosage_unit eq 'GRAM'}">selected</c:if> value="GRAM">
+                                ${unit_name_g}
+                        </option>
+                        <option
+                                <c:if test="${medicine_dosage_unit eq 'MICROGRAM'}">selected</c:if> value="MICROGRAM">
+                                ${unit_name_mcg}
+                        </option>
+                        <option
+                                <c:if test="${medicine_dosage_unit eq 'ME'}">selected</c:if> value="ME">
+                                ${unit_name_me}
+                        </option>
+                        <option
+                                <c:if test="${medicine_dosage_unit eq 'NANOGRAM'}">selected</c:if> value="NANOGRAM">
+                                ${unit_name_ng}
+                        </option>
+                    </select>
+                    <br><br>
+                    <input type="submit" name="sub" value="${search}"/>
+                    <input type="submit" form="reset_search_results_form" value="${reset_search_results}"/>
+                    <br>
+                </form>
+                <form id="reset_search_results_form" action="${context_path}/jsp/common/medicines.jsp"></form>
+                <hr>
+                <br/>
+            </c:when>
+            <c:otherwise>
+                <p>${prescription_title} № ${prescription_id} ${expiration_date}: ${prescription_expiration_date}.</p>
+                <p>${available}: ${prescription_available_quantity} ${tab_or_ml}</p>
+            </c:otherwise>
+        </c:choose>
         <c:if test="${empty medicines_data_map}">
             <c:choose>
                 <c:when test="${not empty show_search_result}">
@@ -182,10 +196,11 @@
                             <p>${manufacturer_title} ${manufacturer.name}(${manufacturer.country})</p>
                             <c:choose>
                                 <c:when test="${current_user_role eq 'CUSTOMER'}">
-                                    <form id="add_to_cart_form" action="${context_path}/controller" method="post">
+                                    <form id="add_to_cart_form_${medicine_id}" action="${context_path}/controller"
+                                          method="post">
                                         <input type="hidden" name="command" value="add_medicine_to_cart"/>
-                                        <input type="hidden" name="order_medicine_id"
-                                               value="<c:out value="${medicine_id}"/>"/>
+                                        <input type="hidden" name="order_medicine_id" value="${medicine_id}"/>
+                                        <input type="hidden" name="prescription_id" value="${prescription_id}"/>
                                         <div class="numbers">
                                             <button type="button" id="${medicine_id}_btn_minus"
                                                     onclick="minus(${medicine_id})">
@@ -212,7 +227,14 @@
                                 <c:when test="${medicine.totalPackages > 0}">
                                     <h2><b><c:out value="${medicine.price}"/> BYN</b></h2>
                                     <c:if test="${current_user_role eq 'CUSTOMER'}">
-                                        <input type="submit" form="add_to_cart_form" value="${add_to_cart}"/>
+                                        <input type="submit" form="add_to_cart_form_${medicine_id}"
+                                               <c:if test="${medicine.needPrescription() &&
+                                               (empty show_prescriptions_medicines)}">disabled</c:if>
+                                               value="${add_to_cart}"/>
+                                        <c:if test="${medicine.needPrescription()&&
+                                               (empty show_prescriptions_medicines)}">
+                                            <p class="successful_msg">${go_to_prescriptions}</p>
+                                        </c:if>
                                     </c:if>
                                 </c:when>
                                 <c:otherwise>

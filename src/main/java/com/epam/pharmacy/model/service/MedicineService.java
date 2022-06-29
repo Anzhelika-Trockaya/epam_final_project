@@ -2,9 +2,9 @@ package com.epam.pharmacy.model.service;
 
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Medicine;
+import com.epam.pharmacy.model.entity.Prescription;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,5 +19,11 @@ public interface MedicineService {
 
     Optional<Integer> findTotalPackages(long id) throws ServiceException;
 
-    Map<Long, Map<String, Object>> findByParams(HashMap<String, String> paramsMap) throws ServiceException;
+    Map<Long, Map<String, Object>> findByParams(Map<String, String> paramsMap) throws ServiceException;
+
+    Map<Long, Map<String, Object>> findByPrescription(Prescription prescription) throws ServiceException;
+
+    Map<Long, Map<String, Object>> findAllAvailableForCustomer(long customerId) throws ServiceException;
+
+    Map<Long, Map<String, Object>> findByParamsForCustomer(long customerId, HashMap<String, String> stringStringHashMap) throws ServiceException;
 }

@@ -27,7 +27,7 @@
 <fmt:message key="medicines.not_available" var="not_available"/>
 <html>
 <head>
-    <title>Title</title>
+    <title>${cart_page_title}</title>
 </head>
 <body>
 

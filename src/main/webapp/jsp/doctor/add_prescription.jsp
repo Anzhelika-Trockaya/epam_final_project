@@ -26,6 +26,8 @@
 <fmt:message key="medicines.nanogram" var="unit_name_ng"/>
 <fmt:message key="adding_medicine.incorrect_required" var="incorrect_required_msg_text"/>
 <fmt:message key="adding_medicine.incorrect_not_integer" var="incorrect_integer_msg_text"/>
+<fmt:message key="forms.tables" var="tab"/>
+<fmt:message key="forms.pieces" var="psc"/>
 <html>
 <head>
     <title>${customers_page_title}</title>
@@ -73,21 +75,6 @@
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_international_name}"/></p>
         </c:if>
         <br>
-        <label for="prescription_form">${form_title}</label>
-        <select id="prescription_form" name="prescription_form_id" size="1">
-            <option id="default_form" selected value="">-</option>
-            <c:forEach var="form" items="${forms_list}">
-                <option
-                        <c:if test="${prescription_form_id eq form.id}">selected</c:if> value="${form.id}">
-                        ${form.name}
-                </option>
-            </c:forEach>
-        </select>
-        <p id="incorrect_form_msg" class="incorrect_data_msg"></p>
-        <c:if test="${not empty incorrect_form}">
-            <p class="incorrect_data_msg"><fmt:message key="${incorrect_form}"/></p>
-        </c:if>
-        <br>
         <label for="dosage">${dosage_title}</label>
         <input type="number" id="dosage" name="prescription_dosage" value="${prescription_dosage}"/>
         <select id="dosage_unit" name="prescription_dosage_unit" size="1">
@@ -127,6 +114,17 @@
         <br>
         <label for="prescription_quantity">${quantity_title}</label>
         <input type="number" id="prescription_quantity" name="prescription_quantity" value="${prescription_quantity}"/>
+        <select id="prescription_unit" name="prescription_unit" size="1">
+            <option id="default_unit" selected value="TABLES">
+                ${tab}
+            </option>
+            <option <c:if test="${prescription_unit eq 'MILLILITERS'}">selected</c:if> value="MILLILITERS">
+                ${unit_name_ml}
+            </option>
+            <option <c:if test="${prescription_unit eq 'PIECES'}">selected</c:if> value="PIECES">
+                ${psc}
+            </option>
+        </select>
         <p id="incorrect_quantity_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_quantity}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_quantity}"/></p>
@@ -146,7 +144,7 @@
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_validyty}"/></p>
         </c:if>
         <br><br>
-        <input type="submit" value="${save}"/>  <input type="submit" form="cancel_form" value="${cancel}"/>
+        <input type="submit" value="${save}"/> <input type="submit" form="cancel_form" value="${cancel}"/>
     </form>
     <form id="cancel_form" action="${context_path}/controller" method="post">
         <input type="hidden" name="command" value="go_customers_page"/>
@@ -157,15 +155,11 @@
     function validate() {
         const intPattern = /^[1-9]\d{0,8}$/;
         const internationalNameInput = document.forms["add_prescription_form"]["prescription_international_name"];
-        const formInput = document.forms["add_prescription_form"]["prescription_form"];
         const dosageInput = document.forms["add_prescription_form"]["prescription_dosage"];
         const unitInput = document.forms["add_prescription_form"]["prescription_dosage_unit"];
         const quantityInput = document.forms["add_prescription_form"]["prescription_quantity"];
         let result = true;
         if (!validateRequired(internationalNameInput, "incorrect_international_name_msg", "${incorrect_required_msg_text}")) {
-            result = false;
-        }
-        if (!validateRequired(formInput, "incorrect_form_msg", "${incorrect_required_msg_text}")) {
             result = false;
         }
         if (!(validateRequired(dosageInput, "incorrect_dosage_msg", "${incorrect_required_msg_text}") &&

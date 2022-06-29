@@ -57,6 +57,11 @@ public final class PropertyKey {
     public static final String MEDICINES_ADDED_TO_CART = "medicines.added_to_cart";
     public static final String MEDICINES_NOT_ADDED_TO_CART = "medicines.not_added_to_cart";
     public static final String EDIT_MEDICINE_INCORRECT_CHANGE_TOTAL_VALUE = "edit_medicine.incorrect_change_total_value";
+    public static final String MEDICINES_PRESCRIPTION_IS_NOT_VALID = "medicines.prescription_is_not_valid";
+    public static final String MEDICINES_TOO_BIG_QUANTITY = "medicines.too_big_quantity_msg";
+    public static final String PRESCRIPTIONS_NOT_AVAILABLE_IN_CART_YET = "prescriptions.not_available_in_cart_yet";
+    public static final String PRESCRIPTIONS_DELETED = "prescriptions.deleted";
+    public static final String PRESCRIPTIONS_NOT_DELETED = "prescriptions.not_deleted";
 
     private PropertyKey() {
     }

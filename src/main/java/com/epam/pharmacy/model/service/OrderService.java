@@ -6,9 +6,12 @@ import com.epam.pharmacy.model.entity.Medicine;
 import java.util.Map;
 
 public interface OrderService {
-    boolean addToCart(long customerId, String medicineIdString, String quantityString) throws ServiceException;
+
+    boolean addToCartWithoutPrescription(long customerId, Map<String, String> positionParams) throws ServiceException;
+
+    boolean addToCartWithPrescription(long customerId, Map<String, String> positionParams) throws ServiceException;
 
     Map<Medicine, Integer> findCartContent(long customerId) throws ServiceException;
 
-    Map<Long, Integer> findCartPositions(long customerId) throws ServiceException;
+    int findNumberForPrescriptionInCart(long prescriptionId, long customerId) throws ServiceException;
 }

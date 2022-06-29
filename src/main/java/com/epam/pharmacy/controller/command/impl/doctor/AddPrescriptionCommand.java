@@ -40,7 +40,6 @@ public class AddPrescriptionCommand implements Command {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.ADD_PRESCRIPTION_NOT_ADDED);
                 RequestFiller requestFiller = RequestFiller.getInstance();
                 requestFiller.addDataToRequest(request, data);
-                requestFiller.addForms(request);
                 requestFiller.addInternationalNames(request);
             }
         } catch (ServiceException e) {
@@ -53,7 +52,7 @@ public class AddPrescriptionCommand implements Command {
     public Map<String, String> createPrescriptionDataMap(HttpServletRequest request) {
         Map<String, String> data = new HashMap<>();
         String[] paramNames = new String[]{PRESCRIPTION_INTERNATIONAL_NAME_ID, PRESCRIPTION_CUSTOMER_ID,
-                PRESCRIPTION_QUANTITY, PRESCRIPTION_VALIDITY, PRESCRIPTION_FORM_ID, PRESCRIPTION_DOSAGE,
+                PRESCRIPTION_QUANTITY, PRESCRIPTION_VALIDITY, PRESCRIPTION_UNIT, PRESCRIPTION_DOSAGE,
                 PRESCRIPTION_DOSAGE_UNIT, CUSTOMER_LASTNAME, CUSTOMER_NAME, CUSTOMER_PATRONYMIC, CUSTOMER_BIRTHDAY_DATE,
                 CUSTOMER_SEX};
         for (String paramName : paramNames) {

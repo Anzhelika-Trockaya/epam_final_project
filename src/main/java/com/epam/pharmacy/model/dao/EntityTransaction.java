@@ -57,6 +57,17 @@ public class EntityTransaction implements AutoCloseable {
         }
     }
 
+    public void setAutoCommit(boolean value) throws DaoException {
+        try {
+            if (connection.getAutoCommit() != value) {
+                connection.setAutoCommit(value);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception when setting autoCommit in Connection. Value=" + value, e);
+            throw new DaoException("Exception when setting autoCommit in Connection. Value=" + value, e);
+        }
+    }
+
     public void commit() throws DaoException {
         try {
             connection.commit();
@@ -79,13 +90,6 @@ public class EntityTransaction implements AutoCloseable {
             ConnectionPool connectionPool = ConnectionPool.getInstance();
             connection = connectionPool.getConnection();
         }
-        try {
-            if (connection.getAutoCommit() != autoCommit) {
-                connection.setAutoCommit(autoCommit);
-            }
-        } catch (SQLException e) {
-            LOGGER.error("Exception when setting autoCommit in Connection. Value=" + autoCommit, e);
-            throw new DaoException("Exception when setting autoCommit in Connection. Value=" + autoCommit, e);
-        }
+        setAutoCommit(autoCommit);
     }
 }

@@ -4,6 +4,7 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.MedicineDao;
 import com.epam.pharmacy.model.entity.Medicine;
+import com.epam.pharmacy.model.entity.Prescription;
 import com.epam.pharmacy.model.mapper.impl.MedicineRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,18 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
                     "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path) " +
                     "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+    private static final String SQL_SELECT_ALL_AVAILABLE_MEDICINES_FOR_CUSTOMER =
+            "SELECT m.medicine_id, m.medicine_name, m.medicine_international_name_id, m.medicine_price, " +
+                    "m.medicine_number_in_package, m.medicine_form_id, m.medicine_dosage, " +
+                    "m.medicine_dosage_unit, m.medicine_ingredients, m.medicine_need_prescription, " +
+                    "m.medicine_manufacturer_id, m.medicine_instruction, m.medicine_image_path, " +
+                    "m.medicine_total_packages - IFNULL(ord.ords_sum, 0) AS medicine_total_packages " +
+                    "FROM medicines m LEFT JOIN (" +
+                    "SELECT SUM(ord.order_medicine_quantity) AS ords_sum, ord.medicine_id, ord.order_medicine_quantity " +
+                    "FROM m2m_order_medicine ord JOIN orders ords ON ords.order_id = ord.order_id " +
+                    "WHERE ords.customer_id = ? AND ords.order_state = 'CREATED' GROUP BY ord.medicine_id" +
+                    ") ord ON m.medicine_id = ord.medicine_id " +
+                    "WHERE medicine_total_packages > 0";
     private static final String SQL_SELECT_ALL_MEDICINES =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, " +
@@ -37,12 +50,6 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
                     "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
                     "FROM medicines WHERE medicine_id = ?";
-    private static final String SQL_SELECT_MEDICINE_BY_PART_OF_NAME =
-            "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
-                    "FROM medicines WHERE medicine_name LIKE ?";
     private static final String SQL_SELECT_MEDICINE_BY_INTERNATIONAL_NAME_ID =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, " +
@@ -63,13 +70,35 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "FROM medicines WHERE medicine_form_id = ?";
     private static final String SQL_SELECT_MEDICINE_TOTAL_PACKAGES_BY_ID =
             "SELECT medicine_total_packages FROM medicines WHERE medicine_id = ?";
-    private static final String SQL_SELECT_MEDICINE_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT =
+    private static final String SQL_SELECT_MEDICINES_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, " +
                     "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
                     "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
                     "FROM medicines WHERE medicine_name LIKE UPPER(?) AND medicine_international_name_id LIKE ? AND " +
                     "medicine_form_id LIKE ? AND medicine_dosage LIKE ? AND medicine_dosage_unit LIKE ?";
+    private static final String SQL_SELECT_MEDICINES_AVAILABLE_FOR_CUSTOMER_BY_PARAMS =
+            "SELECT m.medicine_id, m.medicine_name, m.medicine_international_name_id, m.medicine_price, " +
+                    "m.medicine_number_in_package, m.medicine_form_id, m.medicine_dosage, " +
+                    "m.medicine_dosage_unit, m.medicine_ingredients, m.medicine_need_prescription, " +
+                    "m.medicine_manufacturer_id, m.medicine_instruction, m.medicine_image_path, " +
+                    "m.medicine_total_packages - IFNULL(ord.ords_sum, 0) AS medicine_total_packages " +
+                    "FROM medicines m LEFT JOIN (" +
+                    "SELECT SUM(ord.order_medicine_quantity) AS ords_sum, ord.medicine_id, ord.order_medicine_quantity " +
+                    "FROM m2m_order_medicine ord JOIN orders ords ON ords.order_id = ord.order_id " +
+                    "WHERE ords.customer_id = ? AND ords.order_state = 'CREATED' GROUP BY ord.medicine_id" +
+                    ") ord ON m.medicine_id = ord.medicine_id " +
+                    "WHERE medicine_total_packages > 0 AND m.medicine_name LIKE UPPER(?) " +
+                    "AND m.medicine_international_name_id LIKE ? AND m.medicine_form_id LIKE ? " +
+                    "AND m.medicine_dosage LIKE ? AND m.medicine_dosage_unit LIKE ?";
+    private static final String SQL_SELECT_MEDICINES_BY_INTERNATIONAL_NAME_ID_FORM_UNIT_DOSAGE_DOSAGE_UNIT =
+            "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, form_unit, " +
+                    "medicine_dosage, medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, " +
+                    "medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
+                    "FROM medicines med JOIN forms f ON med.medicine_form_id = f.form_id " +
+                    "WHERE med.medicine_international_name_id = ? AND f.form_unit = ? AND med.medicine_dosage = ? " +
+                    "AND med.medicine_dosage_unit = ?";
     private static final String SQL_UPDATE_MEDICINE_BY_ID =
             "UPDATE medicines SET medicine_name = ?, medicine_international_name_id = ?, medicine_price = ?, " +
                     "medicine_number_in_package = ?, medicine_form_id = ?, medicine_dosage = ?, " +
@@ -133,6 +162,85 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     }
 
     @Override
+    public List<Medicine> findAvailableForCustomer(long customerId) throws DaoException {
+        List<Medicine> medicines = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_AVAILABLE_MEDICINES_FOR_CUSTOMER)) {
+            statement.setLong(1, customerId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                MedicineRowMapper mapper = MedicineRowMapper.getInstance();
+                Optional<Medicine> currentMedicineOptional;
+                while (resultSet.next()) {
+                    currentMedicineOptional = mapper.mapRow(resultSet);
+                    currentMedicineOptional.ifPresent(medicines::add);
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find medicines for customer exception. customerId=" + customerId, e);
+            throw new DaoException("Find medicines for customer exception. customerId=" + customerId, e);
+        }
+        return medicines;
+    }
+
+    @Override
+    public List<Medicine> findByParams(Map<String, String> paramsMap) throws DaoException {
+        try (PreparedStatement statement = connection.
+                prepareStatement(SQL_SELECT_MEDICINES_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT)) {
+            String medicineName = paramsMap.get(MEDICINE_NAME);
+            if (!medicineName.equals(PERCENT)) {
+                medicineName = PERCENT + medicineName.trim() + PERCENT;
+            }
+            statement.setString(1, medicineName);
+            statement.setString(2, paramsMap.get(MEDICINE_INTERNATIONAL_NAME_ID));
+            statement.setString(3, paramsMap.get(MEDICINE_FORM_ID));
+            statement.setString(4, paramsMap.get(MEDICINE_DOSAGE));
+            statement.setString(5, paramsMap.get(MEDICINE_DOSAGE_UNIT));
+            return findMedicines(statement);
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find medicines by params." + paramsMap, e);
+            throw new DaoException("Exception when find medicines by params." + paramsMap, e);
+        }
+    }
+
+    @Override
+    public List<Medicine> findByParamsAvailableForCustomer(long customerId,
+                                                           HashMap<String, String> paramsMap) throws DaoException {
+        try (PreparedStatement statement = connection.
+                prepareStatement(SQL_SELECT_MEDICINES_AVAILABLE_FOR_CUSTOMER_BY_PARAMS)) {
+            String medicineName = paramsMap.get(MEDICINE_NAME);
+            if (!medicineName.equals(PERCENT)) {
+                medicineName = PERCENT + medicineName.trim() + PERCENT;
+            }
+            statement.setLong(1, customerId);
+            statement.setString(2, medicineName);
+            statement.setString(3, paramsMap.get(MEDICINE_INTERNATIONAL_NAME_ID));
+            statement.setString(4, paramsMap.get(MEDICINE_FORM_ID));
+            statement.setString(5, paramsMap.get(MEDICINE_DOSAGE));
+            statement.setString(6, paramsMap.get(MEDICINE_DOSAGE_UNIT));
+            return findMedicines(statement);
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find medicines available for customer by params. customerId=" +
+                    customerId + "paramsMap=" + paramsMap, e);
+            throw new DaoException("Exception when find medicines available for customer by params. customerId=" +
+                    customerId + "paramsMap=" + paramsMap, e);
+        }
+    }
+
+    @Override
+    public List<Medicine> findByPrescription(Prescription prescription) throws DaoException {
+        try (PreparedStatement statement = connection.
+                prepareStatement(SQL_SELECT_MEDICINES_BY_INTERNATIONAL_NAME_ID_FORM_UNIT_DOSAGE_DOSAGE_UNIT)) {
+            statement.setLong(1, prescription.getInternationalNameId());
+            statement.setString(2, prescription.getUnit().name());
+            statement.setInt(3, prescription.getDosage());
+            statement.setString(4, prescription.getDosageUnit().name());
+            return findMedicines(statement);
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find medicines by prescription." + prescription, e);
+            throw new DaoException("Exception when find medicines by prescription." + prescription, e);
+        }
+    }
+
+    @Override
     public Optional<Medicine> findById(long id) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_ID)) {
             statement.setLong(1, id);
@@ -150,26 +258,6 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             LOGGER.error("Find medicine by id exception. id=" + id, e);
             throw new DaoException("Find medicine by id exception. id=" + id, e);
         }
-    }
-
-    @Override
-    public List<Medicine> findByPartOfName(String name) throws DaoException {//fixme delete
-        List<Medicine> medicines = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_BY_PART_OF_NAME)) {
-            statement.setString(1, PERCENT + name + PERCENT);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                MedicineRowMapper mapper = MedicineRowMapper.getInstance();
-                Optional<Medicine> currentMedicineOptional;
-                while (resultSet.next()) {
-                    currentMedicineOptional = mapper.mapRow(resultSet);
-                    currentMedicineOptional.ifPresent(medicines::add);
-                }
-            }
-        } catch (SQLException e) {
-            LOGGER.error("Find medicine by part of name exception. name=" + name, e);
-            throw new DaoException("Find medicine by part of name exception. name=" + name, e);
-        }
-        return medicines;
     }
 
     @Override
@@ -258,26 +346,6 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     " value=" + value, e);
             throw new DaoException("Update medicine total packages exception. MedicineId=" + medicineId +
                     " value=" + value, e);
-        }
-    }
-
-    @Override
-    public List<Medicine> findByParams(HashMap<String, String> paramsMap) throws DaoException {
-        try (PreparedStatement statement = connection.
-                prepareStatement(SQL_SELECT_MEDICINE_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT)) {
-            String medicineName = paramsMap.get(MEDICINE_NAME);
-            if (!medicineName.equals(PERCENT)) {
-                medicineName = PERCENT + medicineName.trim() + PERCENT;
-            }
-            statement.setString(1, medicineName);
-            statement.setString(2, paramsMap.get(MEDICINE_INTERNATIONAL_NAME_ID));
-            statement.setString(3, paramsMap.get(MEDICINE_FORM_ID));
-            statement.setString(4, paramsMap.get(MEDICINE_DOSAGE));
-            statement.setString(5, paramsMap.get(MEDICINE_DOSAGE_UNIT));
-            return findMedicines(statement);
-        } catch (SQLException e) {
-            LOGGER.error("Exception when find medicines by params." + paramsMap, e);
-            throw new DaoException("Exception when find medicines by params." + paramsMap, e);
         }
     }
 

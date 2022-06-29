@@ -11,7 +11,7 @@ public class Prescription extends CustomEntity implements Serializable {
     private long customerId;
     private long doctorId;
     private long internationalNameId;
-    private long formId;
+    private FormUnit unit;
     private int dosage;
     private DosageUnit dosageUnit;
     private int quantity;
@@ -55,12 +55,12 @@ public class Prescription extends CustomEntity implements Serializable {
         this.internationalNameId = internationalNameId;
     }
 
-    public long getFormId() {
-        return formId;
+    public FormUnit getUnit() {
+        return unit;
     }
 
-    public void setFormId(long formId) {
-        this.formId = formId;
+    public void setUnit(FormUnit unit) {
+        this.unit = unit;
     }
 
     public int getDosage() {
@@ -117,14 +117,14 @@ public class Prescription extends CustomEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Prescription that = (Prescription) o;
         return id == that.id && customerId == that.customerId && doctorId == that.doctorId &&
-                internationalNameId == that.internationalNameId && formId == that.formId && dosage == that.dosage &&
+                internationalNameId == that.internationalNameId && unit == that.unit && dosage == that.dosage &&
                 quantity == that.quantity && soldQuantity == that.soldQuantity && needRenewal == that.needRenewal &&
                 dosageUnit == that.dosageUnit && Objects.equals(expirationDate, that.expirationDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, doctorId, internationalNameId, formId, dosage, dosageUnit, quantity,
+        return Objects.hash(id, customerId, doctorId, internationalNameId, unit, dosage, dosageUnit, quantity,
                 soldQuantity, expirationDate, needRenewal);
     }
 
@@ -135,7 +135,7 @@ public class Prescription extends CustomEntity implements Serializable {
         sb.append(", customerId=").append(customerId);
         sb.append(", doctorId=").append(doctorId);
         sb.append(", internationalNameId=").append(internationalNameId);
-        sb.append(", formId=").append(formId);
+        sb.append(", unit=").append(unit);
         sb.append(", dosage=").append(dosage);
         sb.append(", dosageUnit=").append(dosageUnit);
         sb.append(", quantity=").append(quantity);
@@ -172,8 +172,8 @@ public class Prescription extends CustomEntity implements Serializable {
             return this;
         }
 
-        public Builder buildFormId(long id) {
-            prescription.formId = id;
+        public Builder buildUnit(FormUnit unit) {
+            prescription.unit = unit;
             return this;
         }
 

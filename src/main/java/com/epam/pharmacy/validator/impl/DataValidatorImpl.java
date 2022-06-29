@@ -197,7 +197,7 @@ public class DataValidatorImpl implements DataValidator {
     }
 
     @Override
-    public boolean isCorrectMedicineSearchParamsMap(HashMap<String, String> paramsMap) {
+    public boolean isCorrectMedicineSearchParamsMap(Map<String, String> paramsMap) {
         String dosage = paramsMap.get(MEDICINE_DOSAGE);
         return (!paramsMap.isEmpty()) && (dosage.isEmpty() || isCorrectQuantity(dosage));
     }
@@ -348,7 +348,7 @@ public class DataValidatorImpl implements DataValidator {
         String dosage = data.get(PRESCRIPTION_DOSAGE);
         String dosageUnit = data.get(PRESCRIPTION_DOSAGE_UNIT);
         String internationalNameId = data.get(PRESCRIPTION_INTERNATIONAL_NAME_ID);
-        String formId = data.get(PRESCRIPTION_FORM_ID);
+        String unit = data.get(PRESCRIPTION_UNIT);
         if (!isCorrectQuantity(quantity)) {
             result = false;
             data.put(INCORRECT_QUANTITY, ADDING_MEDICINE_INCORRECT_NOT_INTEGER);
@@ -365,7 +365,7 @@ public class DataValidatorImpl implements DataValidator {
             result = false;
             data.put(INCORRECT_INTERNATIONAL_NAME, ADDING_MEDICINE_INCORRECT_REQUIRED);
         }
-        if (!isNotEmpty(formId)) {
+        if (!isCorrectFormUnit(unit)) {
             result = false;
             data.put(INCORRECT_FORM, ADDING_MEDICINE_INCORRECT_REQUIRED);
         }

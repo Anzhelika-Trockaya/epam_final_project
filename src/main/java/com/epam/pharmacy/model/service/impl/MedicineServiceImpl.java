@@ -71,6 +71,22 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
+    public Map<Long, Map<String, Object>> findAllAvailableForCustomer(long customerId) throws ServiceException {
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
+        MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao, internationalNameDao, manufacturerDao, formDao);
+            List<Medicine> medicines = medicineDao.findAvailableForCustomer(customerId);
+            return buildMedicinesDataMap(medicines, internationalNameDao, manufacturerDao, formDao);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find medicines available for customer. customerId=" + customerId, e);
+            throw new ServiceException("Exception when find medicines available for customer. customerId=" + customerId, e);
+        }
+    }
+
+    @Override
     public boolean update(Map<String, String> data) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectMedicineData(data)) {
@@ -121,7 +137,7 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public Map<Long, Map<String, Object>> findByParams(HashMap<String, String> paramsMap) throws ServiceException {
+    public Map<Long, Map<String, Object>> findByParams(Map<String, String> paramsMap) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectMedicineSearchParamsMap(paramsMap)) {
             return new HashMap<>();
@@ -141,7 +157,45 @@ public class MedicineServiceImpl implements MedicineService {
         }
     }
 
-    private void replaceEmptyParamsByPercent(HashMap<String, String> paramsMap) {
+    @Override
+    public Map<Long, Map<String, Object>> findByParamsForCustomer(long customerId,
+                                                                  HashMap<String, String> paramsMap) throws ServiceException {
+        DataValidator validator = DataValidatorImpl.getInstance();
+        if (!validator.isCorrectMedicineSearchParamsMap(paramsMap)) {
+            return new HashMap<>();
+        }
+        replaceEmptyParamsByPercent(paramsMap);
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
+        MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao, internationalNameDao, manufacturerDao, formDao);
+            List<Medicine> medicines = medicineDao.findByParamsAvailableForCustomer(customerId, paramsMap);
+            return buildMedicinesDataMap(medicines, internationalNameDao, manufacturerDao, formDao);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when search medicines. customerId="+customerId+" paramsMap=" + paramsMap, e);
+            throw new ServiceException("Exception when search medicines. customerId="+customerId+" paramsMap=" + paramsMap, e);
+        }
+    }
+
+    @Override
+    public Map<Long, Map<String, Object>> findByPrescription(Prescription prescription) throws ServiceException {
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
+        MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao, internationalNameDao, manufacturerDao, formDao);
+            List<Medicine> medicines = medicineDao.findByPrescription(prescription);
+            return buildMedicinesDataMap(medicines, internationalNameDao, manufacturerDao, formDao);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when search medicines for prescription." + prescription, e);
+            throw new ServiceException("Exception when search medicines for prescription." + prescription, e);
+        }
+    }
+
+    private void replaceEmptyParamsByPercent(Map<String, String> paramsMap) {
         for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
             if (entry.getValue().isEmpty()) {
                 entry.setValue(PERCENT);

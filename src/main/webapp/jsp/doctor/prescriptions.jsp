@@ -20,6 +20,9 @@
 <fmt:message key="prescriptions.request_quantity_msg" var="request_quantity_msg"/>
 <fmt:message key="prescriptions.no_requests_msg" var="no_requests_msg"/>
 <fmt:message key="prescriptions.find_medicines" var="find_medicines_btn"/>
+<fmt:message key="prescriptions.requested" var="requested"/>
+<fmt:message key="medicines.milliliter" var="ml"/>
+<fmt:message key="action.delete" var="delete"/>
 <html>
 <head>
     <title>${prescriptions_page_title}</title>
@@ -74,7 +77,6 @@
                         <th>${birthday_date_title}</th>
                     </c:if>
                     <th>${international_name_title}</th>
-                    <th>${form_name_title}</th>
                     <th>${dosage_title}</th>
                     <th>${quantity_title}</th>
                     <th>${sold_quantity_title}</th>
@@ -95,29 +97,28 @@
                             </td>
                         </c:if>
                         <td>
-                            <c:set var="current_international_name"
-                                   value="${prescription_data_map.get(\"international_name\")}"/>
-                            <c:out value="${current_international_name}"/>
+                            <c:out value="${prescription_data_map.get(\"international_name\")}"/>
                         </td>
                         <td>
-                            <c:set var="current_form" value="${prescription_data_map.get(\"form_name\")}"/>
-                            <c:out value="${current_form}"/>
-                        </td>
-                        <td>
-                            <c:set var="current_dosage" value="${prescription_data_map.get(\"dosage\")}"/>
-                            <c:set var="current_dosage_unit" value="${prescription_data_map.get(\"dosage_unit\")}"/>
-                            <c:out value="${current_dosage}"/>
-                            <c:out value="${current_dosage_unit}"/>
+                            <c:out value="${prescription_data_map.get(\"dosage\")}"/>
+                            <c:out value="${prescription_data_map.get(\"dosage_unit\")}"/>
                         </td>
                         <td>
                             <c:set var="current_quantity" value="${prescription_data_map.get(\"quantity\")}"/>
+                            <c:set var="current_unit" value="${prescription_data_map.get(\"prescription_unit\")}"/>
+                            <c:if test="${!(current_unit eq 'MILLILITERS')}">N</c:if>
                             <c:out value="${current_quantity}"/>
+                            <c:if test="${current_unit eq 'MILLILITERS'}">${ml}</c:if>
                         </td>
                         <td>
                             <c:set var="current_sold_quantity" value="${prescription_data_map.get(\"sold_quantity\")}"/>
                             <c:out value="${current_sold_quantity}"/>
                         </td>
-                        <td><c:out value="${prescription_data_map.get(\"expiration_date\")}"/></td>
+                        <td>
+                            <c:set var="current_expiration_date"
+                                   value="${prescription_data_map.get(\"expiration_date\")}"/>
+                            <c:out value="${current_expiration_date}"/>
+                        </td>
                         <td>
                             <div>
                                 <c:choose>
@@ -132,19 +133,48 @@
                                         </div>
                                     </c:when>
                                     <c:when test="${(current_user_role eq 'CUSTOMER') &&
-                                    (current_quantity - current_sold_quantity > 0) &&
-                                    (prescription_data_map.get(\"need_renewal\") eq 'false')}">
-                                        <div>
-                                            <form action="${context_path}/controller" method="post">
-                                                <input type="hidden" name="command"
-                                                       value="request_renewal_prescription">
-                                                <input type="hidden" name="prescription_id" value="${prescription_id}"/>
-                                                <input type="submit" value="${request_renewal_btn}">
-                                            </form>
-                                        </div>
+                                    (current_quantity - current_sold_quantity > 0)}">
+                                        <c:choose>
+                                            <c:when test="${(prescription_data_map.get(\"need_renewal\") eq 'false')}">
+                                                <div>
+                                                    <form action="${context_path}/controller" method="post">
+                                                        <input type="hidden" name="command"
+                                                               value="request_renewal_prescription">
+                                                        <input type="hidden" name="prescription_id"
+                                                               value="${prescription_id}"/>
+                                                        <input type="submit" value="${request_renewal_btn}">
+                                                    </form>
+                                                </div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <p class="successful_msg">${requested}</p>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </c:when>
                                 </c:choose>
                             </div>
+                        </td>
+                        <td>
+                            <c:if test="${(current_user_role eq 'CUSTOMER') &&
+                                    (prescription_data_map.get(\"is_active\") eq 'true')}">
+                                <div>
+                                    <form action="${context_path}/controller" method="post">
+                                        <input type="hidden" name="command"
+                                               value="show_medicines_for_prescription">
+                                        <input type="hidden" name="prescription_id" value="${prescription_id}"/>
+                                        <input type="submit" value="${find_medicines_btn}">
+                                    </form>
+                                </div>
+                            </c:if>
+                            <c:if test="${current_user_role eq 'DOCTOR'}">
+                                <div>
+                                    <form action="${context_path}/controller" method="post">
+                                        <input type="hidden" name="command" value="delete_prescription">
+                                        <input type="hidden" name="prescription_id" value="${prescription_id}"/>
+                                        <input type="submit" value="${delete}">
+                                    </form>
+                                </div>
+                            </c:if>
                         </td>
                     </tr>
                 </c:forEach>

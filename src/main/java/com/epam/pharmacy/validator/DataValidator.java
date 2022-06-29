@@ -56,5 +56,5 @@ public interface DataValidator {
 
     boolean isCorrectUserSearchParamsMap(Map<String, String> paramsMap);
 
-    boolean isCorrectMedicineSearchParamsMap(HashMap<String, String> paramsMap);
+    boolean isCorrectMedicineSearchParamsMap(Map<String, String> paramsMap);
 }
