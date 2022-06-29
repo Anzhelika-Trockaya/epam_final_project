@@ -13,19 +13,20 @@ import org.apache.logging.log4j.Logger;
 
 public class RequestRenewalPrescriptionCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
+
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
         String prescriptionId = request.getParameter(ParameterName.PRESCRIPTION_ID);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = serviceProvider.getPrescriptionService();
-        Router router=new Router(PagePath.PRESCRIPTIONS);
+        Router router = new Router(PagePath.PRESCRIPTIONS);
         try {
             boolean result = prescriptionService.makeNeedRenewal(prescriptionId);
-            if(result){
+            if (result) {
                 router.setTypeRedirect();
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_SUCCESSFUL_RENEWAL_REQUEST);
-            } else{
+            } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_FAILED_RENEWAL_REQUEST);
             }
         } catch (ServiceException e) {

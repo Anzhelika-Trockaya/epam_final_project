@@ -55,6 +55,26 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
+    public Map<String, Object> findMedicineContentById(long id, long customerId) throws ServiceException {
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
+        MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao, internationalNameDao, manufacturerDao, formDao);
+            Optional<Medicine> medicineOptional = medicineDao.findById(id);
+            if (!medicineOptional.isPresent()){
+                LOGGER.warn("Exception medicine with id=" + id+" not found");
+                throw new ServiceException("Exception medicine with id=" + id+" not found");
+            }
+            return buildMedicineDataMap(medicineOptional.get(), internationalNameDao, manufacturerDao, formDao);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find medicine content. id=" + id, e);
+            throw new ServiceException("Exception when find medicine content. id=" + id, e);
+        }
+    }
+
+    @Override
     public Map<Long, Map<String, Object>> findAll() throws ServiceException {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
@@ -174,8 +194,8 @@ public class MedicineServiceImpl implements MedicineService {
             List<Medicine> medicines = medicineDao.findByParamsAvailableForCustomer(customerId, paramsMap);
             return buildMedicinesDataMap(medicines, internationalNameDao, manufacturerDao, formDao);
         } catch (DaoException e) {
-            LOGGER.error("Exception when search medicines. customerId="+customerId+" paramsMap=" + paramsMap, e);
-            throw new ServiceException("Exception when search medicines. customerId="+customerId+" paramsMap=" + paramsMap, e);
+            LOGGER.error("Exception when search medicines. customerId=" + customerId + " paramsMap=" + paramsMap, e);
+            throw new ServiceException("Exception when search medicines. customerId=" + customerId + " paramsMap=" + paramsMap, e);
         }
     }
 
@@ -211,31 +231,35 @@ public class MedicineServiceImpl implements MedicineService {
     private Map<Long, Map<String, Object>> buildMedicinesDataMap(List<Medicine> medicines,
                                                                  InternationalMedicineNameDaoImpl internationalNameDao,
                                                                  ManufacturerDaoImpl manufacturerDao,
-                                                                 MedicineFormDaoImpl formDao) throws DaoException {
+                                                                 MedicineFormDaoImpl formDao) throws DaoException, ServiceException {
         Map<Long, Map<String, Object>> resultMap = new HashMap<>();
-        Optional<Manufacturer> currentManufacturerOptional;
-        Optional<MedicineForm> currentFormOptional;
-        Optional<InternationalMedicineName> currentInternationalNameOptional;
         Map<String, Object> currentMedicineData;
         for (Medicine medicine : medicines) {
-            currentManufacturerOptional = manufacturerDao.findById(medicine.getManufacturerId());
-            currentFormOptional = formDao.findById(medicine.getFormId());
-            currentInternationalNameOptional = internationalNameDao.findById(medicine.getInternationalNameId());
-            if (currentManufacturerOptional.isPresent() &&
-                    currentFormOptional.isPresent() &&
-                    currentInternationalNameOptional.isPresent()) {
-                currentMedicineData = new HashMap<>();
-                currentMedicineData.put(ParameterName.MEDICINE, medicine);
-                currentMedicineData.put(ParameterName.MANUFACTURER, currentManufacturerOptional.get());
-                currentMedicineData.put(ParameterName.FORM, currentFormOptional.get());
-                currentMedicineData.put(ParameterName.INTERNATIONAL_NAME, currentInternationalNameOptional.get());
-            } else {
-                LOGGER.warn("Exception when build medicine data=" + medicine);
-                continue;
-            }
+            currentMedicineData=buildMedicineDataMap(medicine, internationalNameDao, manufacturerDao, formDao);
             resultMap.put(medicine.getId(), currentMedicineData);
         }
         return resultMap;
+    }
+
+    public Map<String, Object> buildMedicineDataMap(Medicine medicine,
+                                                     InternationalMedicineNameDaoImpl internationalNameDao,
+                                                     ManufacturerDaoImpl manufacturerDao,
+                                                     MedicineFormDaoImpl formDao) throws DaoException, ServiceException {
+        Map<String, Object> medicineData=new HashMap<>();
+        Optional<Manufacturer> manufacturerOptional = manufacturerDao.findById(medicine.getManufacturerId());
+        Optional<MedicineForm> formOptional = formDao.findById(medicine.getFormId());
+        Optional<InternationalMedicineName> internationalNameOptional =
+                internationalNameDao.findById(medicine.getInternationalNameId());
+        if (manufacturerOptional.isPresent() && formOptional.isPresent() && internationalNameOptional.isPresent()) {
+            medicineData.put(ParameterName.MEDICINE, medicine);
+            medicineData.put(ParameterName.MANUFACTURER, manufacturerOptional.get());
+            medicineData.put(ParameterName.FORM, formOptional.get());
+            medicineData.put(ParameterName.INTERNATIONAL_NAME, internationalNameOptional.get());
+        } else {
+            LOGGER.warn("Exception when build medicine data=" + medicine);
+            throw new ServiceException("Exception when build medicine data=" + medicine);
+        }
+        return medicineData;
     }
 
     private Medicine buildMedicine(Map<String, String> medicineData) {
@@ -256,8 +280,6 @@ public class MedicineServiceImpl implements MedicineService {
         int numberInPackage = Integer.parseInt(numberInPackageString);
         String priceString = medicineData.get(MEDICINE_PRICE);
         BigDecimal price = BigDecimal.valueOf(Double.parseDouble(priceString));
-        String ingredients = medicineData.get(MEDICINE_INGREDIENTS);
-        String instruction = medicineData.get(MEDICINE_INSTRUCTION);
         String image = medicineData.get(MEDICINE_IMAGE_LINK);
         Medicine.Builder medicineBuilder;
         String idString = medicineData.get(MEDICINE_ID);
@@ -282,8 +304,6 @@ public class MedicineServiceImpl implements MedicineService {
                 buildManufacturerId(manufacturerId).
                 buildPrice(price).
                 buildNeedPrescription(needPrescription).
-                buildIngredients(ingredients).
-                buildInstruction(instruction).
                 buildImagePath(image).
                 build();
     }

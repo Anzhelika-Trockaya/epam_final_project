@@ -57,7 +57,7 @@
                 </td>
                 <td>
                     <c:if test="${sessionScope.current_user_role eq 'CUSTOMER'}">
-                        <a href="${pageContext.request.contextPath}/controller?command=go_cart_page">${cart}</a>
+                        <a href="${pageContext.request.contextPath}/controller?command=go_cart">${cart}</a>
                     </c:if>
                 </td>
                 <td>

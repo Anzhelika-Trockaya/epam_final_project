@@ -75,16 +75,14 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
                                                     int prescriptionAvailableNumber) throws ServiceException {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         OrderService orderService = serviceProvider.getOrderService();
-        Map<Medicine, Integer> cartContent = orderService.findCartContent(customerId);
-        long currentId;
+        Map<Long, Integer> cartContent = orderService.findMedicineInCartWithQuantity(customerId);
         Medicine medicine;
         int medicineFromCartPackages;
         int totalWithoutCartPackages;
-        for (Medicine medicineFromCart : cartContent.keySet()) {
-            currentId = medicineFromCart.getId();
-            if (medicinesData.containsKey(currentId)) {
-                medicine = (Medicine) medicinesData.get(currentId).get(MEDICINE);
-                medicineFromCartPackages = cartContent.get(medicineFromCart);
+        for (long medicineId : cartContent.keySet()) {
+            if (medicinesData.containsKey(medicineId)) {
+                medicine = (Medicine) medicinesData.get(medicineId).get(MEDICINE);
+                medicineFromCartPackages = cartContent.get(medicineId);
                 totalWithoutCartPackages = medicine.getTotalPackages() - medicineFromCartPackages;
                 medicine.setTotalPackages(totalWithoutCartPackages);
             }

@@ -80,10 +80,6 @@ public class AddMedicineCommand implements Command {
         medicineData.put(MEDICINE_TOTAL_PACKAGES, totalPackages);
         String price = request.getParameter(PRICE);
         medicineData.put(MEDICINE_PRICE, price);
-        String ingredients = request.getParameter(INGREDIENTS);
-        medicineData.put(MEDICINE_INGREDIENTS, ingredients);
-        String instruction = request.getParameter(INSTRUCTION);
-        medicineData.put(MEDICINE_INSTRUCTION, instruction);
         return medicineData;
     }
 }

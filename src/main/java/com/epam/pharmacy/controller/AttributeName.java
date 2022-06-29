@@ -46,8 +46,6 @@ public final class AttributeName {
     public static final String INCORRECT_TOTAL_PACKAGES = "incorrect_total_packages";
     public static final String INCORRECT_CHANGE_TOTAL_VALUE = "incorrect_change_total_value";
     public static final String INCORRECT_PRICE = "incorrect_price";
-    public static final String INCORRECT_INGREDIENTS = "incorrect_ingredients";
-    public static final String INCORRECT_INSTRUCTION = "incorrect_instruction";
     public static final String MEDICINE_NAME="medicine_name";
     public static final String MEDICINE_INTERNATIONAL_NAME_ID="medicine_international_name_id";
     public static final String MEDICINE_FORM_ID="medicine_form_id";
@@ -58,12 +56,10 @@ public final class AttributeName {
     public static final String MEDICINE_NUMBER_IN_PACKAGE ="medicine_number_in_package";
     public static final String MEDICINE_TOTAL_PACKAGES ="medicine_total_packages";
     public static final String MEDICINE_PRICE="medicine_price";
-    public static final String MEDICINE_INGREDIENTS="medicine_ingredients";
-    public static final String MEDICINE_INSTRUCTION="medicine_instruction";
     public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
     public static final String TEMP_SUCCESSFUL_ADDED = "temp_successful_added";
     public static final String INCORRECT_FILE ="incorrect_file" ;
-    public static final String CART_CONTENT = "cart_content";
+    public static final String CART_CONTENT_SET = "cart_content_set";
     public static final String MEDICINE = "medicine";
     public static final String INCORRECT_DATA = "incorrect_data";
     public static final String BLOCKED = "blocked";
@@ -84,6 +80,11 @@ public final class AttributeName {
     public static final String PRESCRIPTION_EXPIRATION_DATE = "prescription_expiration_date";
     public static final String PRESCRIPTION_AVAILABLE_QUANTITY = "prescription_available_quantity";
     public static final String SHOW_SEARCH_RESULT = "show_search_result";
+    public static final String INVALID_PRESCRIPTION = "invalid_prescription";
+    public static final String OUT_OF_STOCK = "out_of_stock";
+    public static final String AVAILABLE_QUANTITY = "available_quantity";
+    public static final String IS_CORRECT_ORDER = "is_correct_order";
+    public static final String TOTAL_COST = "total_cost";
 
 
     private AttributeName() {

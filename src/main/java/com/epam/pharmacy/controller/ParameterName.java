@@ -20,17 +20,13 @@ public final class ParameterName {
     public static final String DOSAGE_UNIT = "dosage_unit";
     public static final String NEED_PRESCRIPTION = "need_prescription";
     public static final String MANUFACTURER = "manufacturer";
-    public static final String AMOUNT_IN_PACKAGE = "amount_in_package";
     public static final String NUMBER_IN_PACKAGE = "number_in_package";
     public static final String TOTAL_PACKAGES = "total_packages";
     public static final String PRICE = "price";
-    public static final String INGREDIENTS = "ingredients";
-    public static final String INSTRUCTION = "instruction";
     public static final String IMAGE = "image";
     public static final String ORDER_MEDICINE_ID = "order_medicine_id";
     public static final String ORDER_MEDICINE_NUMBER = "order_medicine_number";
     public static final String IMAGE_PATH = "image_path";
-    public static final String SEARCH_MEDICINE_NAME = "search_medicine_name";
     public static final String INTERNATIONAL_NAME_ID="international_name_id";
     public static final String FORM_UNIT = "form_unit";
     public static final String FORM_ID = "form_id";
@@ -43,14 +39,11 @@ public final class ParameterName {
     public static final String PRESCRIPTION_DOCTOR_ID = "prescription_doctor_id";
     public static final String PRESCRIPTION_CUSTOMER_ID = "prescription_customer_id";
     public static final String PRESCRIPTION_QUANTITY = "prescription_quantity";
-    public static final String PRESCRIPTION_SOLD_QUANTITY = "prescription_sold_quantity";
     public static final String PRESCRIPTION_VALIDITY = "prescription_validity";
     public static final String PRESCRIPTION_UNIT = "prescription_unit";
     public static final String PRESCRIPTION_DOSAGE = "prescription_dosage";
     public static final String PRESCRIPTION_DOSAGE_UNIT = "prescription_dosage_unit";
-    public static final String PRESCRIPTION_NEED_RENEWAL = "prescription_need_renewal";
     public static final String INCORRECT_QUANTITY = "incorrect_quantity";
-    public static final String INCORRECT_SOLD_QUANTITY = "incorrect_sold_quantity";
     public static final String USER_FULL_NAME = "user_full_name";
     public static final String SOLD_QUANTITY = "sold_quantity";
     public static final String QUANTITY = "quantity";
@@ -78,6 +71,7 @@ public final class ParameterName {
     public static final String MEDICINE_DOSAGE = "medicine_dosage";
     public static final String MEDICINE_DOSAGE_UNIT = "medicine_dosage_unit";
     public static final String IS_ACTIVE = "is_active";
+    public static final String PRESCRIPTION = "prescription";
 
 
     private ParameterName() {

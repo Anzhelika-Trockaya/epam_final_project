@@ -9,6 +9,7 @@ import com.epam.pharmacy.model.dao.impl.MedicineDaoImpl;
 import com.epam.pharmacy.model.dao.impl.OrderDaoImpl;
 import com.epam.pharmacy.model.dao.impl.PrescriptionDaoImpl;
 import com.epam.pharmacy.model.entity.Medicine;
+import com.epam.pharmacy.model.entity.OrderPosition;
 import com.epam.pharmacy.model.entity.Prescription;
 import com.epam.pharmacy.model.service.OrderService;
 import com.epam.pharmacy.validator.DataValidator;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.epam.pharmacy.controller.AttributeName.FAILED_CHANGE_MESSAGE;
 import static com.epam.pharmacy.controller.ParameterName.*;
@@ -65,7 +67,7 @@ public class OrderServiceImpl implements OrderService {
                     positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_TOO_BIG_QUANTITY);
                     return false;
                 }
-                result = orderDao.addToOrder(cartOrderId, medicineIdValue, quantity, PRESCRIPTION_ID_IF_DO_NOT_NEED);
+                result = orderDao.addToOrder(cartOrderId, medicineIdValue, quantity);
             }
         } catch (DaoException e) {
             LOGGER.error("Adding to cart exception. customerId=" + customerId +
@@ -101,13 +103,13 @@ public class OrderServiceImpl implements OrderService {
             Medicine medicine = medicineOptional.get();
             long prescriptionId = Long.parseLong(prescriptionIdString);
             long cartOrderId = getCartOrderId(customerId, orderDao);
-            if(!prescriptionIsValid(prescriptionDao, prescriptionId)){
+            if (!prescriptionIsValid(prescriptionDao, prescriptionId)) {
                 positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_PRESCRIPTION_IS_NOT_VALID);
                 return false;
             }
             if (orderDao.existsPositionInOrder(cartOrderId, medicine.getId(), prescriptionId)) {
                 int availableQuantity = findPositionsAvailableQuantityIfExistInCart(
-                                medicine, cartOrderId, prescriptionId, orderDao, prescriptionDao);
+                        medicine, cartOrderId, prescriptionId, orderDao, prescriptionDao);
                 if (quantity > availableQuantity) {
                     positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_TOO_BIG_QUANTITY);
                     return false;
@@ -133,7 +135,35 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<Medicine, Integer> findCartContent(long customerId) throws ServiceException {
+    public Map<Long, Integer> findMedicineInCartWithQuantity(long customerId) throws ServiceException {
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(orderDao);
+            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            return orderDao.findMedicineIdWithQuantityInOrder(cartOrderId);
+        } catch (DaoException e) {
+            LOGGER.error("Finding cart medicines id and quantity exception. customerId=" + customerId, e);
+            throw new ServiceException("Finding cart medicines id and quantity exception" + customerId, e);
+        }
+    }
+
+    @Override
+    public int findNumberForPrescriptionInCart(long prescriptionId, long customerId) throws ServiceException {
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(orderDao);
+            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            return orderDao.findNumberForPrescriptionInOrder(cartOrderId, prescriptionId);
+        } catch (DaoException e) {
+            LOGGER.error("Finding number for prescription exception. customerId=" + customerId +
+                    " prescriptionId=" + prescriptionId, e);
+            throw new ServiceException("Finding number for prescription exception. customerId=" + customerId +
+                    " prescriptionId=" + prescriptionId, e);
+        }
+    }
+
+    @Override
+    public Set<OrderPosition> findCartPositions(long customerId) throws ServiceException {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
@@ -146,24 +176,37 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int findNumberForPrescriptionInCart(long prescriptionId, long customerId) throws ServiceException {
+    public boolean deletePositionFromCart(long medicineId, long prescriptionId, long customerId) throws ServiceException {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
             long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
-            return orderDao.findNumberForPrescriptionInOrder(cartOrderId, prescriptionId);
+            return orderDao.deletePositionFromOrder(cartOrderId, medicineId, prescriptionId);
         } catch (DaoException e) {
-            LOGGER.error("Finding number for prescription exception. customerId=" + customerId+
-                    " prescriptionId="+prescriptionId, e);
-            throw new ServiceException("Finding number for prescription exception. customerId=" + customerId+
-                    " prescriptionId="+prescriptionId, e);
+            LOGGER.error("Delete position from cart exception. medicineId=" + medicineId +
+                    ", customerId=" + customerId + ", prescriptionId=" + prescriptionId, e);
+            throw new ServiceException("Delete position from cart exception. medicineId=" + medicineId +
+                    ", customerId=" + customerId + ", prescriptionId=" + prescriptionId, e);
+        }
+    }
+
+    @Override
+    public boolean clearCart(long customerId) throws ServiceException {
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(orderDao);
+            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            return orderDao.deleteAllPositionsFromOrder(cartOrderId);
+        } catch (DaoException e) {
+            LOGGER.error("Clear cart exception. customerId=" + customerId, e);
+            throw new ServiceException("Clear cart exception. customerId=" + customerId, e);
         }
     }
 
     private boolean prescriptionIsValid(PrescriptionDaoImpl prescriptionDao, long prescriptionId) throws DaoException {
         Optional<Prescription> prescription = prescriptionDao.findById(prescriptionId);
-        if(!prescription.isPresent()){
-            LOGGER.warn("Prescription not found. id="+prescriptionId);
+        if (!prescription.isPresent()) {
+            LOGGER.warn("Prescription not found. id=" + prescriptionId);
             return false;
         }
         LocalDate expirationDate = prescription.get().getExpirationDate();

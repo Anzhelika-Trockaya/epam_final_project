@@ -12,7 +12,6 @@ public class Order extends CustomEntity implements Serializable {
     private LocalDate paymentDate;
     private State state;
     private long pharmacistId;
-    private String check;
 
     public enum State {
         CREATED,
@@ -62,14 +61,6 @@ public class Order extends CustomEntity implements Serializable {
         this.pharmacistId = pharmacistId;
     }
 
-    public String getCheck() {
-        return check;
-    }
-
-    public void setCheck(String check) {
-        this.check = check;
-    }
-
     public State getState() {
         return state;
     }
@@ -84,13 +75,12 @@ public class Order extends CustomEntity implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return id == order.id && customerId == order.customerId && pharmacistId == order.pharmacistId &&
-                state == order.state && Objects.equals(paymentDate, order.paymentDate) &&
-                Objects.equals(check, order.check);
+                state == order.state && Objects.equals(paymentDate, order.paymentDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, state, paymentDate, pharmacistId, check);
+        return Objects.hash(id, customerId, state, paymentDate, pharmacistId);
     }
 
     @Override
@@ -101,7 +91,6 @@ public class Order extends CustomEntity implements Serializable {
                 append(", state=").append(state).
                 append(", paymentDate=").append(paymentDate).
                 append(", pharmacistId=").append(pharmacistId).
-                append(", check='").append(check).append('\'').
                 append('}').toString();
     }
 
@@ -137,11 +126,6 @@ public class Order extends CustomEntity implements Serializable {
 
         public Builder buildPharmacistId(long id) {
             order.setPharmacistId(id);
-            return this;
-        }
-
-        public Builder buildCheck(String check) {
-            order.setCheck(check);
             return this;
         }
 

@@ -27,25 +27,24 @@ public class MedicineRowMapper implements CustomRowMapper<Medicine> {
         }
         return instance;
     }
+
     @Override
     public Optional<Medicine> mapRow(ResultSet resultSet) throws DaoException {
         Optional<Medicine> optionalMedicine;
         try {
             long id = resultSet.getLong(MEDICINE_ID);
             String name = resultSet.getString(MEDICINE_NAME);
-            long internationalNameId= resultSet.getLong(MEDICINE_INTERNATIONAL_NAME_ID);
-            BigDecimal price=resultSet.getBigDecimal(MEDICINE_PRICE);
-            int totalPackages=resultSet.getInt(MEDICINE_TOTAL_PACKAGES);
-            int numberInPackage=resultSet.getInt(MEDICINE_NUMBER_IN_PACKAGE);
-            long formId=resultSet.getLong(MEDICINE_FORM_ID);
-            int dosage=resultSet.getInt(MEDICINE_DOSAGE);
+            long internationalNameId = resultSet.getLong(MEDICINE_INTERNATIONAL_NAME_ID);
+            BigDecimal price = resultSet.getBigDecimal(MEDICINE_PRICE);
+            int totalPackages = resultSet.getInt(MEDICINE_TOTAL_PACKAGES);
+            int numberInPackage = resultSet.getInt(MEDICINE_NUMBER_IN_PACKAGE);
+            long formId = resultSet.getLong(MEDICINE_FORM_ID);
+            int dosage = resultSet.getInt(MEDICINE_DOSAGE);
             String dosageUnitString = resultSet.getString(MEDICINE_DOSAGE_UNIT);
-            DosageUnit dosageUnit=DosageUnit.valueOf(dosageUnitString);
-            String ingredients= resultSet.getString(MEDICINE_INGREDIENTS);
-            boolean needPrescription=resultSet.getBoolean(MEDICINE_NEED_PRESCRIPTION);
-            long manufacturerId= resultSet.getLong(MEDICINE_MANUFACTURER_ID);
-            String instruction=resultSet.getString(MEDICINE_INSTRUCTION);
-            String imagePath=resultSet.getString(MEDICINE_IMAGE_PATH);
+            DosageUnit dosageUnit = DosageUnit.valueOf(dosageUnitString);
+            boolean needPrescription = resultSet.getBoolean(MEDICINE_NEED_PRESCRIPTION);
+            long manufacturerId = resultSet.getLong(MEDICINE_MANUFACTURER_ID);
+            String imagePath = resultSet.getString(MEDICINE_IMAGE_PATH);
             Medicine medicine = new Medicine.Builder(id).
                     buildName(name).
                     buildInternationalNameId(internationalNameId).
@@ -55,14 +54,12 @@ public class MedicineRowMapper implements CustomRowMapper<Medicine> {
                     buildFormId(formId).
                     buildDosage(dosage).
                     buildDosageUnit(dosageUnit).
-                    buildIngredients(ingredients).
                     buildNeedPrescription(needPrescription).
                     buildManufacturerId(manufacturerId).
-                    buildInstruction(instruction).
                     buildImagePath(imagePath).
                     build();
-            optionalMedicine=Optional.of(medicine);
-        }catch (SQLException e) {
+            optionalMedicine = Optional.of(medicine);
+        } catch (SQLException e) {
             LOGGER.warn("Exception when map medicine row. ", e);
             optionalMedicine = Optional.empty();
         }

@@ -34,7 +34,7 @@
 <fmt:message key="medicines.microgram" var="unit_name_mcg"/>
 <fmt:message key="medicines.me" var="unit_name_me"/>
 <fmt:message key="medicines.nanogram" var="unit_name_ng"/>
-<fmt:message key="medicines.not_available" var="not_available"/>
+<fmt:message key="medicines.out_of_stock" var="out_of_stock"/>
 <fmt:message key="medicines.go_to_prescriptions" var="go_to_prescriptions"/>
 <fmt:message key="medicines.prescription" var="prescription_title"/>
 <fmt:message key="medicines.expiration_date" var="expiration_date"/>
@@ -163,10 +163,7 @@
                                  alt="no image"></td>
                         <td>
                             <p class="medicine_name_link">
-                                <b>
-                                    <a href="${context_path}/controller?command=go_medicine_page&id=<c:out value="${medicine.id}"/>">
-                                        <c:out value="${medicine.name}"/>
-                                    </a>
+                                <b> <c:out value="${medicine.name}"/>
                                     <c:if test="${medicine.needPrescription()}">
                                         <span>${need_prescription_msg}</span>
                                     </c:if>
@@ -238,7 +235,7 @@
                                     </c:if>
                                 </c:when>
                                 <c:otherwise>
-                                    <h4>${not_available}</h4>
+                                    <h4>${out_of_stock}</h4>
                                 </c:otherwise>
                             </c:choose>
                             <c:if test="${!(current_user_role eq 'CUSTOMER')}">

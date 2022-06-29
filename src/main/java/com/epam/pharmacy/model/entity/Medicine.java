@@ -16,10 +16,8 @@ public class Medicine extends CustomEntity implements Serializable {
     private long formId;
     private int dosage;
     private DosageUnit dosageUnit;
-    private String ingredients;
     private boolean needPrescription;
     private long manufacturerId;
-    private String instruction;
     private String imagePath;
 
     public Medicine() {
@@ -98,14 +96,6 @@ public class Medicine extends CustomEntity implements Serializable {
         this.dosageUnit = dosageUnit;
     }
 
-    public String getIngredients() {
-        return ingredients;
-    }
-
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-
     public boolean needPrescription() {
         return needPrescription;
     }
@@ -120,14 +110,6 @@ public class Medicine extends CustomEntity implements Serializable {
 
     public void setManufacturerId(long manufacturerId) {
         this.manufacturerId = manufacturerId;
-    }
-
-    public String getInstruction() {
-        return instruction;
-    }
-
-    public void setInstruction(String instruction) {
-        this.instruction = instruction;
     }
 
     public String getImagePath() {
@@ -148,14 +130,13 @@ public class Medicine extends CustomEntity implements Serializable {
                 formId == medicine.formId && dosage == medicine.dosage &&
                 needPrescription == medicine.needPrescription && manufacturerId == medicine.manufacturerId &&
                 Objects.equals(name, medicine.name) && Objects.equals(price, medicine.price) &&
-                dosageUnit == medicine.dosageUnit && Objects.equals(ingredients, medicine.ingredients) &&
-                Objects.equals(instruction, medicine.instruction) && Objects.equals(imagePath, medicine.imagePath);
+                dosageUnit == medicine.dosageUnit &&  Objects.equals(imagePath, medicine.imagePath);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, name, internationalNameId, price, totalPackages, numberInPackage, formId, dosage,
-                dosageUnit, ingredients, needPrescription, manufacturerId, instruction, imagePath);
+                dosageUnit, needPrescription, manufacturerId, imagePath);
     }
 
     @Override
@@ -170,10 +151,8 @@ public class Medicine extends CustomEntity implements Serializable {
                 ", formId=" + formId +
                 ", dosage=" + dosage +
                 ", dosageUnit=" + dosageUnit +
-                ", ingredients='" + ingredients + '\'' +
                 ", needPrescription=" + needPrescription +
                 ", manufacturerId=" + manufacturerId +
-                ", instruction='" + instruction + '\'' +
                 ", imagePath=" + imagePath +
                 '}';
     }
@@ -229,11 +208,6 @@ public class Medicine extends CustomEntity implements Serializable {
             return this;
         }
 
-        public Builder buildIngredients(String ingredients) {
-            medicine.setIngredients(ingredients);
-            return this;
-        }
-
         public Builder buildNeedPrescription(boolean needPrescription) {
             medicine.setNeedPrescription(needPrescription);
             return this;
@@ -241,11 +215,6 @@ public class Medicine extends CustomEntity implements Serializable {
 
         public Builder buildManufacturerId(long id) {
             medicine.setManufacturerId(id);
-            return this;
-        }
-
-        public Builder buildInstruction(String instruction) {
-            medicine.setInstruction(instruction);
             return this;
         }
 

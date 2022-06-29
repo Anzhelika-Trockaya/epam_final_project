@@ -22,15 +22,14 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     private static final String PERCENT = "%";
     private static final String SQL_INSERT_MEDICINE =
             "INSERT INTO medicines (medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path) " +
-                    "values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, medicine_image_path) " +
+                    "values(?,?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_SELECT_ALL_AVAILABLE_MEDICINES_FOR_CUSTOMER =
             "SELECT m.medicine_id, m.medicine_name, m.medicine_international_name_id, m.medicine_price, " +
                     "m.medicine_number_in_package, m.medicine_form_id, m.medicine_dosage, " +
-                    "m.medicine_dosage_unit, m.medicine_ingredients, m.medicine_need_prescription, " +
-                    "m.medicine_manufacturer_id, m.medicine_instruction, m.medicine_image_path, " +
+                    "m.medicine_dosage_unit, m.medicine_need_prescription, m.medicine_manufacturer_id, " +
+                    "m.medicine_image_path, " +
                     "m.medicine_total_packages - IFNULL(ord.ords_sum, 0) AS medicine_total_packages " +
                     "FROM medicines m LEFT JOIN (" +
                     "SELECT SUM(ord.order_medicine_quantity) AS ords_sum, ord.medicine_id, ord.order_medicine_quantity " +
@@ -40,48 +39,42 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "WHERE medicine_total_packages > 0";
     private static final String SQL_SELECT_ALL_MEDICINES =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
-                    "FROM medicines";
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, " +
+                    "medicine_image_path FROM medicines";
     private static final String SQL_SELECT_MEDICINE_BY_ID =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
-                    "FROM medicines WHERE medicine_id = ?";
+                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_need_prescription, " +
+                    "medicine_manufacturer_id, medicine_image_path FROM medicines WHERE medicine_id = ?";
     private static final String SQL_SELECT_MEDICINE_BY_INTERNATIONAL_NAME_ID =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, medicine_image_path " +
                     "FROM medicines WHERE medicine_international_name_id = ?";
     private static final String SQL_SELECT_MEDICINE_BY_MANUFACTURER_ID =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, medicine_image_path " +
                     "FROM medicines WHERE medicine_manufacturer_id = ?";
     private static final String SQL_SELECT_MEDICINE_BY_FORM_ID =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, medicine_image_path " +
                     "FROM medicines WHERE medicine_form_id = ?";
     private static final String SQL_SELECT_MEDICINE_TOTAL_PACKAGES_BY_ID =
             "SELECT medicine_total_packages FROM medicines WHERE medicine_id = ?";
     private static final String SQL_SELECT_MEDICINES_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_total_packages, medicine_number_in_package, " +
-                    "medicine_form_id, medicine_dosage, medicine_dosage_unit, medicine_ingredients, " +
-                    "medicine_need_prescription, medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, medicine_image_path " +
                     "FROM medicines WHERE medicine_name LIKE UPPER(?) AND medicine_international_name_id LIKE ? AND " +
                     "medicine_form_id LIKE ? AND medicine_dosage LIKE ? AND medicine_dosage_unit LIKE ?";
     private static final String SQL_SELECT_MEDICINES_AVAILABLE_FOR_CUSTOMER_BY_PARAMS =
             "SELECT m.medicine_id, m.medicine_name, m.medicine_international_name_id, m.medicine_price, " +
                     "m.medicine_number_in_package, m.medicine_form_id, m.medicine_dosage, " +
-                    "m.medicine_dosage_unit, m.medicine_ingredients, m.medicine_need_prescription, " +
-                    "m.medicine_manufacturer_id, m.medicine_instruction, m.medicine_image_path, " +
+                    "m.medicine_dosage_unit, m.medicine_need_prescription, m.medicine_manufacturer_id, " +
+                    "m.medicine_image_path, " +
                     "m.medicine_total_packages - IFNULL(ord.ords_sum, 0) AS medicine_total_packages " +
                     "FROM medicines m LEFT JOIN (" +
                     "SELECT SUM(ord.order_medicine_quantity) AS ords_sum, ord.medicine_id, ord.order_medicine_quantity " +
@@ -94,16 +87,15 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     private static final String SQL_SELECT_MEDICINES_BY_INTERNATIONAL_NAME_ID_FORM_UNIT_DOSAGE_DOSAGE_UNIT =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, medicine_form_id, form_unit, " +
-                    "medicine_dosage, medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, " +
-                    "medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
+                    "medicine_dosage, medicine_dosage_unit, medicine_need_prescription, " +
+                    "medicine_manufacturer_id, medicine_image_path " +
                     "FROM medicines med JOIN forms f ON med.medicine_form_id = f.form_id " +
                     "WHERE med.medicine_international_name_id = ? AND f.form_unit = ? AND med.medicine_dosage = ? " +
                     "AND med.medicine_dosage_unit = ?";
     private static final String SQL_UPDATE_MEDICINE_BY_ID =
             "UPDATE medicines SET medicine_name = ?, medicine_international_name_id = ?, medicine_price = ?, " +
                     "medicine_number_in_package = ?, medicine_form_id = ?, medicine_dosage = ?, " +
-                    "medicine_dosage_unit = ?, medicine_ingredients = ?, " +
-                    "medicine_need_prescription = ?, medicine_manufacturer_id = ?, medicine_instruction = ?, " +
+                    "medicine_dosage_unit = ?, medicine_need_prescription = ?, medicine_manufacturer_id = ?, " +
                     "medicine_image_path = ? WHERE medicine_id = ?";
     private static final String SQL_UPDATE_MEDICINE_TOTAL_PACKAGES_BY_ID =
             "UPDATE medicines SET medicine_total_packages = medicine_total_packages + ? WHERE medicine_id = ?";
@@ -120,11 +112,9 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             statement.setLong(6, medicine.getFormId());
             statement.setInt(7, medicine.getDosage());
             statement.setString(8, medicine.getDosageUnit().name());
-            statement.setString(9, medicine.getIngredients());
-            statement.setBoolean(10, medicine.needPrescription());
-            statement.setLong(11, medicine.getManufacturerId());
-            statement.setString(12, medicine.getInstruction());
-            statement.setString(13, medicine.getImagePath());
+            statement.setBoolean(9, medicine.needPrescription());
+            statement.setLong(10, medicine.getManufacturerId());
+            statement.setString(11, medicine.getImagePath());
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
             LOGGER.error("Adding medicine exception." + medicine, e);
@@ -322,12 +312,10 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
             statement.setLong(5, medicine.getFormId());
             statement.setInt(6, medicine.getDosage());
             statement.setString(7, medicine.getDosageUnit().name());
-            statement.setString(8, medicine.getIngredients());
-            statement.setBoolean(9, medicine.needPrescription());
-            statement.setLong(10, medicine.getManufacturerId());
-            statement.setString(11, medicine.getInstruction());
-            statement.setString(12, medicine.getImagePath());
-            statement.setLong(13, medicine.getId());
+            statement.setBoolean(8, medicine.needPrescription());
+            statement.setLong(9, medicine.getManufacturerId());
+            statement.setString(10, medicine.getImagePath());
+            statement.setLong(11, medicine.getId());
             return statement.executeUpdate() == ONE_UPDATED ? oldMedicineOptional : Optional.empty();
         } catch (SQLException e) {
             LOGGER.error("Edit medicine exception." + medicine, e);

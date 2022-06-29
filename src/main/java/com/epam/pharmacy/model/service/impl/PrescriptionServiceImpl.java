@@ -111,14 +111,24 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Override
     public Optional<Prescription> findById(String prescriptionId) throws ServiceException {
+        try {
+            long id = Long.parseLong(prescriptionId);
+            return findById(id);
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when find prescription. id=" + prescriptionId, e);
+            throw new ServiceException("Exception when find prescription. id=" + prescriptionId, e);
+        }
+    }
+
+    @Override
+    public Optional<Prescription> findById(long id) throws ServiceException {
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(prescriptionDao);
-            long id = Long.parseLong(prescriptionId);
             return prescriptionDao.findById(id);
         } catch (DaoException e) {
-            LOGGER.error("Exception when find prescription. id=" + prescriptionId, e);
-            throw new ServiceException("Exception when find prescription. id=" + prescriptionId, e);
+            LOGGER.error("Exception when find prescription. id=" + id, e);
+            throw new ServiceException("Exception when find prescription. id=" + id, e);
         }
     }
 

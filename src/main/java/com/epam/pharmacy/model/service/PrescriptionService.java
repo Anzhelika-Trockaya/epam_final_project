@@ -22,5 +22,7 @@ public interface PrescriptionService {
 
     Optional<Prescription> findById(String prescriptionId) throws ServiceException;
 
+    Optional<Prescription> findById(long id) throws ServiceException;
+
     boolean deleteIfIsNotUsed(String prescriptionId) throws ServiceException;
 }

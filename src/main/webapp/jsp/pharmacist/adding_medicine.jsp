@@ -14,8 +14,6 @@
 <fmt:message key="adding_medicine.number_in_package" var="label_number_in_package"/>
 <fmt:message key="adding_medicine.total_packages" var="label_total_packages"/>
 <fmt:message key="adding_medicine.price" var="label_price"/>
-<fmt:message key="adding_medicine.ingredients" var="label_ingredients"/>
-<fmt:message key="adding_medicine.instruction" var="label_instruction"/>
 <fmt:message key="adding_medicine.image" var="label_image"/>
 <fmt:message key="adding_medicine.successful_msg" var="successful_added_msg"/>
 <fmt:message key="action.add" var="adding_btn_value"/>
@@ -43,10 +41,8 @@
     <c:set value="${medicine.formId}" var="medicine_form_id"/>
     <c:set value="${medicine.dosage}" var="medicine_dosage"/>
     <c:set value="${medicine.dosageUnit}" var="medicine_dosage_unit"/>
-    <c:set value="${medicine.ingredients}" var="medicine_ingredients"/>
     <c:set value="${medicine.needPrescription()}" var="medicine_need_prescription"/>
     <c:set value="${medicine.manufacturerId}" var="medicine_manufacturer_id"/>
-    <c:set value="${medicine.instruction}" var="medicine_instruction"/>
     <c:set value="${medicine.imagePath}" var="medicine_image_link"/>
 </c:if>
 <c:if test="${empty medicine_change_total_value}">
@@ -206,20 +202,6 @@
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_price}"/></p>
         </c:if>
         <br/>
-        <label for="ingredients">${label_ingredients}</label>
-        <textarea id="ingredients" name="ingredients" maxlength="100">${medicine_ingredients}</textarea>
-        <p id="incorrect_ingredients_msg" class="incorrect_data_msg"></p>
-        <c:if test="${not empty incorrect_ingredients}">
-            <p class="incorrect_data_msg"><fmt:message key="${incorrect_ingredients}"/></p>
-        </c:if>
-        <br/>
-        <label for="instruction">${label_instruction}</label>
-        <textarea id="instruction" name="instruction" maxlength="100">${medicine_instruction}</textarea>
-        <p id="incorrect_instruction_msg" class="incorrect_data_msg"></p>
-        <c:if test="${not empty incorrect_instruction}">
-            <p class="incorrect_data_msg"><fmt:message key="${incorrect_instruction}"/></p>
-        </c:if>
-        <br/>
         <input type="button" id="loadFileXml" value="${choose_file}"
                onclick="document.getElementById('image').click();"/>
         <input type="file" style="display:none;" onchange="onChangeFile()" id="image" name="image"
@@ -312,8 +294,6 @@
         const manufacturerInput = document.forms["medicine_form"]["manufacturer"];
         const numberInPackageInput = document.forms["medicine_form"]["number_in_package"];
         const priceInput = document.forms["medicine_form"]["price"];
-        const ingredientsInput = document.forms["medicine_form"]["ingredients"];
-        const instructionInput = document.forms["medicine_form"]["instruction"];
         let result = true;
         if (${empty medicine_id}) {
             const totalPackagesInput = document.forms["medicine_form"]["total_packages"];
@@ -345,12 +325,6 @@
         }
         if (!(validateRequired(priceInput, "incorrect_price_msg", "${incorrect_required_msg_text}") &&
             validatePatternMismatch(priceInput, pricePattern, "incorrect_price_msg", "${incorrect_price_msg_text}"))) {
-            result = false;
-        }
-        if (!validateRequired(ingredientsInput, "incorrect_ingredients_msg", "${incorrect_required_msg_text}")) {
-            result = false;
-        }
-        if (!validateRequired(instructionInput, "incorrect_instruction_msg", "${incorrect_required_msg_text}")) {
             result = false;
         }
         if (document.getElementById("file_path_msg").innerText === "") {

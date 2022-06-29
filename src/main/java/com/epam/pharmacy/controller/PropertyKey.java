@@ -1,7 +1,6 @@
 package com.epam.pharmacy.controller;
 
 public final class PropertyKey {
-    public static final String REGISTRATION_SUCCESSFUL_MESSAGE = "registration.successful_msg";
     public static final String REGISTRATION_INCORRECT_LASTNAME = "registration.incorrect_lastname";
     public static final String REGISTRATION_INCORRECT_NAME = "registration.incorrect_name";
     public static final String REGISTRATION_INCORRECT_PATRONYMIC = "registration.incorrect_patronymic";
@@ -62,6 +61,9 @@ public final class PropertyKey {
     public static final String PRESCRIPTIONS_NOT_AVAILABLE_IN_CART_YET = "prescriptions.not_available_in_cart_yet";
     public static final String PRESCRIPTIONS_DELETED = "prescriptions.deleted";
     public static final String PRESCRIPTIONS_NOT_DELETED = "prescriptions.not_deleted";
+    public static final String CART_DELETED = "cart.deleted";
+    public static final String CART_NOT_DELETED = "cart.not_deleted";
+    public static final String CART_NOT_CLEARED = "cart.not_cleared";
 
     private PropertyKey() {
     }

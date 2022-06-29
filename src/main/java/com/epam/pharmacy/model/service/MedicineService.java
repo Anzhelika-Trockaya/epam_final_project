@@ -13,6 +13,8 @@ public interface MedicineService {
 
     Optional<Medicine> findById(String medicineIdString) throws ServiceException;
 
+    Map<String, Object> findMedicineContentById(long id, long customerId) throws ServiceException;
+
     Map<Long, Map<String, Object>> findAll() throws ServiceException;
 
     boolean update(Map<String, String> medicineData) throws ServiceException;

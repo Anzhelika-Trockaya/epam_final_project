@@ -17,7 +17,6 @@ import static com.epam.pharmacy.controller.ParameterName.USER_ROLE;
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
 public class DataValidatorImpl implements DataValidator {
@@ -232,8 +231,6 @@ public class DataValidatorImpl implements DataValidator {
         String numberInPackage = medicineData.get(MEDICINE_NUMBER_IN_PACKAGE);
         String totalPackages = medicineData.get(MEDICINE_TOTAL_PACKAGES);
         String price = medicineData.get(MEDICINE_PRICE);
-        String instruction = medicineData.get(MEDICINE_INSTRUCTION);
-        String ingredients = medicineData.get(MEDICINE_INGREDIENTS);
         String imageLink = medicineData.get(MEDICINE_IMAGE_LINK);
         String changeTotalValue = medicineData.get(MEDICINE_CHANGE_TOTAL_VALUE);
         if (changeTotalValue == null) {
@@ -278,14 +275,6 @@ public class DataValidatorImpl implements DataValidator {
         if (!isCorrectPrice(price)) {
             result = false;
             medicineData.put(INCORRECT_PRICE, ADDING_MEDICINE_INCORRECT_PRICE);
-        }
-        if (!isNotEmpty(ingredients)) {
-            result = false;
-            medicineData.put(INCORRECT_INGREDIENTS, ADDING_MEDICINE_INCORRECT_REQUIRED);
-        }
-        if (!isNotEmpty(instruction)) {
-            result = false;
-            medicineData.put(INCORRECT_INSTRUCTION, ADDING_MEDICINE_INCORRECT_REQUIRED);
         }
         if (!isNotEmpty(imageLink)) {
             result = false;

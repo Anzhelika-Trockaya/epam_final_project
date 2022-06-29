@@ -28,14 +28,11 @@ public final class ColumnName {
     public static final String MEDICINE_PRICE="medicine_price";
     public static final String MEDICINE_TOTAL_PACKAGES ="medicine_total_packages";
     public static final String MEDICINE_NUMBER_IN_PACKAGE ="medicine_number_in_package";
-    public static final String MEDICINE_AMOUNT_IN_PACKAGE ="medicine_amount_in_package";
     public static final String MEDICINE_FORM_ID="medicine_form_id";
     public static final String MEDICINE_DOSAGE="medicine_dosage";
     public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
-    public static final String MEDICINE_INGREDIENTS="medicine_ingredients";
     public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
     public static final String MEDICINE_MANUFACTURER_ID="medicine_manufacturer_id";
-    public static final String MEDICINE_INSTRUCTION="medicine_instruction";
     public static final String MEDICINE_IMAGE_PATH="medicine_image_path";
     public static final String ORDER_ID = "order_id";
     public static final String ORDER_MEDICINE_QUANTITY = "order_medicine_quantity";
@@ -52,6 +49,7 @@ public final class ColumnName {
     public static final String AVAILABLE_QUANTITY = "available_quantity";
     public static final String NUMBER = "number";
     public static final String PRESCRIPTION_UNIT = "prescription_unit";
+    public static final String ORDER_MEDICINE_PRICE = "order_medicine_price";
 
     private ColumnName() {
     }

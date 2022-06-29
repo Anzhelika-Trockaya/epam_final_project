@@ -6,7 +6,9 @@ import com.epam.pharmacy.model.dao.ColumnName;
 import com.epam.pharmacy.model.dao.OrderDao;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.Order;
+import com.epam.pharmacy.model.entity.OrderPosition;
 import com.epam.pharmacy.model.mapper.impl.MedicineRowMapper;
+import com.epam.pharmacy.model.mapper.impl.OrderPositionRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,13 +25,12 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             "INSERT INTO orders (customer_id, order_state) VALUES (?,?)";
     private static final String SQL_SELECT_ORDER_ID_WITH_CUSTOMER_ID_WITH_CREATED_STATE =
             "SELECT order_id FROM orders WHERE customer_id = ? AND order_state = 'CREATED'";
-    private static final String SQL_SELECT_ORDER_MEDICINES_AND_QUANTITY =
-            "SELECT order_medicine_quantity, med.medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
-                    "medicine_number_in_package, medicine_total_packages, medicine_form_id, medicine_dosage, " +
-                    "medicine_dosage_unit, medicine_ingredients, medicine_need_prescription, " +
-                    "medicine_manufacturer_id, medicine_instruction, medicine_image_path " +
-                    "FROM m2m_order_medicine m2m JOIN medicines med ON m2m.medicine_id = med.medicine_id " +
-                    "WHERE m2m.order_id = ?";
+    private static final String SQL_SELECT_ORDER_MEDICINES_ID_AND_QUANTITY =
+            "SELECT SUM(order_medicine_quantity) AS order_medicine_quantity, medicine_id " +
+                    "FROM m2m_order_medicine WHERE order_id = ? GROUP BY medicine_id";
+    private static final String SQL_SELECT_ORDER_POSITIONS =
+            "SELECT order_id, medicine_id, order_medicine_quantity, prescription_id, order_medicine_price " +
+                    "FROM m2m_order_medicine WHERE order_id = ?";
     private static final String SQL_UPDATE_ORDER = "";//fixme
     private static final String SQL_INSERT_ORDER_ID_MEDICINE_ID_PRESCRIPTION_ID_AND_QUANTITY_INTO_M2M_ORDER_MEDICINE =
             "INSERT INTO m2m_order_medicine (order_id, medicine_id, prescription_id, order_medicine_quantity) " +
@@ -37,8 +38,8 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     private static final String SQL_INSERT_ORDER_ID_MEDICINE_ID_AND_QUANTITY_INTO_M2M_ORDER_MEDICINE =
             "INSERT INTO m2m_order_medicine (order_id, medicine_id, order_medicine_quantity) VALUES(?,?,?)";
     private static final String SQL_UPDATE_QUANTITY_INTO_M2M_ORDER_MEDICINE =
-            "UPDATE m2m_order_medicine SET order_medicine_quantity = ? WHERE order_id = ? " +
-                    "AND medicine_id = ? AND prescription_id = ?";
+            "UPDATE m2m_order_medicine SET order_medicine_quantity = ? " +
+                    "WHERE order_id = ? AND medicine_id = ? AND prescription_id = ?";
     private static final String SQL_SELECT_ORDER_ID_FROM_ROW_IN_M2M_ORDER_MEDICINE =
             "SELECT order_id FROM m2m_order_medicine WHERE order_id = ? AND medicine_id = ? AND prescription_id = ?";
     private static final String SQL_SELECT_POSITION_NUMBER =
@@ -54,6 +55,10 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
                     "WHERE order_id = ? AND medicine_id = ? AND prescription_id = ?";
     private static final String SQL_EXISTS_PRESCRIPTION_ID =
             "SELECT EXISTS (SELECT order_id FROM m2m_order_medicine WHERE prescription_id = ?)";
+    private static final String SQL_DELETE_ROW_FROM_M2M_ORDER_MEDICINE =
+            "DELETE FROM m2m_order_medicine WHERE order_id = ? AND medicine_id = ? AND prescription_id = ?";
+    private static final String SQL_DELETE_ROW_WITH_ORDER_ID_FROM_M2M_ORDER_MEDICINE =
+            "DELETE FROM m2m_order_medicine WHERE order_id = ?";
     private static final int ONE_UPDATED = 1;
     private static final long NOT_EXISTS_ORDER_ID_VALUE = -1;
     private static final int POSITION_NUMBER_IF_NOT_EXISTS_ORDER = -1;
@@ -117,23 +122,40 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public Map<Medicine, Integer> findOrderPositions(long orderId) throws DaoException {
-        Map<Medicine, Integer> orderPositions = new HashMap<>();
-        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDER_MEDICINES_AND_QUANTITY)) {
+    public Map<Long, Integer> findMedicineIdWithQuantityInOrder(long orderId) throws DaoException {
+        Map<Long, Integer> orderPositions = new HashMap<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDER_MEDICINES_ID_AND_QUANTITY)) {
             statement.setLong(1, orderId);
             try (ResultSet resultSet = statement.executeQuery()) {
-                MedicineRowMapper mapper = MedicineRowMapper.getInstance();
-                Optional<Medicine> currentMedicineOptional;
                 int quantity;
+                long medicineId;
                 while (resultSet.next()) {
-                    currentMedicineOptional = mapper.mapRow(resultSet);
+                    medicineId = resultSet.getLong(MEDICINE_ID);
                     quantity = resultSet.getInt(ORDER_MEDICINE_QUANTITY);
-                    if (currentMedicineOptional.isPresent()) {
-                        orderPositions.put(currentMedicineOptional.get(), quantity);
-                    }
+                    orderPositions.put(medicineId, quantity);
                 }
             }
             return orderPositions;
+        } catch (SQLException e) {
+            LOGGER.error("Finding medicines in order exception. orderId=" + orderId, e);
+            throw new DaoException("Finding medicines in order exception. orderId=" + orderId, e);
+        }
+    }
+
+    @Override
+    public Set<OrderPosition> findOrderPositions(long orderId) throws DaoException {
+        Set<OrderPosition> positions = new HashSet<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDER_POSITIONS)) {
+            statement.setLong(1, orderId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                OrderPositionRowMapper mapper = OrderPositionRowMapper.getInstance();
+                Optional<OrderPosition> currentPositionOptional;
+                while (resultSet.next()) {
+                    currentPositionOptional = mapper.mapRow(resultSet);
+                    currentPositionOptional.ifPresent(positions::add);
+                }
+            }
+            return positions;
         } catch (SQLException e) {
             LOGGER.error("Finding order positions exception. orderId=" + orderId, e);
             throw new DaoException("Finding order positions exception. orderId=" + orderId, e);
@@ -262,6 +284,32 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
         } catch (SQLException e) {
             LOGGER.error("Exception when check existing prescription id in orders", e);
             throw new DaoException("Exception when check existing prescription id in orders", e);
+        }
+    }
+
+    @Override
+    public boolean deletePositionFromOrder(long orderId, long medicineId, long prescriptionId) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_DELETE_ROW_FROM_M2M_ORDER_MEDICINE)) {
+            statement.setLong(1, orderId);
+            statement.setLong(2, medicineId);
+            statement.setLong(3, prescriptionId);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when delete order position. orderId=" + orderId +
+                    " medicineId=" + medicineId + " prescriptionId=" + prescriptionId, e);
+            throw new DaoException("Exception when delete order position. orderId=" + orderId +
+                    " medicineId=" + medicineId + " prescriptionId=" + prescriptionId, e);
+        }
+    }
+
+    @Override
+    public boolean deleteAllPositionsFromOrder(long orderId) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_DELETE_ROW_WITH_ORDER_ID_FROM_M2M_ORDER_MEDICINE)) {
+            statement.setLong(1, orderId);
+            return statement.executeUpdate() >= ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when delete rows with order_id. orderId=" + orderId, e);
+            throw new DaoException("Exception when delete rows with order_id. orderId=" + orderId, e);
         }
     }
 }

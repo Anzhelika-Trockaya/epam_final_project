@@ -11,9 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.AttributeName.CUSTOMER_BIRTHDAY_DATE;
@@ -21,12 +21,14 @@ import static com.epam.pharmacy.controller.AttributeName.CUSTOMER_LASTNAME;
 import static com.epam.pharmacy.controller.AttributeName.CUSTOMER_NAME;
 import static com.epam.pharmacy.controller.AttributeName.CUSTOMER_PATRONYMIC;
 import static com.epam.pharmacy.controller.AttributeName.CUSTOMER_SEX;
+import static com.epam.pharmacy.controller.AttributeName.MEDICINE;
 import static com.epam.pharmacy.controller.AttributeName.PRESCRIPTION_CUSTOMER_ID;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
 public class RequestFiller {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ZERO_QUANTITY = 0;
+    private static final long NOT_EXISTS_PRESCRIPTION_ID = 0;
     public static RequestFiller instance;
 
     private RequestFiller() {
@@ -95,10 +97,30 @@ public class RequestFiller {
         }
     }
 
-    public void addPrescriptions(HttpServletRequest httpServletRequest) throws CommandException {
+    public void addCartContent(HttpServletRequest request) throws CommandException {
+        ServiceProvider provider = ServiceProvider.getInstance();
+        OrderService orderService = provider.getOrderService();
+        HttpSession session = request.getSession();
+        long customerId = (long) session.getAttribute(CURRENT_USER_ID);
+        try {
+            Set<OrderPosition> cartPositions = orderService.findCartPositions(customerId);
+            Set<Map<String, Object>> cartContent = findCartContent(cartPositions, customerId);
+            request.setAttribute(CART_CONTENT_SET, cartContent);
+            Map<Long, Integer> medicineIdWithQuantityFromCart = orderService.findMedicineInCartWithQuantity(customerId);
+            boolean isCorrect = checkValidityOfCartContent(cartContent, medicineIdWithQuantityFromCart);
+            request.setAttribute(AttributeName.IS_CORRECT_ORDER, isCorrect);
+            BigDecimal totalCost = countTotalCost(cartContent);
+            request.setAttribute(AttributeName.TOTAL_COST, totalCost);
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when fill cart. customerId=" + customerId, e);
+            throw new CommandException("Exception when fill customerId=" + customerId, e);
+        }
+    }
+
+    public void addPrescriptions(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = provider.getPrescriptionService();
-        HttpSession session = httpServletRequest.getSession();
+        HttpSession session = request.getSession();
         UserRole currentUserRole = (UserRole) session.getAttribute(CURRENT_USER_ROLE);
         long id = (long) session.getAttribute(CURRENT_USER_ID);
         try {
@@ -107,7 +129,7 @@ public class RequestFiller {
                 case DOCTOR:
                     prescriptionsMap = prescriptionService.findAllByDoctor(id);
                     int renewalRequestsQuantity = findNeedRenewal(prescriptionsMap);
-                    httpServletRequest.setAttribute(AttributeName.RENEWAL_REQUESTS_QUANTITY, renewalRequestsQuantity);
+                    request.setAttribute(AttributeName.RENEWAL_REQUESTS_QUANTITY, renewalRequestsQuantity);
                     break;
                 case CUSTOMER:
                     prescriptionsMap = prescriptionService.findAllByCustomer(id);
@@ -118,7 +140,7 @@ public class RequestFiller {
                     break;
             }
             if (prescriptionsMap != null) {
-                httpServletRequest.setAttribute(AttributeName.PRESCRIPTIONS_MAP, prescriptionsMap);
+                request.setAttribute(AttributeName.PRESCRIPTIONS_MAP, prescriptionsMap);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception when fill prescriptions ", e);
@@ -220,5 +242,90 @@ public class RequestFiller {
                     currentQuantity - currentSoldQuantity > ZERO_QUANTITY;
             prescription.put(ParameterName.IS_ACTIVE, isActiveCurrent);
         }
+    }
+
+    private Set<Map<String, Object>> findCartContent(Set<OrderPosition> cartPositions,
+                                                     long customerId) throws ServiceException {
+        Set<Map<String, Object>> cartContent = new HashSet<>();
+        if (!cartPositions.isEmpty()) {
+            ServiceProvider provider = ServiceProvider.getInstance();
+            MedicineService medicineService = provider.getMedicineService();
+            PrescriptionService prescriptionService = provider.getPrescriptionService();
+            Map<String, Object> positionContent;
+            for (OrderPosition position : cartPositions) {
+                positionContent = medicineService.findMedicineContentById(position.getMedicineId(), customerId);
+                int positionQuantity = position.getQuantity();
+                positionContent.put(QUANTITY, positionQuantity);
+                long prescriptionId = position.getPrescriptionId();
+                if (prescriptionId != NOT_EXISTS_PRESCRIPTION_ID) {
+                    Optional<Prescription> prescriptionOptional = prescriptionService.findById(prescriptionId);
+                    if (!prescriptionOptional.isPresent()) {
+                        LOGGER.warn("Prescription with id=" + prescriptionId + " not found.");
+                        continue;
+                    }
+                    Prescription prescription = prescriptionOptional.get();
+                    positionContent.put(PRESCRIPTION, prescription);
+                }
+                cartContent.add(positionContent);
+            }
+        }
+        return cartContent;
+    }
+
+    private boolean checkValidityOfCartContent(Set<Map<String, Object>> cartContent,
+                                               Map<Long, Integer> medicineIdWithQuantityFromCart) throws ServiceException {
+        boolean isValid = true;
+        for (Map<String, Object> positionContent : cartContent) {
+            isValid = isAvailableQuantity(positionContent, medicineIdWithQuantityFromCart) && isValid;
+            if (positionContent.containsKey(PRESCRIPTION)) {
+                Prescription prescription = (Prescription) positionContent.get(PRESCRIPTION);
+                if (isInvalidPrescriptionExpirationDate(prescription)) {
+                    positionContent.put(INVALID_PRESCRIPTION, INVALID_PRESCRIPTION);
+                    isValid = false;
+                }
+            }
+        }
+        return isValid;
+    }
+
+    private boolean isAvailableQuantity(Map<String, Object> positionContent,
+                                        Map<Long, Integer> medicineIdWithQuantityFromCart) {
+        boolean result = true;
+        Medicine medicine = (Medicine) positionContent.get(MEDICINE);
+        int medicineQuantityInCart = medicineIdWithQuantityFromCart.get(medicine.getId());
+        int totalPackages = medicine.getTotalPackages();
+        if (totalPackages == ZERO_QUANTITY) {
+            positionContent.put(OUT_OF_STOCK, OUT_OF_STOCK);
+            result = false;
+        } else if (totalPackages < medicineQuantityInCart) {
+            positionContent.put(AVAILABLE_QUANTITY, totalPackages);
+            result = false;
+        }
+        return result;
+    }
+
+    private boolean isInvalidPrescriptionExpirationDate(Prescription prescription) {
+        LocalDate expirationDate = prescription.getExpirationDate();
+        LocalDate now = LocalDate.now();
+        return expirationDate.isBefore(now);
+    }
+
+
+    private BigDecimal countTotalCost(Set<Map<String, Object>> cartContent) {
+        BigDecimal totalCost = BigDecimal.ZERO;
+        BigDecimal positionCost;
+        Medicine positionMedicine;
+        BigDecimal positionPrice;
+        int positionQuantity;
+        for (Map<String, Object> positionContent : cartContent) {
+            if (!positionContent.containsKey(OUT_OF_STOCK)) {
+                positionMedicine = (Medicine) positionContent.get(MEDICINE);
+                positionPrice = positionMedicine.getPrice();
+                positionQuantity = (int) positionContent.get(QUANTITY);
+                positionCost = positionPrice.multiply(BigDecimal.valueOf(positionQuantity));
+                totalCost = totalCost.add(positionCost);
+            }
+        }
+        return totalCost;
     }
 }
