@@ -72,6 +72,7 @@ public final class ParameterName {
     public static final String MEDICINE_DOSAGE_UNIT = "medicine_dosage_unit";
     public static final String IS_ACTIVE = "is_active";
     public static final String PRESCRIPTION = "prescription";
+    public static final String TOTAL_COST = "total_cost";
 
 
     private ParameterName() {

@@ -52,7 +52,8 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
                 Map<Long, Map<String, Object>> medicinesForPrescriptionData =
                         medicineService.findByPrescription(prescription);
                 int prescriptionAvailableNumber = prescription.getQuantity() - prospectiveSoldNumber;
-                changeTotalQuantitiesToMaxPossible(currentUserId, medicinesForPrescriptionData, prescriptionAvailableNumber);
+                changeTotalQuantitiesToMaxPossible(currentUserId,
+                        medicinesForPrescriptionData, prescriptionAvailableNumber);
                 request.setAttribute(MEDICINES_DATA_MAP, medicinesForPrescriptionData);
                 request.setAttribute(AttributeName.SHOW_PRESCRIPTIONS_MEDICINES, true);
                 request.setAttribute(AttributeName.PRESCRIPTION_ID, prescription.getId());

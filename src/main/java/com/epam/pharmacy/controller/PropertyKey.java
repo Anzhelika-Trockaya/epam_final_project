@@ -64,6 +64,9 @@ public final class PropertyKey {
     public static final String CART_DELETED = "cart.deleted";
     public static final String CART_NOT_DELETED = "cart.not_deleted";
     public static final String CART_FAILED_CHANGE_POSITION = "cart.failed_change_position";
+    public static final String CART_NOT_ENOUGH_MONEY_IN_THE_ACCOUNT = "cart.not_enough_money_in_the_account";
+    public static final String CART_SUCCESSFULLY_ORDERED = "cart.successfully_ordered";
+    public static final String CART_FAILED_ORDER = "cart.failed_order";
 
     private PropertyKey() {
     }

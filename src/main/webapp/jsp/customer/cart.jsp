@@ -188,7 +188,8 @@
     <hr>
     <h3>${total_cost_label}: ${total_cost}</h3>
     <form action="${context_path}/controller">
-        <input type="hidden" name="command" value="go_pay_page"/>
+        <input type="hidden" name="command" value="order"/>
+        <input type="hidden" name="total_cost" value="${total_cost}"/>
         <input type="submit" value="${order_btn}" <c:if test="${!is_correct_order}">disabled</c:if>/>
     </form>
 </div>

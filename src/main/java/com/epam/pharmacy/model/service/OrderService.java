@@ -4,6 +4,7 @@ import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.OrderPosition;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,5 +24,10 @@ public interface OrderService {
 
     boolean clearCart(long customerId) throws ServiceException;
 
-    boolean changePositionQuantityInCart(long medicineId, long prescriptionId, int quantity, long customerId) throws ServiceException;
+    boolean changePositionQuantityInCart(long medicineId,
+                                         long prescriptionId, int quantity, long customerId) throws ServiceException;
+
+    boolean order(long customerId) throws ServiceException;
+
+    boolean order(long customerId, BigDecimal expectedTotalCost) throws ServiceException;
 }

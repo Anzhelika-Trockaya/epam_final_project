@@ -38,6 +38,7 @@ public enum CommandType {
     DELETE_PRESCRIPTION(new DeletePrescriptionCommand()),
     DELETE_POSITION_FROM_CART(new DeletePositionFromCartCommand()),
     DEFAULT(new DefaultCommand()),
+    ORDER(new OrderCommand()),
     RENEWAL_PRESCRIPTION(new RenewalPrescriptionCommand()),
     REQUEST_RENEWAL_PRESCRIPTION(new RequestRenewalPrescriptionCommand()),
     LOGOUT(new LogoutCommand()),

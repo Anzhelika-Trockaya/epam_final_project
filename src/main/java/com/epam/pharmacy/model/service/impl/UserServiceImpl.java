@@ -15,6 +15,7 @@ import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.*;
@@ -209,6 +210,18 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             LOGGER.error("Exception when search users. paramsMap=" + paramsMap, e);
             throw new ServiceException("Exception when search users. paramsMap=" + paramsMap, e);
+        }
+    }
+
+    @Override
+    public BigDecimal findAccountBalance(long customerId) throws ServiceException {
+        UserDaoImpl userDao = new UserDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
+            return userDao.findAccountBalance(customerId);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find account balance. CustomerId=" + customerId, e);
+            throw new ServiceException("Exception when find account balance. CustomerId=" + customerId, e);
         }
     }
 

@@ -4,6 +4,7 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.Prescription;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,5 @@ public interface MedicineDao {
 
     Optional<Integer> findTotalPackages(long id) throws DaoException;
 
+    Optional<BigDecimal> findMedicinePrice(long medicineId) throws DaoException;
 }

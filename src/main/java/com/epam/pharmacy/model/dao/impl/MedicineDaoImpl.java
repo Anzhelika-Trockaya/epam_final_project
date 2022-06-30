@@ -9,6 +9,7 @@ import com.epam.pharmacy.model.mapper.impl.MedicineRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -64,6 +65,8 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "FROM medicines WHERE medicine_form_id = ?";
     private static final String SQL_SELECT_MEDICINE_TOTAL_PACKAGES_BY_ID =
             "SELECT medicine_total_packages FROM medicines WHERE medicine_id = ?";
+    private static final String SQL_SELECT_MEDICINE_PRICE_BY_ID =
+            "SELECT medicine_price FROM medicines WHERE medicine_id = ?";
     private static final String SQL_SELECT_MEDICINES_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
@@ -97,9 +100,10 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "medicine_number_in_package = ?, medicine_form_id = ?, medicine_dosage = ?, " +
                     "medicine_dosage_unit = ?, medicine_need_prescription = ?, medicine_manufacturer_id = ?, " +
                     "medicine_image_path = ? WHERE medicine_id = ?";
-    private static final String SQL_UPDATE_MEDICINE_TOTAL_PACKAGES_BY_ID =
+    private static final String SQL_INCREASE_MEDICINE_TOTAL_PACKAGES_BY_ID =
             "UPDATE medicines SET medicine_total_packages = medicine_total_packages + ? WHERE medicine_id = ?";
     private static final String SQL_DELETE_MEDICINE_BY_ID = "DELETE FROM medicines WHERE medicine_id = ?";
+
 
     @Override
     public boolean create(Medicine medicine) throws DaoException {
@@ -293,6 +297,26 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     int total = resultSet.getInt(MEDICINE_TOTAL_PACKAGES);
                     return Optional.of(total);
                 } else {
+                    LOGGER.warn("Medicine total packages not found. id=" + id);
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find total of medicine by id exception. id=" + id, e);
+            throw new DaoException("Find total of medicine by id exception. id=" + id, e);
+        }
+    }
+
+    @Override
+    public Optional<BigDecimal> findMedicinePrice(long id) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_MEDICINE_PRICE_BY_ID)) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    BigDecimal price = resultSet.getBigDecimal(MEDICINE_PRICE);
+                    return Optional.of(price);
+                } else {
+                    LOGGER.warn("Medicine price not found. id=" + id);
                     return Optional.empty();
                 }
             }
@@ -326,7 +350,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
 
     @Override
     public boolean updateTotalPackages(long medicineId, int value) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_MEDICINE_TOTAL_PACKAGES_BY_ID)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INCREASE_MEDICINE_TOTAL_PACKAGES_BY_ID)) {
             statement.setInt(1, value);
             statement.setLong(2, medicineId);
             return statement.executeUpdate() == ONE_UPDATED;

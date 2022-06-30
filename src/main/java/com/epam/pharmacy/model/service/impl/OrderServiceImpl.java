@@ -8,6 +8,7 @@ import com.epam.pharmacy.model.dao.OrderDao;
 import com.epam.pharmacy.model.dao.impl.MedicineDaoImpl;
 import com.epam.pharmacy.model.dao.impl.OrderDaoImpl;
 import com.epam.pharmacy.model.dao.impl.PrescriptionDaoImpl;
+import com.epam.pharmacy.model.dao.impl.UserDaoImpl;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.OrderPosition;
 import com.epam.pharmacy.model.entity.Prescription;
@@ -17,6 +18,7 @@ import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Optional;
@@ -29,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final long NOT_EXISTS_ORDER_ID_VALUE = -1;
     private static final long PRESCRIPTION_ID_IF_DO_NOT_NEED = 0;
+    private static final int COMPARE_RESULT_IF_EQUALS = 0;
 
     @Override
     public boolean addToCartWithoutPrescription(long customerId,
@@ -181,8 +184,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean deletePositionFromCart(long medicineId,
-                                          long prescriptionId,
-                                          long customerId) throws ServiceException {
+                                          long prescriptionId, long customerId) throws ServiceException {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
@@ -210,10 +212,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean changePositionQuantityInCart(long medicineId,
-                                                long prescriptionId,
-                                                int quantity,
-                                                long customerId) throws ServiceException {
+    public boolean changePositionQuantityInCart(long medicineId, long prescriptionId,
+                                                int quantity, long customerId) throws ServiceException {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
@@ -242,10 +242,10 @@ public class OrderServiceImpl implements OrderService {
                     return false;
                 }
                 Prescription prescription = prescriptionOptional.get();
-                int prescriptionNumberInCartExceptCurrentPosition=
+                int prescriptionNumberInCartExceptCurrentPosition =
                         orderDao.findNumberForPrescriptionInOrderExceptCurrentPosition(cartOrderId,
                                 medicineId, prescriptionId);
-                int prescriptionAvailableNumber = prescription.getQuantity() - prescription.getSoldQuantity()-
+                int prescriptionAvailableNumber = prescription.getQuantity() - prescription.getSoldQuantity() -
                         prescriptionNumberInCartExceptCurrentPosition;
                 int medicineAvailablePackagesForPrescription =
                         prescriptionAvailableNumber / medicine.getNumberInPackage();
@@ -260,6 +260,62 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("Change position quantity in cart exception. medicineId=" + medicineId +
                     ", customerId=" + customerId + ", prescriptionId=" + prescriptionId + ", quantity=" + quantity, e);
         }
+    }
+
+    @Override
+    public boolean order(long customerId, BigDecimal expectedTotalCost) throws ServiceException {
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        UserDaoImpl userDao = new UserDaoImpl();
+        PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
+        BigDecimal totalCost = BigDecimal.ZERO;
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.begin(orderDao, medicineDao, userDao, prescriptionDao);
+            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            Set<OrderPosition> positions = orderDao.findOrderPositions(cartOrderId);
+            Optional<BigDecimal> currentPriceOptional;
+            BigDecimal currentPrice;
+            BigDecimal currentPositionCost;
+            try {
+                for (OrderPosition position : positions) {
+                    medicineDao.updateTotalPackages(position.getMedicineId(), -position.getQuantity());
+                    currentPriceOptional = medicineDao.findMedicinePrice(position.getMedicineId());
+                    if (!currentPriceOptional.isPresent()) {
+                        LOGGER.warn("Position medicine price not found.");
+                        transaction.rollback();
+                        return false;
+                    }
+                    currentPrice = currentPriceOptional.get();
+                    orderDao.addPriceToPosition(position.getOrderId(), position.getMedicineId(),
+                            position.getPrescriptionId(), currentPrice);
+                    if (position.getPrescriptionId() != PRESCRIPTION_ID_IF_DO_NOT_NEED) {
+                        prescriptionDao.increaseSoldQuantity(position.getPrescriptionId(),
+                                position.getMedicineId(), position.getQuantity());
+                    }
+                    currentPositionCost = currentPrice.multiply(new BigDecimal(position.getQuantity()));
+                    totalCost = totalCost.add(currentPositionCost);
+                }
+                if (expectedTotalCost.compareTo(totalCost) == COMPARE_RESULT_IF_EQUALS) {
+                    userDao.decreaseAccountBalance(totalCost);
+                    orderDao.makeOrderStatePaid(cartOrderId);
+                    transaction.commit();
+                    return true;
+                } else {
+                    transaction.rollback();
+                    return false;
+                }
+            } catch (DaoException e) {
+                LOGGER.warn("Exception when make order transaction. CustomerId=" + customerId +
+                        ", expectedTotalCost=" + expectedTotalCost, e);
+                transaction.rollback();
+                return false;
+            }
+        } catch (DaoException e) {
+            LOGGER.error("Exception when make order. customerId=" + customerId +
+                    ", expectedTotalCost=" + expectedTotalCost, e);
+            throw new ServiceException("Exception when make order. customerId=" + customerId +
+                    ", expectedTotalCost=" + expectedTotalCost, e);
+        }//todo
     }
 
     private boolean prescriptionIsInvalid(PrescriptionDaoImpl prescriptionDao, long prescriptionId) throws DaoException {

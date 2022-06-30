@@ -99,9 +99,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
 
     @Override
     public boolean addPositionToOrder(long orderId,
-                                      long medicineId,
-                                      int quantity,
-                                      long prescriptionId) throws DaoException {
+                                      long medicineId, int quantity, long prescriptionId) throws DaoException {
         try (PreparedStatement statement = connection.
                 prepareStatement(SQL_INSERT_ORDER_ID_MEDICINE_ID_PRESCRIPTION_ID_QUANTITY_INTO_M2M_ORDER_MEDICINE)) {
             statement.setLong(1, orderId);

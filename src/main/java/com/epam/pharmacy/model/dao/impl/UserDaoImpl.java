@@ -8,6 +8,7 @@ import com.epam.pharmacy.model.mapper.impl.UserRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +53,9 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                     "WHERE LOWER(user_lastname) LIKE LOWER(?) AND LOWER(user_name) LIKE LOWER(?) AND " +
                     "LOWER(user_patronymic) LIKE LOWER(?) AND user_birthday_date LIKE ? AND " +
                     "user_role LIKE ? AND user_state LIKE ?";
+    private static final String SQL_SELECT_ACCOUNT_BALANCE_BY_USER_ID =
+            "SELECT user_account_balance FROM users WHERE user_id = ?";
+    private static final BigDecimal BALANCE_IF_NOT_FOUND = BigDecimal.ZERO;
 
     @Override
     public boolean create(User user) throws DaoException {
@@ -195,6 +199,23 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
+    @Override
+    public BigDecimal findAccountBalance(long id) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ACCOUNT_BALANCE_BY_USER_ID)) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getBigDecimal(1);
+                } else {
+                    LOGGER.warn("User account balance not found. id=" + id);
+                    return BALANCE_IF_NOT_FOUND;
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find user account balance by id exception. id=" + id, e);
+            throw new DaoException("Find user account balance by id exception. id=" + id, e);
+        }
+    }
 
     public List<User> findByParams(Map<String, String> paramsMap) throws DaoException {
         try (PreparedStatement statement = connection.

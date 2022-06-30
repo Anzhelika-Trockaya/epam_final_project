@@ -3,6 +3,7 @@ package com.epam.pharmacy.model.dao;
 import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.exception.DaoException;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,4 +17,6 @@ public interface UserDao {
     boolean updatePassword(long id, String password) throws DaoException;
 
     List<User> findActiveCustomers() throws DaoException;
+
+    BigDecimal findAccountBalance(long id) throws DaoException;
 }
