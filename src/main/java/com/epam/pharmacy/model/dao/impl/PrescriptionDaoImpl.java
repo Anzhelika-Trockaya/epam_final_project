@@ -79,8 +79,10 @@ public class PrescriptionDaoImpl extends AbstractDao<Prescription> implements Pr
                     "prescription_customer_id = ?, prescription_quantity = ?, prescription_expiration_date = ?, " +
                     "prescription_unit = ?, prescription_dosage = ?, prescription_dosage_unit = ?, " +
                     "prescription_need_renewal = ?, prescription_sold_quantity = ? WHERE prescription_id = ?";
-    private static final String SQL_UPDATE_PRESCRIPTION_SOLD_QUANTITY_BY_ID =
-            "UPDATE prescriptions SET prescription_sold_quantity = ? WHERE prescription_id = ?";
+    private static final String SQL_INCREASE_PRESCRIPTION_SOLD_QUANTITY_BY_ID =
+            "UPDATE prescriptions SET prescription_sold_quantity = prescription_sold_quantity + " +
+                    "(SELECT medicine_number_in_package * ? FROM medicines WHERE medicine_id = ?) " +
+                    "WHERE prescription_id = ?";
     private static final String SQL_UPDATE_PRESCRIPTION_EXPIRATION_DATE_AND_NEED_RENEWAL_MAKE_FALSE_BY_ID =
             "UPDATE prescriptions SET prescription_expiration_date = ?, prescription_need_renewal = false WHERE prescription_id = ?";
     private static final String SQL_UPDATE_MAKE_NEED_RENEWAL_TRUE_BY_ID =
@@ -229,20 +231,6 @@ public class PrescriptionDaoImpl extends AbstractDao<Prescription> implements Pr
     }
 
     @Override
-    public boolean updateSoldQuantity(long id, int newQuantity) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_PRESCRIPTION_SOLD_QUANTITY_BY_ID)) {
-            statement.setInt(1, newQuantity);
-            statement.setLong(2, id);
-            return statement.executeUpdate() == ONE_UPDATED;
-        } catch (SQLException e) {
-            LOGGER.error("Updating prescription sold quantity exception. id=" + id + " newSoldQuantity=" +
-                    newQuantity, e);
-            throw new DaoException("Updating prescription sold quantity exception. id=" + id + " newSoldQuantity=" +
-                    newQuantity, e);
-        }
-    }
-
-    @Override
     public boolean updateExpirationDateAndSetNeedRenewalFalse(long id, LocalDate newDate) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(
                 SQL_UPDATE_PRESCRIPTION_EXPIRATION_DATE_AND_NEED_RENEWAL_MAKE_FALSE_BY_ID)) {
@@ -272,17 +260,32 @@ public class PrescriptionDaoImpl extends AbstractDao<Prescription> implements Pr
     public int findPrescriptionAvailableNumber(long prescriptionId) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_AVAILABLE_QUANTITY_BY_PRESCRIPTION_ID)) {
             statement.setLong(1, prescriptionId);
-            try(ResultSet resultSet = statement.executeQuery()) {
-                if(resultSet.next()){
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
                     return resultSet.getInt(ColumnName.AVAILABLE_QUANTITY);
-                }else {
-                    LOGGER.warn("Prescription with id="+prescriptionId+" not found");
+                } else {
+                    LOGGER.warn("Prescription with id=" + prescriptionId + " not found");
                     return AVAILABLE_QUANTITY_IF_NOT_EXISTS;
                 }
             }
         } catch (SQLException e) {
             LOGGER.error("Find prescription available quantity exception. prescriptionId=" + prescriptionId, e);
             throw new DaoException("Find prescription available quantity exception. prescriptionId=" + prescriptionId, e);
+        }
+    }
+
+    @Override
+    public boolean increaseSoldQuantity(long prescriptionId, long medicineId, int medicinePackages) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INCREASE_PRESCRIPTION_SOLD_QUANTITY_BY_ID)) {
+            statement.setInt(1, medicinePackages);
+            statement.setLong(2, medicineId);
+            statement.setLong(3, prescriptionId);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Increase prescription sold quantity exception. prescriptionId=" + prescriptionId +
+                    ", medicineId=" + medicineId + ", medicinePackages=" + medicinePackages, e);
+            throw new DaoException("Increase prescription sold quantity exception. prescriptionId=" + prescriptionId +
+                    ", medicineId=" + medicineId + ", medicinePackages=" + medicinePackages, e);
         }
     }
 

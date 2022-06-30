@@ -3,6 +3,7 @@ package com.epam.pharmacy.model.dao;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.OrderPosition;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public interface OrderDao {
 
     Set<OrderPosition> findOrderPositions(long orderId) throws DaoException;
 
-    long getOrderIdWithoutPayment(long customerId) throws DaoException;
+    long getOrderIdWithoutPaymentIfExists(long customerId) throws DaoException;
 
     boolean createEmptyOrder(long customerId) throws DaoException;
 
@@ -42,4 +43,9 @@ public interface OrderDao {
 
     int findNumberForPrescriptionInOrderExceptCurrentPosition(long orderId, long medicineId,
                                                               long prescriptionId) throws DaoException;
+
+    boolean updatePriceInPosition(long orderId, long medicineId, long prescriptionId,
+                                  BigDecimal price) throws DaoException;
+
+    boolean makeOrderPaidAndUpdateTotalCostAndPaidDate(long cartOrderId, BigDecimal totalCost) throws DaoException;
 }

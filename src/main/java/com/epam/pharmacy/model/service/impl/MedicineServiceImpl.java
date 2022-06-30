@@ -129,7 +129,7 @@ public class MedicineServiceImpl implements MedicineService {
                 }
             }
             try {
-                medicineDao.updateTotalPackages(medicine.getId(), changeTotalValue);
+                medicineDao.increaseTotalPackages(medicine.getId(), changeTotalValue);
                 Optional<Medicine> optionalMedicine = medicineDao.update(medicine);
                 transaction.commit();
                 return optionalMedicine.isPresent();

@@ -27,7 +27,5 @@ public interface OrderService {
     boolean changePositionQuantityInCart(long medicineId,
                                          long prescriptionId, int quantity, long customerId) throws ServiceException;
 
-    boolean order(long customerId) throws ServiceException;
-
     boolean order(long customerId, BigDecimal expectedTotalCost) throws ServiceException;
 }

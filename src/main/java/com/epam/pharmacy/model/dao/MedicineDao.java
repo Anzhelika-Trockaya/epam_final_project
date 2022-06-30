@@ -26,7 +26,7 @@ public interface MedicineDao {
 
     List<Medicine> findByFormId(long id) throws DaoException;
 
-    boolean updateTotalPackages(long medicineId, int value) throws DaoException;
+    boolean increaseTotalPackages(long medicineId, int value) throws DaoException;
 
     Optional<Integer> findTotalPackages(long id) throws DaoException;
 

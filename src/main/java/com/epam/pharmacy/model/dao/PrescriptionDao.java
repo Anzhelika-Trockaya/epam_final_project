@@ -15,8 +15,6 @@ public interface PrescriptionDao {
 
     Map<Long, Map<String, Object>> findAllOfCustomer(long id) throws DaoException;
 
-    boolean updateSoldQuantity(long id, int newQuantity) throws DaoException;
-
     boolean updateExpirationDateAndSetNeedRenewalFalse(long id, LocalDate newDate) throws DaoException;
 
     boolean makeNeedRenewal(long id) throws DaoException;
@@ -24,4 +22,6 @@ public interface PrescriptionDao {
     Map<Long, Map<String, Object>> findNeededRenewalOfDoctor(long doctorId) throws DaoException;
 
     int findPrescriptionAvailableNumber(long prescriptionId) throws DaoException;
+
+    boolean increaseSoldQuantity(long prescriptionId, long medicineId, int medicinePackages) throws DaoException;
 }

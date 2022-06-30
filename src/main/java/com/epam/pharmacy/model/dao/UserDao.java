@@ -19,4 +19,8 @@ public interface UserDao {
     List<User> findActiveCustomers() throws DaoException;
 
     BigDecimal findAccountBalance(long id) throws DaoException;
+
+    boolean increaseAccountBalance(long id, BigDecimal value) throws DaoException;
+
+    boolean decreaseAccountBalance(long id, BigDecimal totalCost) throws DaoException;
 }

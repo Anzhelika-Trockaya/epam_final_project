@@ -55,6 +55,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                     "user_role LIKE ? AND user_state LIKE ?";
     private static final String SQL_SELECT_ACCOUNT_BALANCE_BY_USER_ID =
             "SELECT user_account_balance FROM users WHERE user_id = ?";
+    private static final String SQL_INCREASE_ACCOUNT_BALANCE_BY_USER_ID =
+            "UPDATE users SET user_account_balance = user_account_balance + ? WHERE user_id = ?";
     private static final BigDecimal BALANCE_IF_NOT_FOUND = BigDecimal.ZERO;
 
     @Override
@@ -214,6 +216,34 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         } catch (SQLException e) {
             LOGGER.error("Find user account balance by id exception. id=" + id, e);
             throw new DaoException("Find user account balance by id exception. id=" + id, e);
+        }
+    }
+
+    @Override
+    public boolean increaseAccountBalance(long id, BigDecimal value) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INCREASE_ACCOUNT_BALANCE_BY_USER_ID)) {
+            statement.setBigDecimal(1, value);
+            statement.setLong(2, id);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Increase user account balance by id exception. id=" + id +
+                    ", value=" + value, e);
+            throw new DaoException("Increase user account balance by id exception. id=" + id +
+                    ", value=" + value, e);
+        }
+    }
+
+    @Override
+    public boolean decreaseAccountBalance(long id, BigDecimal value) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_INCREASE_ACCOUNT_BALANCE_BY_USER_ID)) {
+            statement.setBigDecimal(1, value.negate());
+            statement.setLong(2, id);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Decrease user account balance by id exception. id=" + id +
+                    ", value=" + value, e);
+            throw new DaoException("Decrease user account balance by id exception. id=" + id +
+                    ", value=" + value, e);
         }
     }
 

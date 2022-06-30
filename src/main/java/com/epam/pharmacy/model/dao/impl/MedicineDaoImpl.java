@@ -349,7 +349,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     }
 
     @Override
-    public boolean updateTotalPackages(long medicineId, int value) throws DaoException {
+    public boolean increaseTotalPackages(long medicineId, int value) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_INCREASE_MEDICINE_TOTAL_PACKAGES_BY_ID)) {
             statement.setInt(1, value);
             statement.setLong(2, medicineId);

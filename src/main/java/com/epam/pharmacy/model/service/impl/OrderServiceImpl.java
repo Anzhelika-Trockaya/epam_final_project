@@ -146,7 +146,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             return orderDao.findMedicineIdWithQuantityInOrder(cartOrderId);
         } catch (DaoException e) {
             LOGGER.error("Finding cart medicines id and quantity exception. customerId=" + customerId, e);
@@ -159,7 +159,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             return orderDao.findNumberForPrescriptionInOrder(cartOrderId, prescriptionId);
         } catch (DaoException e) {
             LOGGER.error("Finding number for prescription exception. customerId=" + customerId +
@@ -174,7 +174,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             return orderDao.findOrderPositions(cartOrderId);
         } catch (DaoException e) {
             LOGGER.error("Finding cart positions exception. customerId=" + customerId, e);
@@ -188,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             return orderDao.deletePositionFromOrder(cartOrderId, medicineId, prescriptionId);
         } catch (DaoException e) {
             LOGGER.error("Delete position from cart exception. medicineId=" + medicineId +
@@ -203,7 +203,7 @@ public class OrderServiceImpl implements OrderService {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             return orderDao.deleteAllPositionsFromOrder(cartOrderId);
         } catch (DaoException e) {
             LOGGER.error("Clear cart exception. customerId=" + customerId, e);
@@ -219,7 +219,7 @@ public class OrderServiceImpl implements OrderService {
         PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao, medicineDao, prescriptionDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             Optional<Medicine> medicineOptional = medicineDao.findById(medicineId);
             if (!medicineOptional.isPresent()) {
                 LOGGER.warn("Medicine with id=" + medicineId + " not found");
@@ -271,36 +271,70 @@ public class OrderServiceImpl implements OrderService {
         BigDecimal totalCost = BigDecimal.ZERO;
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.begin(orderDao, medicineDao, userDao, prescriptionDao);
-            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            long cartOrderId = getCartOrderId(customerId, orderDao);
             Set<OrderPosition> positions = orderDao.findOrderPositions(cartOrderId);
             Optional<BigDecimal> currentPriceOptional;
             BigDecimal currentPrice;
             BigDecimal currentPositionCost;
+            boolean isUpdated;
             try {
                 for (OrderPosition position : positions) {
-                    medicineDao.updateTotalPackages(position.getMedicineId(), -position.getQuantity());
+                    isUpdated = medicineDao.increaseTotalPackages(position.getMedicineId(), -position.getQuantity());
+                    if (!isUpdated) {
+                        LOGGER.warn("Medicine total packages not updated. MedicineId=" + position.getMedicineId() +
+                                ", increase value=" + (-position.getQuantity()));
+                        transaction.rollback();
+                        return false;
+                    }
                     currentPriceOptional = medicineDao.findMedicinePrice(position.getMedicineId());
                     if (!currentPriceOptional.isPresent()) {
-                        LOGGER.warn("Position medicine price not found.");
+                        LOGGER.warn("Position medicine price not found. MedicineId=" + position.getMedicineId());
                         transaction.rollback();
                         return false;
                     }
                     currentPrice = currentPriceOptional.get();
-                    orderDao.addPriceToPosition(position.getOrderId(), position.getMedicineId(),
+                    isUpdated = orderDao.updatePriceInPosition(position.getOrderId(), position.getMedicineId(),
                             position.getPrescriptionId(), currentPrice);
+                    if (!isUpdated) {
+                        LOGGER.warn("Position price not updated." + position + " Price=" + currentPrice);
+                        transaction.rollback();
+                        return false;
+                    }
                     if (position.getPrescriptionId() != PRESCRIPTION_ID_IF_DO_NOT_NEED) {
-                        prescriptionDao.increaseSoldQuantity(position.getPrescriptionId(),
+                        if(prescriptionIsInvalid(prescriptionDao, position.getPrescriptionId())){
+                            LOGGER.warn("Prescription is invalid." + position);
+                            transaction.rollback();
+                            return false;
+                        }
+                        isUpdated = prescriptionDao.increaseSoldQuantity(position.getPrescriptionId(),
                                 position.getMedicineId(), position.getQuantity());
+                        if (!isUpdated) {
+                            LOGGER.warn("Position sold quantity is not updated." + position);
+                            transaction.rollback();
+                            return false;
+                        }
                     }
                     currentPositionCost = currentPrice.multiply(new BigDecimal(position.getQuantity()));
                     totalCost = totalCost.add(currentPositionCost);
                 }
                 if (expectedTotalCost.compareTo(totalCost) == COMPARE_RESULT_IF_EQUALS) {
-                    userDao.decreaseAccountBalance(totalCost);
-                    orderDao.makeOrderStatePaid(cartOrderId);
+                    isUpdated = userDao.decreaseAccountBalance(customerId, totalCost);
+                    if (!isUpdated) {
+                        LOGGER.warn("User balance not updated. userId=" + customerId+" totalCost="+totalCost);
+                        transaction.rollback();
+                        return false;
+                    }
+                    isUpdated = orderDao.makeOrderPaidAndUpdateTotalCostAndPaidDate(cartOrderId, totalCost);
+                    if (!isUpdated) {
+                        LOGGER.warn("Not made order paid. cartOrderId=" + cartOrderId+" totalCost="+totalCost);
+                        transaction.rollback();
+                        return false;
+                    }
                     transaction.commit();
                     return true;
                 } else {
+                    LOGGER.warn("Expected total cost(" + expectedTotalCost +
+                            ") not equals Real total cost(" + totalCost + ")");
                     transaction.rollback();
                     return false;
                 }
@@ -353,18 +387,17 @@ public class OrderServiceImpl implements OrderService {
         return Math.min(resultAvailablePackagesForPrescription, medicineAvailablePackages);
     }
 
-    private int findPositionsAvailableQuantityIfExistInCart(Medicine medicine,
-                                                            long cartOrderId,
+    private int findPositionsAvailableQuantityIfExistInCart(Medicine medicine, long cartOrderId,
                                                             OrderDaoImpl orderDao) throws DaoException {
         int medicineQuantityInCart = orderDao.findMedicineQuantityInOrder(cartOrderId, medicine.getId());
         return medicine.getTotalPackages() - medicineQuantityInCart;
     }
 
     private long getCartOrderId(long customerId, OrderDao orderDao) throws DaoException {
-        long cartId = orderDao.getOrderIdWithoutPayment(customerId);
+        long cartId = orderDao.getOrderIdWithoutPaymentIfExists(customerId);
         if (cartId == NOT_EXISTS_ORDER_ID_VALUE) {
             orderDao.createEmptyOrder(customerId);
-            cartId = orderDao.getOrderIdWithoutPayment(customerId);
+            cartId = orderDao.getOrderIdWithoutPaymentIfExists(customerId);
         }
         return cartId;
     }
