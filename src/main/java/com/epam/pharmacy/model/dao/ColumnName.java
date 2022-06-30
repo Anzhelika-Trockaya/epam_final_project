@@ -50,6 +50,7 @@ public final class ColumnName {
     public static final String NUMBER = "number";
     public static final String PRESCRIPTION_UNIT = "prescription_unit";
     public static final String ORDER_MEDICINE_PRICE = "order_medicine_price";
+    public static final String QUANTITY = "quantity";
 
     private ColumnName() {
     }

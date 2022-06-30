@@ -42,7 +42,7 @@
         <br/>
     </c:if>
     <c:if test="${current_user_role eq 'DOCTOR'}">
-        <c:if test="${empty show_renewal_requests}">
+        <c:if test="${empty temp_show_renewal_requests}">
             <c:choose>
                 <c:when test="${renewal_requests_quantity > 0}">
                     <p class="failed_msg">${request_quantity_msg} ${renewal_requests_quantity}</p>
@@ -57,7 +57,7 @@
             <label for="show_renewal_requests">${show_renewal_requests_title}</label>
             <input type="checkbox" onclick="this.form.submit()"
                    id="show_renewal_requests" name="show_renewal_requests"
-                   <c:if test="${show_renewal_requests}">checked</c:if> value="true"/>
+                   <c:if test="${temp_show_renewal_requests}">checked</c:if> value="true"/>
         </form>
         <br/>
     </c:if>

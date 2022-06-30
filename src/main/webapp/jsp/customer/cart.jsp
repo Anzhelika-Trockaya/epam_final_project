@@ -11,6 +11,7 @@
 <fmt:message key="cart.order" var="order_btn"/>
 <fmt:message key="cart.total_cost" var="total_cost_label"/>
 <fmt:message key="cart.pack" var="pack"/>
+<fmt:message key="cart.prescription_available_quantity" var="prescr_available_quant"/>
 <fmt:message key="action.delete" var="delete"/>
 <fmt:message key="action.clear" var="clear"/>
 <fmt:message key="medicines.milliliter" var="ml"/>
@@ -29,6 +30,7 @@
 <fmt:message key="medicines.out_of_stock" var="out_of_stock_msg"/>
 <fmt:message key="medicines.prescription" var="prescription_title"/>
 <fmt:message key="medicines.expiration_date" var="exp_date"/>
+<fmt:message key="medicines.tab_or_ml" var="tab_or_ml"/>
 <html>
 <head>
     <title>${cart_page_title}</title>
@@ -37,7 +39,7 @@
 <body>
 <div>
     <h3>${cart_title}</h3>
-    <c:if test="${!(empty cart_content_set)}">
+    <c:if test="${!(empty cart_content_list)}">
         <form action="${context_path}/controller">
             <input type="hidden" name="command" value="clear_cart"/>
             <input type="submit" value="${clear}"/>
@@ -57,11 +59,11 @@
         <table>
             <tbody>
             <c:choose>
-                <c:when test="${empty cart_content_set}">
+                <c:when test="${empty cart_content_list}">
                     <p>${empty_msg}</p>
                 </c:when>
                 <c:otherwise>
-                    <c:forEach var="data_map" items="${cart_content_set}">
+                    <c:forEach var="data_map" items="${cart_content_list}">
                         <c:set var="medicine" value="${data_map.get(\"medicine\")}"/>
                         <c:set var="medicine_id" value="${medicine.id}"/>
                         <c:set var="manufacturer" value="${data_map.get(\"manufacturer\")}"/>
@@ -146,9 +148,16 @@
                                 <c:if test="${!(prescription_id eq '0')}">
                                     <p>${prescription_title} №${prescription_id}</p>
                                     <p>${exp_date}: ${prescription.expirationDate}</p>
-                                    <c:if test="${invalid_prescription}">
-                                        <p class="incorrect_data_msg">${prescription_invalid_msg}</p>
-                                    </c:if>
+                                    <c:choose>
+                                        <c:when test="${invalid_prescription}">
+                                            <p class="incorrect_data_msg">${prescription_invalid_msg}</p>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <p>${prescr_available_quant}:
+                                                    ${prescription.quantity-prescription.soldQuantity} ${tab_or_ml}</p>
+
+                                        </c:otherwise>
+                                    </c:choose>
                                 </c:if>
                             </td>
                             <td>
@@ -206,7 +215,7 @@
     }
 
     function validatePattern(quantityInput) {
-        const numberPattern = /^[1-9]\d{1,5}$/;
+        const numberPattern = /^[1-9]\d{0,5}$/;
         if (!numberPattern.test(quantityInput.value)) {
             quantityInput.value = 1;
         }

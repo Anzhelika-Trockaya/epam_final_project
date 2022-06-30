@@ -31,7 +31,8 @@ public class OrderServiceImpl implements OrderService {
     private static final long PRESCRIPTION_ID_IF_DO_NOT_NEED = 0;
 
     @Override
-    public boolean addToCartWithoutPrescription(long customerId, Map<String, String> positionParams) throws ServiceException {
+    public boolean addToCartWithoutPrescription(long customerId,
+                                                Map<String, String> positionParams) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
         String quantityString = positionParams.get(QUANTITY);
         if (!validator.isCorrectQuantity(quantityString)) {
@@ -59,7 +60,7 @@ public class OrderServiceImpl implements OrderService {
                     positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_TOO_BIG_QUANTITY);
                     return false;
                 }
-                result = orderDao.increaseMedicineQuantityInOrderPosition(
+                result = orderDao.increaseQuantityInOrderPosition(
                         cartOrderId, medicineIdValue, quantity, PRESCRIPTION_ID_IF_DO_NOT_NEED);
             } else {
                 int availableQuantity = medicine.getTotalPackages();
@@ -67,7 +68,7 @@ public class OrderServiceImpl implements OrderService {
                     positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_TOO_BIG_QUANTITY);
                     return false;
                 }
-                result = orderDao.addToOrder(cartOrderId, medicineIdValue, quantity);
+                result = orderDao.addPositionToOrder(cartOrderId, medicineIdValue, quantity);
             }
         } catch (DaoException e) {
             LOGGER.error("Adding to cart exception. customerId=" + customerId +
@@ -79,7 +80,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean addToCartWithPrescription(long customerId, Map<String, String> positionParams) throws ServiceException {
+    public boolean addToCartWithPrescription(long customerId,
+                                             Map<String, String> positionParams) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
         String quantityString = positionParams.get(QUANTITY);
         if (!validator.isCorrectQuantity(quantityString)) {
@@ -103,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
             Medicine medicine = medicineOptional.get();
             long prescriptionId = Long.parseLong(prescriptionIdString);
             long cartOrderId = getCartOrderId(customerId, orderDao);
-            if (!prescriptionIsValid(prescriptionDao, prescriptionId)) {
+            if (prescriptionIsInvalid(prescriptionDao, prescriptionId)) {
                 positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_PRESCRIPTION_IS_NOT_VALID);
                 return false;
             }
@@ -114,14 +116,16 @@ public class OrderServiceImpl implements OrderService {
                     positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_TOO_BIG_QUANTITY);
                     return false;
                 }
-                result = orderDao.increaseMedicineQuantityInOrderPosition(cartOrderId, medicineIdValue, quantity, prescriptionId);
+                result = orderDao.increaseQuantityInOrderPosition(cartOrderId,
+                        medicineIdValue, quantity, prescriptionId);
             } else {
-                int availableQuantity = findPositionAvailableQuantityIfNotExistInCart(medicine, prescriptionId, prescriptionDao);
+                int availableQuantity =
+                        findPositionAvailableQuantityIfNotExistInCart(medicine, prescriptionId, prescriptionDao);
                 if (quantity > availableQuantity) {
                     positionParams.put(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_TOO_BIG_QUANTITY);
                     return false;
                 }
-                result = orderDao.addToOrder(cartOrderId, medicineIdValue, quantity, prescriptionId);
+                result = orderDao.addPositionToOrder(cartOrderId, medicineIdValue, quantity, prescriptionId);
             }
         } catch (DaoException e) {
             LOGGER.error("Adding to cart exception. customerId=" + customerId +
@@ -176,7 +180,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean deletePositionFromCart(long medicineId, long prescriptionId, long customerId) throws ServiceException {
+    public boolean deletePositionFromCart(long medicineId,
+                                          long prescriptionId,
+                                          long customerId) throws ServiceException {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);
@@ -203,15 +209,68 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
-    private boolean prescriptionIsValid(PrescriptionDaoImpl prescriptionDao, long prescriptionId) throws DaoException {
+    @Override
+    public boolean changePositionQuantityInCart(long medicineId,
+                                                long prescriptionId,
+                                                int quantity,
+                                                long customerId) throws ServiceException {
+        OrderDaoImpl orderDao = new OrderDaoImpl();
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        PrescriptionDaoImpl prescriptionDao = new PrescriptionDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(orderDao, medicineDao, prescriptionDao);
+            long cartOrderId = orderDao.getOrderIdWithoutPayment(customerId);
+            Optional<Medicine> medicineOptional = medicineDao.findById(medicineId);
+            if (!medicineOptional.isPresent()) {
+                LOGGER.warn("Medicine with id=" + medicineId + " not found");
+                return false;
+            }
+            Medicine medicine = medicineOptional.get();
+            if (medicine.needPrescription() && prescriptionIsInvalid(prescriptionDao, prescriptionId)) {
+                return false;
+            }
+            int medicineQuantityInCartExceptCurrentPosition =
+                    orderDao.findMedicineQuantityInOrderExceptCurrentPosition(cartOrderId, medicineId, prescriptionId);
+            int prospectiveMedicineQuantityInCart = medicineQuantityInCartExceptCurrentPosition + quantity;
+            if (prospectiveMedicineQuantityInCart > medicine.getTotalPackages()) {
+                return false;
+            }
+            if (medicine.needPrescription()) {
+                Optional<Prescription> prescriptionOptional = prescriptionDao.findById(prescriptionId);
+                if (!prescriptionOptional.isPresent()) {
+                    LOGGER.warn("Prescription with id=" + prescriptionId + " not found");
+                    return false;
+                }
+                Prescription prescription = prescriptionOptional.get();
+                int prescriptionNumberInCartExceptCurrentPosition=
+                        orderDao.findNumberForPrescriptionInOrderExceptCurrentPosition(cartOrderId,
+                                medicineId, prescriptionId);
+                int prescriptionAvailableNumber = prescription.getQuantity() - prescription.getSoldQuantity()-
+                        prescriptionNumberInCartExceptCurrentPosition;
+                int medicineAvailablePackagesForPrescription =
+                        prescriptionAvailableNumber / medicine.getNumberInPackage();
+                if (quantity > medicineAvailablePackagesForPrescription) {
+                    return false;
+                }
+            }
+            return orderDao.changePositionQuantityInOrder(cartOrderId, medicineId, prescriptionId, quantity);
+        } catch (DaoException e) {
+            LOGGER.error("Change position quantity in cart exception. medicineId=" + medicineId +
+                    ", customerId=" + customerId + ", prescriptionId=" + prescriptionId + ", quantity=" + quantity, e);
+            throw new ServiceException("Change position quantity in cart exception. medicineId=" + medicineId +
+                    ", customerId=" + customerId + ", prescriptionId=" + prescriptionId + ", quantity=" + quantity, e);
+        }
+    }
+
+    private boolean prescriptionIsInvalid(PrescriptionDaoImpl prescriptionDao, long prescriptionId) throws DaoException {
         Optional<Prescription> prescription = prescriptionDao.findById(prescriptionId);
         if (!prescription.isPresent()) {
             LOGGER.warn("Prescription not found. id=" + prescriptionId);
-            return false;
+            return true;
         }
         LocalDate expirationDate = prescription.get().getExpirationDate();
         LocalDate now = LocalDate.now();
-        return now.isBefore(expirationDate);
+        return !now.isBefore(expirationDate);
     }
 
     private int findPositionAvailableQuantityIfNotExistInCart(Medicine medicine,
@@ -228,22 +287,21 @@ public class OrderServiceImpl implements OrderService {
                                                             long prescriptionId,
                                                             OrderDaoImpl orderDao,
                                                             PrescriptionDaoImpl prescriptionDao) throws DaoException {
+        int prescriptionNumberInCart = orderDao.findNumberForPrescriptionInOrder(cartOrderId, prescriptionId);
         int prescriptionAvailableNumber = prescriptionDao.findPrescriptionAvailableNumber(prescriptionId);
-        int positionNumberInCart =
-                orderDao.findPositionNumberInOrder(cartOrderId, medicine.getId(), prescriptionId);
-        int resultAvailableNumberForPrescription = prescriptionAvailableNumber - positionNumberInCart;
+        int resultAvailableNumberForPrescription = prescriptionAvailableNumber - prescriptionNumberInCart;
         int resultAvailablePackagesForPrescription =
                 resultAvailableNumberForPrescription / medicine.getNumberInPackage();
-        int medicineAvailablePackagesQuantity = medicine.getTotalPackages() - positionNumberInCart;
-        return Math.min(resultAvailablePackagesForPrescription, medicineAvailablePackagesQuantity);
+        int medicineQuantityInCart = orderDao.findMedicineQuantityInOrder(cartOrderId, medicine.getId());
+        int medicineAvailablePackages = medicine.getTotalPackages() - medicineQuantityInCart;
+        return Math.min(resultAvailablePackagesForPrescription, medicineAvailablePackages);
     }
 
     private int findPositionsAvailableQuantityIfExistInCart(Medicine medicine,
                                                             long cartOrderId,
                                                             OrderDaoImpl orderDao) throws DaoException {
-        int positionNumberInCart =
-                orderDao.findPositionNumberInOrder(cartOrderId, medicine.getId(), PRESCRIPTION_ID_IF_DO_NOT_NEED);
-        return medicine.getTotalPackages() - positionNumberInCart;
+        int medicineQuantityInCart = orderDao.findMedicineQuantityInOrder(cartOrderId, medicine.getId());
+        return medicine.getTotalPackages() - medicineQuantityInCart;
     }
 
     private long getCartOrderId(long customerId, OrderDao orderDao) throws DaoException {

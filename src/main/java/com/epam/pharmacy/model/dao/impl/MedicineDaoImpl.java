@@ -36,7 +36,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "FROM m2m_order_medicine ord JOIN orders ords ON ords.order_id = ord.order_id " +
                     "WHERE ords.customer_id = ? AND ords.order_state = 'CREATED' GROUP BY ord.medicine_id" +
                     ") ord ON m.medicine_id = ord.medicine_id " +
-                    "WHERE medicine_total_packages > 0";
+                    "WHERE m.medicine_total_packages - IFNULL(ord.ords_sum, 0) > 0";
     private static final String SQL_SELECT_ALL_MEDICINES =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
@@ -154,7 +154,8 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
     @Override
     public List<Medicine> findAvailableForCustomer(long customerId) throws DaoException {
         List<Medicine> medicines = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_AVAILABLE_MEDICINES_FOR_CUSTOMER)) {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_SELECT_ALL_AVAILABLE_MEDICINES_FOR_CUSTOMER)) {
             statement.setLong(1, customerId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 MedicineRowMapper mapper = MedicineRowMapper.getInstance();

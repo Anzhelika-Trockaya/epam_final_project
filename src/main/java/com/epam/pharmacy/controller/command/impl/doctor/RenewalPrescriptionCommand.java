@@ -26,7 +26,7 @@ public class RenewalPrescriptionCommand implements Command {
                 router.setTypeRedirect();
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_SUCCESSFUL_RENEWAL);
-                session.setAttribute(AttributeName.SHOW_RENEWAL_REQUESTS, true);
+                session.setAttribute(AttributeName.TEMP_SHOW_RENEWAL_REQUESTS, true);
             } else{
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_FAILED_RENEWAL);
                 RequestFiller requestFiller = RequestFiller.getInstance();

@@ -63,7 +63,7 @@ public final class PropertyKey {
     public static final String PRESCRIPTIONS_NOT_DELETED = "prescriptions.not_deleted";
     public static final String CART_DELETED = "cart.deleted";
     public static final String CART_NOT_DELETED = "cart.not_deleted";
-    public static final String CART_NOT_CLEARED = "cart.not_cleared";
+    public static final String CART_FAILED_CHANGE_POSITION = "cart.failed_change_position";
 
     private PropertyKey() {
     }

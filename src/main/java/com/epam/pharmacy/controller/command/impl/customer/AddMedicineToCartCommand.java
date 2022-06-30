@@ -31,8 +31,7 @@ public class AddMedicineToCartCommand implements Command {
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         String medicineId = request.getParameter(ORDER_MEDICINE_ID);
         String quantity = request.getParameter(ORDER_MEDICINE_NUMBER);
-        String currentPage = (String) request.getSession().getAttribute(CURRENT_PAGE);
-        Router router = new Router(currentPage);
+        Router router = new Router(PagePath.MEDICINES);
         try {
             Map<String, String> positionParams = createParamsMap(medicineId, quantity);
             Optional<Medicine> medicineOptional = medicineService.findById(medicineId);

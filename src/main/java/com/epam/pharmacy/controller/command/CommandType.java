@@ -25,6 +25,7 @@ public enum CommandType {
     GO_CART(new GoCartCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
+    CHANGE_MEDICINE_QUANTITY_IN_CART(new ChangeMedicineQuantityInCartCommand()),
     CLEAR_CART(new ClearCartCommand()),
     EDIT_INTERNATIONAL_NAME(new EditInternationalNameCommand()),
     EDIT_MEDICINE(new EditMedicineCommand()),

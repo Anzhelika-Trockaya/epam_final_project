@@ -25,9 +25,8 @@ public class GoPrescriptionsFilter implements Filter {
         RequestFiller requestFiller = RequestFiller.getInstance();
         HttpSession session = httpServletRequest.getSession();
         try {
-            if (session.getAttribute(SHOW_RENEWAL_REQUESTS) != null) {
+            if (session.getAttribute(TEMP_SHOW_RENEWAL_REQUESTS) != null) {
                 requestFiller.addPrescriptionRenewalRequests(httpServletRequest);
-                requestFiller.moveSessionAttributeToRequest(httpServletRequest, SHOW_RENEWAL_REQUESTS);
             } else {
                 requestFiller.addPrescriptions(httpServletRequest);
             }

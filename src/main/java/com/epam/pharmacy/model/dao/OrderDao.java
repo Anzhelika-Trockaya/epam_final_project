@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 public interface OrderDao {
-    boolean addToOrder(long orderId, long medicineId, int quantity, long prescriptionId) throws DaoException;
+    boolean addPositionToOrder(long orderId, long medicineId, int quantity, long prescriptionId) throws DaoException;
 
-    boolean addToOrder(long orderId, long medicineId, int quantity) throws DaoException;
+    boolean addPositionToOrder(long orderId, long medicineId, int quantity) throws DaoException;
 
     Map<Long, Integer> findMedicineIdWithQuantityInOrder(long orderId) throws DaoException;
 
@@ -21,9 +21,13 @@ public interface OrderDao {
 
     boolean existsPositionInOrder(long orderId, long medicineId, long prescriptionId) throws DaoException;
 
-    boolean increaseMedicineQuantityInOrderPosition(long orderId, long medicineId, int quantity, long prescriptionId) throws DaoException;
+    boolean increaseQuantityInOrderPosition(long orderId, long medicineId, int quantity,
+                                            long prescriptionId) throws DaoException;
 
-    int findPositionNumberInOrder(long orderId, long medicineId, long prescriptionId) throws DaoException;
+    int findMedicineQuantityInOrder(long orderId, long medicineId) throws DaoException;
+
+    int findMedicineQuantityInOrderExceptCurrentPosition(long orderId, long medicineId,
+                                                         long prescriptionId) throws DaoException;
 
     int findNumberForPrescriptionInOrder(long orderId, long prescriptionId) throws DaoException;
 
@@ -32,4 +36,10 @@ public interface OrderDao {
     boolean deletePositionFromOrder(long cartOrderId, long medicineId, long prescriptionId) throws DaoException;
 
     boolean deleteAllPositionsFromOrder(long orderId) throws DaoException;
+
+    boolean changePositionQuantityInOrder(long orderId, long medicineId, long prescriptionId,
+                                          int quantity) throws DaoException;
+
+    int findNumberForPrescriptionInOrderExceptCurrentPosition(long orderId, long medicineId,
+                                                              long prescriptionId) throws DaoException;
 }

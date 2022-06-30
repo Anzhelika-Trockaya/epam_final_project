@@ -7,7 +7,7 @@ import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.MEDICINE;
 
-public class CartPositionsIdAscendingMedicineIdComparator implements Comparator<Map<String, Object>> {
+public class CartPositionsInAscendingMedicineIdComparator implements Comparator<Map<String, Object>> {
     @Override
     public int compare(Map<String, Object> o1, Map<String, Object> o2) {
         Medicine m1 = (Medicine) o1.get(MEDICINE);

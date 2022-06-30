@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "GoCartFilter", urlPatterns = "/jsp/costumer/cart.jsp",
+@WebFilter(filterName = "GoCartFilter", urlPatterns = "/jsp/customer/cart.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoCartFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();

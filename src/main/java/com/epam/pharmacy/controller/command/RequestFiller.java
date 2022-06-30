@@ -6,6 +6,7 @@ import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.*;
 import com.epam.pharmacy.model.service.*;
+import com.epam.pharmacy.util.CartPositionsInAscendingMedicineIdComparator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -104,8 +105,8 @@ public class RequestFiller {
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         try {
             Set<OrderPosition> cartPositions = orderService.findCartPositions(customerId);
-            Set<Map<String, Object>> cartContent = findCartContent(cartPositions, customerId);
-            request.setAttribute(CART_CONTENT_SET, cartContent);
+            List<Map<String, Object>> cartContent = findCartContent(cartPositions, customerId);
+            request.setAttribute(CART_CONTENT_LIST, cartContent);
             Map<Long, Integer> medicineIdWithQuantityFromCart = orderService.findMedicineInCartWithQuantity(customerId);
             boolean isCorrect = checkValidityOfCartContent(cartContent, medicineIdWithQuantityFromCart);
             request.setAttribute(AttributeName.IS_CORRECT_ORDER, isCorrect);
@@ -201,15 +202,6 @@ public class RequestFiller {
         request.setAttribute(CUSTOMER_BIRTHDAY_DATE, customer.getBirthdayDate());
     }
 
-    public void moveSessionAttributeToRequest(HttpServletRequest request, String attributeName) {
-        HttpSession session = request.getSession();
-        Object attributeValue = session.getAttribute(attributeName);
-        if (attributeValue != null) {
-            request.setAttribute(attributeName, attributeValue);
-            session.removeAttribute(attributeName);
-        }
-    }
-
     public void addDataToRequest(HttpServletRequest request, Map<String, String> data) {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             request.setAttribute(entry.getKey(), entry.getValue());
@@ -244,9 +236,9 @@ public class RequestFiller {
         }
     }
 
-    private Set<Map<String, Object>> findCartContent(Set<OrderPosition> cartPositions,
+    private List<Map<String, Object>> findCartContent(Set<OrderPosition> cartPositions,
                                                      long customerId) throws ServiceException {
-        Set<Map<String, Object>> cartContent = new HashSet<>();
+        List<Map<String, Object>> cartContent = new ArrayList<>();
         if (!cartPositions.isEmpty()) {
             ServiceProvider provider = ServiceProvider.getInstance();
             MedicineService medicineService = provider.getMedicineService();
@@ -269,10 +261,11 @@ public class RequestFiller {
                 cartContent.add(positionContent);
             }
         }
+        cartContent.sort(new CartPositionsInAscendingMedicineIdComparator());
         return cartContent;
     }
 
-    private boolean checkValidityOfCartContent(Set<Map<String, Object>> cartContent,
+    private boolean checkValidityOfCartContent(List<Map<String, Object>> cartContent,
                                                Map<Long, Integer> medicineIdWithQuantityFromCart) throws ServiceException {
         boolean isValid = true;
         for (Map<String, Object> positionContent : cartContent) {
@@ -311,7 +304,7 @@ public class RequestFiller {
     }
 
 
-    private BigDecimal countTotalCost(Set<Map<String, Object>> cartContent) {
+    private BigDecimal countTotalCost(List<Map<String, Object>> cartContent) {
         BigDecimal totalCost = BigDecimal.ZERO;
         BigDecimal positionCost;
         Medicine positionMedicine;

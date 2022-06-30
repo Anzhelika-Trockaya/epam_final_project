@@ -13,7 +13,7 @@ public class GoPrescriptionsPageCommand implements Command {
         String showRenewalRequests = request.getParameter(ParameterName.SHOW_RENEWAL_REQUESTS);
         if (showRenewalRequests != null) {
             requestFiller.addPrescriptionRenewalRequests(request);
-            request.setAttribute(AttributeName.SHOW_RENEWAL_REQUESTS, true);
+            request.setAttribute(AttributeName.TEMP_SHOW_RENEWAL_REQUESTS, true);
         } else {
             requestFiller.addPrescriptions(request);
         }

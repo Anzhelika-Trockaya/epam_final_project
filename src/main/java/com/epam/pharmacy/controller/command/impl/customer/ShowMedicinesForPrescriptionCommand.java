@@ -49,10 +49,11 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
                     orderService.findNumberForPrescriptionInCart(prescription.getId(), currentUserId);
             int prospectiveSoldNumber = prescription.getSoldQuantity() + numberForPrescriptionInCart;
             if (prescription.getQuantity() > prospectiveSoldNumber) {
-                Map<Long, Map<String, Object>> medicinesData = medicineService.findByPrescription(prescription);
+                Map<Long, Map<String, Object>> medicinesForPrescriptionData =
+                        medicineService.findByPrescription(prescription);
                 int prescriptionAvailableNumber = prescription.getQuantity() - prospectiveSoldNumber;
-                changeTotalQuantitiesToMaxPossible(currentUserId, medicinesData, prescriptionAvailableNumber);
-                request.setAttribute(MEDICINES_DATA_MAP, medicinesData);
+                changeTotalQuantitiesToMaxPossible(currentUserId, medicinesForPrescriptionData, prescriptionAvailableNumber);
+                request.setAttribute(MEDICINES_DATA_MAP, medicinesForPrescriptionData);
                 request.setAttribute(AttributeName.SHOW_PRESCRIPTIONS_MEDICINES, true);
                 request.setAttribute(AttributeName.PRESCRIPTION_ID, prescription.getId());
                 request.setAttribute(AttributeName.PRESCRIPTION_EXPIRATION_DATE, prescription.getExpirationDate());
@@ -71,7 +72,7 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
     }
 
     private void changeTotalQuantitiesToMaxPossible(long customerId,
-                                                    Map<Long, Map<String, Object>> medicinesData,
+                                                    Map<Long, Map<String, Object>> medicinesForPrescriptionData,
                                                     int prescriptionAvailableNumber) throws ServiceException {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         OrderService orderService = serviceProvider.getOrderService();
@@ -80,23 +81,24 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
         int medicineFromCartPackages;
         int totalWithoutCartPackages;
         for (long medicineId : cartContent.keySet()) {
-            if (medicinesData.containsKey(medicineId)) {
-                medicine = (Medicine) medicinesData.get(medicineId).get(MEDICINE);
+            if (medicinesForPrescriptionData.containsKey(medicineId)) {
+                medicine = (Medicine) medicinesForPrescriptionData.get(medicineId).get(MEDICINE);
                 medicineFromCartPackages = cartContent.get(medicineId);
                 totalWithoutCartPackages = medicine.getTotalPackages() - medicineFromCartPackages;
                 medicine.setTotalPackages(totalWithoutCartPackages);
             }
         }
-        Iterator<Map.Entry<Long, Map<String, Object>>> entryIterator = medicinesData.entrySet().iterator();
-        while (entryIterator.hasNext()) {
-            Map.Entry<Long, Map<String, Object>> entry = entryIterator.next();
+        Iterator<Map.Entry<Long, Map<String, Object>>> medicinesForPrescriptionDataIterator =
+                medicinesForPrescriptionData.entrySet().iterator();
+        while (medicinesForPrescriptionDataIterator.hasNext()) {
+            Map.Entry<Long, Map<String, Object>> entry = medicinesForPrescriptionDataIterator.next();
             Medicine entryMedicine = (Medicine) entry.getValue().get(MEDICINE);
             int prescriptionAvailablePackages = prescriptionAvailableNumber / entryMedicine.getNumberInPackage();
             int availableResult = Math.min(entryMedicine.getTotalPackages(), prescriptionAvailablePackages);
             if (availableResult > ZERO_QUANTITY) {
                 entryMedicine.setTotalPackages(availableResult);
             } else {
-                entryIterator.remove();
+                medicinesForPrescriptionDataIterator.remove();
             }
         }
     }

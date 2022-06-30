@@ -22,4 +22,6 @@ public interface OrderService {
     boolean deletePositionFromCart(long medicineId, long prescriptionId, long customerId) throws ServiceException;
 
     boolean clearCart(long customerId) throws ServiceException;
+
+    boolean changePositionQuantityInCart(long medicineId, long prescriptionId, int quantity, long customerId) throws ServiceException;
 }

@@ -59,7 +59,7 @@ public final class AttributeName {
     public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
     public static final String TEMP_SUCCESSFUL_ADDED = "temp_successful_added";
     public static final String INCORRECT_FILE ="incorrect_file" ;
-    public static final String CART_CONTENT_SET = "cart_content_set";
+    public static final String CART_CONTENT_LIST = "cart_content_list";
     public static final String MEDICINE = "medicine";
     public static final String INCORRECT_DATA = "incorrect_data";
     public static final String BLOCKED = "blocked";
@@ -72,7 +72,7 @@ public final class AttributeName {
     public static final String CUSTOMER_PATRONYMIC = "customer_patronymic";
     public static final String CUSTOMER_BIRTHDAY_DATE = "customer_birthday";
     public static final String CUSTOMER_SEX = "customer_sex";
-    public static final String SHOW_RENEWAL_REQUESTS = "show_renewal_requests";
+    public static final String TEMP_SHOW_RENEWAL_REQUESTS = "temp_show_renewal_requests";
     public static final String MEDICINES_DATA_MAP = "medicines_data_map";
     public static final String MEDICINE_CHANGE_TOTAL_VALUE = "medicine_change_total_value";
     public static final String SHOW_PRESCRIPTIONS_MEDICINES = "show_prescriptions_medicines";

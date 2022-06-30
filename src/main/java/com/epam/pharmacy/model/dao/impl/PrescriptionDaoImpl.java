@@ -5,8 +5,6 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.ColumnName;
 import com.epam.pharmacy.model.dao.PrescriptionDao;
-import com.epam.pharmacy.model.entity.FormUnit;
-import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.Prescription;
 import com.epam.pharmacy.model.mapper.impl.PrescriptionRowMapper;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +16,7 @@ import java.time.LocalDate;
 import java.util.*;
 
 import static com.epam.pharmacy.controller.ParameterName.*;
-import static com.epam.pharmacy.controller.ParameterName.FORM_UNIT;
+import static com.epam.pharmacy.controller.ParameterName.QUANTITY;
 import static com.epam.pharmacy.model.dao.ColumnName.*;
 import static com.epam.pharmacy.model.dao.ColumnName.PRESCRIPTION_UNIT;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_BIRTHDAY_DATE;
@@ -46,7 +44,7 @@ public class PrescriptionDaoImpl extends AbstractDao<Prescription> implements Pr
                     "prescription_customer_id, prescription_quantity, prescription_sold_quantity, " +
                     "prescription_expiration_date, prescription_unit, prescription_dosage, " +
                     "prescription_dosage_unit, prescription_need_renewal FROM prescriptions WHERE prescription_id = ?";
-    private static final String SQL_SELECT_AVAILABLE_QUANTITY_BY_ID =
+    private static final String SQL_SELECT_AVAILABLE_QUANTITY_BY_PRESCRIPTION_ID =
             "SELECT prescription_quantity - prescription_sold_quantity AS available_quantity FROM prescriptions " +
                     "WHERE prescription_id = ?";
     private static final String SQL_SELECT_BY_DOCTOR_ID =
@@ -272,7 +270,7 @@ public class PrescriptionDaoImpl extends AbstractDao<Prescription> implements Pr
 
     @Override
     public int findPrescriptionAvailableNumber(long prescriptionId) throws DaoException {
-        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_AVAILABLE_QUANTITY_BY_ID)) {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_AVAILABLE_QUANTITY_BY_PRESCRIPTION_ID)) {
             statement.setLong(1, prescriptionId);
             try(ResultSet resultSet = statement.executeQuery()) {
                 if(resultSet.next()){
