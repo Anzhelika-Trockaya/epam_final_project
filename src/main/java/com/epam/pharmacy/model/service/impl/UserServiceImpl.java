@@ -136,12 +136,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(String id) throws ServiceException {
+    public Optional<User> findById(long id) throws ServiceException {
         UserDaoImpl userDao = new UserDaoImpl();
-        long idValue = Long.parseLong(id);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
-            return userDao.findById(idValue);
+            return userDao.findById(id);
         } catch (DaoException daoException) {
             LOGGER.error("Exception when find user id=" + id, daoException);
             throw new ServiceException("Exception when find user id=" + id, daoException);
@@ -222,6 +221,24 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             LOGGER.error("Exception when find account balance. CustomerId=" + customerId, e);
             throw new ServiceException("Exception when find account balance. CustomerId=" + customerId, e);
+        }
+    }
+
+    @Override
+    public boolean increaseAccountBalance(long customerId, String value) throws ServiceException {
+        DataValidator validator = DataValidatorImpl.getInstance();
+        if(!validator.isCorrectValueToIncreaseBalance(value)){
+            return false;
+        }
+        UserDaoImpl userDao = new UserDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
+            return userDao.increaseAccountBalance(customerId, new BigDecimal(value));
+        } catch (DaoException e) {
+            LOGGER.error("Exception when increase account balance. CustomerId=" + customerId+
+                    ", value="+value, e);
+            throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId+
+                    ", value="+value, e);
         }
     }
 

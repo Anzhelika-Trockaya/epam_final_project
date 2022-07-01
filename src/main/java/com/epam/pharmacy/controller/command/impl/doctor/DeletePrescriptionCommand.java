@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.doctor;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.PrescriptionService;
@@ -28,8 +28,8 @@ public class DeletePrescriptionCommand implements Command {
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_DELETED);
             } else{
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_NOT_DELETED);
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addPrescriptions(request);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addPrescriptions(request);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the DeletePrescriptionCommand", e);

@@ -1,12 +1,13 @@
 package com.epam.pharmacy.controller.command;
 
 import com.epam.pharmacy.controller.AttributeName;
+import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.ParameterName;
+import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.*;
 import com.epam.pharmacy.model.service.*;
-import com.epam.pharmacy.util.CartPositionsInAscendingMedicineIdComparator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -26,18 +27,17 @@ import static com.epam.pharmacy.controller.AttributeName.MEDICINE;
 import static com.epam.pharmacy.controller.AttributeName.PRESCRIPTION_CUSTOMER_ID;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
-public class RequestFiller {
+public class ContentFiller {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ZERO_QUANTITY = 0;
-    private static final long NOT_EXISTS_PRESCRIPTION_ID = 0;
-    public static RequestFiller instance;
+    public static ContentFiller instance;
 
-    private RequestFiller() {
+    private ContentFiller() {
     }
 
-    public static RequestFiller getInstance() {
+    public static ContentFiller getInstance() {
         if (instance == null) {
-            instance = new RequestFiller();
+            instance = new ContentFiller();
         }
         return instance;
     }
@@ -104,8 +104,7 @@ public class RequestFiller {
         HttpSession session = request.getSession();
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         try {
-            Set<OrderPosition> cartPositions = orderService.findCartPositions(customerId);
-            List<Map<String, Object>> cartContent = findCartContent(cartPositions, customerId);
+            List<Map<String, Object>> cartContent = orderService.findCartContent(customerId);
             request.setAttribute(CART_CONTENT_LIST, cartContent);
             Map<Long, Integer> medicineIdWithQuantityFromCart = orderService.findMedicineInCartWithQuantity(customerId);
             boolean isCorrect = checkValidityOfCartContent(cartContent, medicineIdWithQuantityFromCart);
@@ -193,6 +192,38 @@ public class RequestFiller {
         }
     }
 
+    public void addCurrentPharmacistOrdersWithState(HttpServletRequest request,
+                                                    Order.State state) throws CommandException {
+        ServiceProvider provider = ServiceProvider.getInstance();
+        OrderService orderService = provider.getOrderService();
+        HttpSession session = request.getSession();
+        long pharmacistId = (long) session.getAttribute(CURRENT_USER_ID);
+        try {
+            Set<Order> orders = orderService.findPharmacistOrdersWithState(pharmacistId, state);
+            request.setAttribute(AttributeName.ORDERS_SET, orders);
+            request.setAttribute(AttributeName.STATE_TO_SHOW, state.name());
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when fill orders. UserId=" + pharmacistId + ", state=" + state, e);
+            throw new CommandException("Exception when fill orders. UserId=" + pharmacistId + ", state=" + state, e);
+        }
+    }
+
+    public void addCurrentUserOrders(HttpServletRequest request) throws CommandException {
+        ServiceProvider provider = ServiceProvider.getInstance();
+        OrderService orderService = provider.getOrderService();
+        HttpSession session = request.getSession();
+        UserRole currentUserRole = (UserRole) session.getAttribute(CURRENT_USER_ROLE);
+        try {
+            long currentUserId = (long) session.getAttribute(CURRENT_USER_ID);
+            Set<Order> orders = orderService.findAllUserOrders(currentUserId, currentUserRole);
+            request.setAttribute(AttributeName.ORDERS_SET, orders);
+        } catch (ServiceException e) {
+            long currentUserId = (long) session.getAttribute(CURRENT_USER_ID);
+            LOGGER.error("Exception when fill orders. UserId=" + currentUserId, e);
+            throw new CommandException("Exception when fill orders. UserId=" + currentUserId, e);
+        }
+    }
+
     public void addCustomerPersonalData(HttpServletRequest request, User customer) {
         request.setAttribute(PRESCRIPTION_CUSTOMER_ID, customer.getId());
         request.setAttribute(CUSTOMER_LASTNAME, customer.getLastname());
@@ -202,9 +233,51 @@ public class RequestFiller {
         request.setAttribute(CUSTOMER_BIRTHDAY_DATE, customer.getBirthdayDate());
     }
 
+    public void addOrderContentToSession(HttpSession session, long orderId) throws CommandException {
+        ServiceProvider provider = ServiceProvider.getInstance();
+        OrderService orderService = provider.getOrderService();
+        UserService userService = provider.getUserService();
+        UserRole currentUserRole = (UserRole) session.getAttribute(CURRENT_USER_ROLE);
+        try {
+            Optional<Order> orderOptional = orderService.findById(orderId);
+            if (!orderOptional.isPresent()) {
+                LOGGER.warn("Order not found. OrderId=" + orderId);
+                throw new CommandException("Order not found. OrderId=" + orderId);
+            }
+            Order order = orderOptional.get();
+            if (UserRole.CUSTOMER != currentUserRole) {
+                Optional<User> customerOptional = userService.findById(order.getCustomerId());
+                if (!customerOptional.isPresent()) {
+                    LOGGER.warn("Customer not found. CustomerId=" + order.getCustomerId());
+                    throw new CommandException("Customer not found. CustomerId=" + order.getCustomerId());
+                }
+                session.setAttribute(TEMP_CUSTOMER, customerOptional.get());
+            }
+            session.setAttribute(TEMP_ORDER, order);
+            List<Map<String, Object>> orderContent = orderService.findOrderContent(orderId);
+            session.setAttribute(TEMP_ORDER_CONTENT_LIST, orderContent);
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when add order content to session. ", e);
+            throw new CommandException("Exception when add order content to session. ", e);
+        }
+    }
+
+
     public void addDataToRequest(HttpServletRequest request, Map<String, String> data) {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             request.setAttribute(entry.getKey(), entry.getValue());
+        }
+    }
+
+    public void addNewOrdersQuantity(HttpServletRequest request) throws CommandException {
+        ServiceProvider provider = ServiceProvider.getInstance();
+        OrderService orderService = provider.getOrderService();
+        try {
+            int newOrdersQuantity = orderService.findNewOrdersQuantity();
+            request.setAttribute(AttributeName.NEW_ORDERS_QUANTITY, newOrdersQuantity);
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when find new orders quantity.", e);
+            throw new CommandException("Exception when find new orders quantity.", e);
         }
     }
 
@@ -234,35 +307,6 @@ public class RequestFiller {
                     currentQuantity - currentSoldQuantity > ZERO_QUANTITY;
             prescription.put(ParameterName.IS_ACTIVE, isActiveCurrent);
         }
-    }
-
-    private List<Map<String, Object>> findCartContent(Set<OrderPosition> cartPositions,
-                                                     long customerId) throws ServiceException {
-        List<Map<String, Object>> cartContent = new ArrayList<>();
-        if (!cartPositions.isEmpty()) {
-            ServiceProvider provider = ServiceProvider.getInstance();
-            MedicineService medicineService = provider.getMedicineService();
-            PrescriptionService prescriptionService = provider.getPrescriptionService();
-            Map<String, Object> positionContent;
-            for (OrderPosition position : cartPositions) {
-                positionContent = medicineService.findMedicineContentById(position.getMedicineId(), customerId);
-                int positionQuantity = position.getQuantity();
-                positionContent.put(QUANTITY, positionQuantity);
-                long prescriptionId = position.getPrescriptionId();
-                if (prescriptionId != NOT_EXISTS_PRESCRIPTION_ID) {
-                    Optional<Prescription> prescriptionOptional = prescriptionService.findById(prescriptionId);
-                    if (!prescriptionOptional.isPresent()) {
-                        LOGGER.warn("Prescription with id=" + prescriptionId + " not found.");
-                        continue;
-                    }
-                    Prescription prescription = prescriptionOptional.get();
-                    positionContent.put(PRESCRIPTION, prescription);
-                }
-                cartContent.add(positionContent);
-            }
-        }
-        cartContent.sort(new CartPositionsInAscendingMedicineIdComparator());
-        return cartContent;
     }
 
     private boolean checkValidityOfCartContent(List<Map<String, Object>> cartContent,
@@ -309,16 +353,19 @@ public class RequestFiller {
         BigDecimal positionCost;
         Medicine positionMedicine;
         BigDecimal positionPrice;
+        OrderPosition position;
         int positionQuantity;
         for (Map<String, Object> positionContent : cartContent) {
             if (!positionContent.containsKey(OUT_OF_STOCK)) {
                 positionMedicine = (Medicine) positionContent.get(MEDICINE);
                 positionPrice = positionMedicine.getPrice();
-                positionQuantity = (int) positionContent.get(QUANTITY);
+                position = (OrderPosition) positionContent.get(POSITION);
+                positionQuantity = position.getQuantity();
                 positionCost = positionPrice.multiply(BigDecimal.valueOf(positionQuantity));
                 totalCost = totalCost.add(positionCost);
             }
         }
         return totalCost;
     }
+
 }

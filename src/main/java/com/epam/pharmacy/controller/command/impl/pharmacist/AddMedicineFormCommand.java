@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineFormService;
@@ -34,7 +34,7 @@ public class AddMedicineFormCommand implements Command {
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, FORMS_NOT_ADDED);
-                RequestFiller.getInstance().addForms(request);
+                ContentFiller.getInstance().addForms(request);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the AddMedicineFormCommand", e);

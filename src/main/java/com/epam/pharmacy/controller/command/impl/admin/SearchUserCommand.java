@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.admin;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.User;
@@ -46,8 +46,8 @@ public class SearchUserCommand implements Command {
         try {
             List<User> users = userService.findByParams(new HashMap<>(paramsMap));
             request.setAttribute(listAttributeName, users);
-            RequestFiller requestFiller = RequestFiller.getInstance();
-            requestFiller.addDataToRequest(request, paramsMap);
+            ContentFiller contentFiller = ContentFiller.getInstance();
+            contentFiller.addDataToRequest(request, paramsMap);
             return router;
         } catch (ServiceException e) {
             LOGGER.error("Exception in the SearchUserCommand", e);

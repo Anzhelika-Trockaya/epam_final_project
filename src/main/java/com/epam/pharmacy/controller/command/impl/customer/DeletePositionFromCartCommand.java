@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.customer;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.OrderService;
@@ -37,8 +37,8 @@ public class DeletePositionFromCartCommand implements Command {
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.CART_DELETED);
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.CART_NOT_DELETED);
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addCartContent(request);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addCartContent(request);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the DeletePositionFromCartCommand", e);

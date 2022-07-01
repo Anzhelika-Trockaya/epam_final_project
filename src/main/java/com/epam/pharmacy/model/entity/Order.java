@@ -1,6 +1,7 @@
 package com.epam.pharmacy.model.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -12,11 +13,12 @@ public class Order extends CustomEntity implements Serializable {
     private LocalDate paymentDate;
     private State state;
     private long pharmacistId;
+    private BigDecimal totalCost;
 
     public enum State {
         CREATED,
         PAID,
-        PROCESSED,
+        IN_PROGRESS,
         COMPLETED
     }
 
@@ -69,18 +71,27 @@ public class Order extends CustomEntity implements Serializable {
         this.state = state;
     }
 
+    public BigDecimal getTotalCost() {
+        return totalCost;
+    }
+
+    public void setTotalCost(BigDecimal totalCost) {
+        this.totalCost = totalCost;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Order order = (Order) o;
         return id == order.id && customerId == order.customerId && pharmacistId == order.pharmacistId &&
-                state == order.state && Objects.equals(paymentDate, order.paymentDate);
+                state == order.state && Objects.equals(paymentDate, order.paymentDate) &&
+                Objects.equals(totalCost, order.totalCost);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, customerId, state, paymentDate, pharmacistId);
+        return Objects.hash(id, customerId, state, paymentDate, pharmacistId, totalCost);
     }
 
     @Override
@@ -88,9 +99,10 @@ public class Order extends CustomEntity implements Serializable {
         return new StringBuilder(this.getClass().getSimpleName()).
                 append("id=").append(id).
                 append(", customerId=").append(customerId).
+                append(", pharmacistId=").append(pharmacistId).
                 append(", state=").append(state).
                 append(", paymentDate=").append(paymentDate).
-                append(", pharmacistId=").append(pharmacistId).
+                append(", totalCost=").append(totalCost).
                 append('}').toString();
     }
 
@@ -110,22 +122,32 @@ public class Order extends CustomEntity implements Serializable {
         }
 
         public Builder buildCustomerId(long customerId) {
-            order.setCustomerId(customerId);
+            order.customerId = customerId;
             return this;
         }
 
         public Builder buildPaymentDate(LocalDate date) {
-            order.setPaymentDate(date);
+            order.paymentDate = date;
             return this;
         }
 
         public Builder buildPharmacistId(State state) {
-            order.setState(state);
+            order.state = state;
             return this;
         }
 
         public Builder buildPharmacistId(long id) {
-            order.setPharmacistId(id);
+            order.pharmacistId = id;
+            return this;
+        }
+
+        public Builder buildTotalCost(BigDecimal totalCost) {
+            order.totalCost = totalCost;
+            return this;
+        }
+
+        public Builder buildState(State state) {
+            order.state = state;
             return this;
         }
 

@@ -1,6 +1,7 @@
 package com.epam.pharmacy.model.dao;
 
 import com.epam.pharmacy.exception.DaoException;
+import com.epam.pharmacy.model.entity.Order;
 import com.epam.pharmacy.model.entity.OrderPosition;
 
 import java.math.BigDecimal;
@@ -8,11 +9,18 @@ import java.util.Map;
 import java.util.Set;
 
 public interface OrderDao {
-    boolean addPositionToOrder(long orderId, long medicineId, int quantity, long prescriptionId) throws DaoException;
+    boolean addPositionWithPrescriptionIdToOrder(long orderId, long medicineId, int quantity, long prescriptionId) throws DaoException;
 
-    boolean addPositionToOrder(long orderId, long medicineId, int quantity) throws DaoException;
+    boolean addPositionWithoutPrescriptionIdToOrder(long orderId, long medicineId, int quantity) throws DaoException;
 
     Map<Long, Integer> findMedicineIdWithQuantityInOrder(long orderId) throws DaoException;
+
+    long findNextPaidOrderId() throws DaoException;
+
+
+    boolean updateOrderStateByOrderId(long orderId, Order.State state) throws DaoException;
+
+    boolean updateOrderPharmacistId(long orderId, long pharmacistId) throws DaoException;
 
     Set<OrderPosition> findOrderPositions(long orderId) throws DaoException;
 
@@ -48,4 +56,12 @@ public interface OrderDao {
                                   BigDecimal price) throws DaoException;
 
     boolean makeOrderPaidAndUpdateTotalCostAndPaidDate(long cartOrderId, BigDecimal totalCost) throws DaoException;
+
+    Set<Order> findAllWithCustomerId(long id) throws DaoException;
+
+    Set<Order> findAllWithPharmacistId(long id) throws DaoException;
+
+    Set<Order> findAllWithPharmacistIdAndState(long id, Order.State state) throws DaoException;
+
+    int findPaidOrdersQuantity() throws DaoException;
 }

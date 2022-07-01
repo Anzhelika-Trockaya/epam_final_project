@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineService;
@@ -43,11 +43,11 @@ public class AddMedicineCommand implements Command {
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_ADDED, true);
                 router.setTypeRedirect();
             } else {
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addDataToRequest(request, medicineData);
-                requestFiller.addManufacturers(request);
-                requestFiller.addForms(request);
-                requestFiller.addInternationalNames(request);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addDataToRequest(request, medicineData);
+                contentFiller.addManufacturers(request);
+                contentFiller.addForms(request);
+                contentFiller.addInternationalNames(request);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the AddMedicineCommand", e);

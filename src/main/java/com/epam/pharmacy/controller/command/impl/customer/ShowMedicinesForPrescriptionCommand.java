@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.customer;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Medicine;
@@ -62,8 +62,8 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
             } else {
                 router = new Router(PagePath.PRESCRIPTIONS);
                 request.setAttribute(FAILED_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_NOT_AVAILABLE_IN_CART_YET);
-                RequestFiller requestFiller= RequestFiller.getInstance();
-                requestFiller.addPrescriptions(request);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addPrescriptions(request);
             }
             return router;
         } catch (ServiceException e) {

@@ -85,6 +85,11 @@ public final class AttributeName {
     public static final String AVAILABLE_QUANTITY = "available_quantity";
     public static final String IS_CORRECT_ORDER = "is_correct_order";
     public static final String TOTAL_COST = "total_cost";
+    public static final String ORDERS_SET = "orders_set";
+    public static final String STATE_TO_SHOW = "state_to_show";
+    public static final String TEMP_CUSTOMER = "temp_customer";
+    public static final String TEMP_ORDER_CONTENT_LIST = "temp_order_content_list";
+    public static final String NEW_ORDERS_QUANTITY = "new_orders_quantity";
 
 
     private AttributeName() {

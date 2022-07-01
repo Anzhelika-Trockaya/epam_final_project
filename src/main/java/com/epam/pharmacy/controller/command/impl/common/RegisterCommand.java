@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.common;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.UserRole;
@@ -44,8 +44,8 @@ public class RegisterCommand implements Command {
                 }
                 router = new Router(page, Router.Type.REDIRECT);
             } else {
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addDataToRequest(request, userData);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addDataToRequest(request, userData);
                 router = new Router(page);
             }
         } catch (ServiceException e) {

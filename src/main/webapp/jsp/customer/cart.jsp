@@ -74,7 +74,7 @@
                         <c:if test="${!(empty prescription)}">
                             <c:set var="prescription_id" value="${prescription.id}"/>
                         </c:if>
-                        <c:set var="quantity" value="${data_map.get(\"quantity\")}"/>
+                        <c:set var="position" value="${data_map.get(\"position\")}"/>
                         <c:set var="out_of_stock" value="${!(data_map.get(\"out_of_stock\") eq null)}"/>
                         <c:set var="available_quantity" value="${data_map.get(\"available_quantity\")}"/>
                         <c:set var="invalid_prescription" value="${!(data_map.get(\"invalid_prescription\") eq null)}"/>
@@ -122,11 +122,11 @@
                                                 -
                                             </button>
                                             <input type="text" name="quantity" onclick="this.select()"
-                                                   value="${quantity}"
+                                                   value="${position.quantity}"
                                                    onkeyup="validatePattern(this)"
                                                    onchange="validateAndSubmit(this.form,
                                                        ${medicine.totalPackages},
-                                                       ${quantity})"
+                                                       ${position.quantity})"
                                                    style="width: 30px"/>
                                             <button type="button" name="plus"
                                                     onclick="plusAndSubmit(this.form, ${medicine.totalPackages})">
@@ -163,7 +163,7 @@
                             <td>
                                 <c:choose>
                                     <c:when test="${!out_of_stock}">
-                                        <h4><b><c:out value="${medicine.price * quantity}"/> BYN</b></h4>
+                                        <h4><b><c:out value="${medicine.price * position.quantity}"/> BYN</b></h4>
                                     </c:when>
                                     <c:otherwise>
                                         <p>-</p>

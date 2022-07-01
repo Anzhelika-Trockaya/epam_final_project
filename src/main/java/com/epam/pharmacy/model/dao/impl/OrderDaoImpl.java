@@ -7,6 +7,7 @@ import com.epam.pharmacy.model.dao.OrderDao;
 import com.epam.pharmacy.model.entity.Order;
 import com.epam.pharmacy.model.entity.OrderPosition;
 import com.epam.pharmacy.model.mapper.impl.OrderPositionRowMapper;
+import com.epam.pharmacy.model.mapper.impl.OrderRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,8 +23,26 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SQL_INSERT_NEW_ORDER =
             "INSERT INTO orders (customer_id, order_state) VALUES (?,?)";
-    private static final String SQL_SELECT_ORDER_ID_WITH_CUSTOMER_ID_WITH_CREATED_STATE =
-            "SELECT order_id FROM orders WHERE customer_id = ? AND order_state = 'CREATED'";
+    private static final String SQL_SELECT_ORDER_ID_WITH_CUSTOMER_ID_AND_STATE =
+            "SELECT order_id FROM orders WHERE customer_id = ? AND order_state = ?";
+    private static final String SQL_SELECT_ORDERS_INFO_WITH_CUSTOMER_ID_NOT_CREATED =
+            "SELECT order_id, order_payment_date, order_state, customer_id, pharmacist_id, order_total_cost " +
+                    "FROM orders WHERE customer_id = ? AND order_state != 'CREATED' ORDER BY order_payment_date DESC";
+    private static final String SQL_SELECT_ORDERS_INFO_WITH_PHARMACIST_ID =
+            "SELECT order_id, order_payment_date, order_state, customer_id, pharmacist_id, order_total_cost " +
+                    "FROM orders WHERE pharmacist_id = ? ORDER BY order_payment_date DESC";
+    private static final String SQL_SELECT_ORDERS_INFO_WITH_PHARMACIST_ID_AND_STATE =
+            "SELECT order_id, order_payment_date, order_state, customer_id, pharmacist_id, order_total_cost " +
+                    "FROM orders WHERE pharmacist_id = ? AND order_state = ? ORDER BY order_payment_date DESC";
+    private static final String SQL_SELECT_ORDER_INFO_BY_ORDER_ID =
+            "SELECT order_id, order_payment_date, order_state, customer_id, pharmacist_id, order_total_cost " +
+                    "FROM orders WHERE order_id = ?";
+    private static final String SQL_SELECT_FIRST_ORDER_ID_WITH_PAID_STATE =
+            "SELECT order_id FROM orders WHERE order_state = 'PAID' ORDER BY order_payment_date LIMIT 1";
+    private static final String SQL_UPDATE_ORDER_STATE = "UPDATE orders SET order_state = ? WHERE order_id = ?";
+    private static final String SQL_UPDATE_ORDER_PHARMACIST_ID = "UPDATE orders SET pharmacist_id = ? WHERE order_id = ?";
+    private static final String SQL_SELECT_PAID_ORDERS_QUANTITY =
+            "SELECT COUNT(order_id) FROM orders WHERE order_state = 'PAID'";
     private static final String SQL_SELECT_ORDER_MEDICINES_ID_AND_QUANTITY =
             "SELECT SUM(order_medicine_quantity) AS order_medicine_quantity, medicine_id " +
                     "FROM m2m_order_medicine WHERE order_id = ? GROUP BY medicine_id";
@@ -78,6 +97,7 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     private static final int ONE_UPDATED = 1;
     private static final long NOT_EXISTS_ORDER_ID_VALUE = -1;
     private static final int POSITION_NUMBER_IF_NOT_EXISTS_ORDER = 0;
+    private static final int ORDERS_QUANTITY_IF_NOT_FOUND = 0;
 
     @Override
     public boolean create(Order order) throws DaoException {
@@ -94,10 +114,6 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
         return null;
     }
 
-    @Override
-    public Optional<Order> findById(long id) throws DaoException {
-        return Optional.empty();
-    }
 
     @Override
     public Optional<Order> update(Order order) throws DaoException {
@@ -105,8 +121,27 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public boolean addPositionToOrder(long orderId,
-                                      long medicineId, int quantity, long prescriptionId) throws DaoException {
+    public Optional<Order> findById(long id) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDER_INFO_BY_ORDER_ID)) {
+            statement.setLong(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    OrderRowMapper mapper = OrderRowMapper.getInstance();
+                    return mapper.mapRow(resultSet);
+                } else {
+                    LOGGER.warn("Order with id not exists. id=" + id);
+                    return Optional.empty();
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find order by id. id=" + id, e);
+            throw new DaoException("Exception when find order by id. id=" + id, e);
+        }
+    }
+
+    @Override
+    public boolean addPositionWithPrescriptionIdToOrder(long orderId, long medicineId,
+                                                        int quantity, long prescriptionId) throws DaoException {
         try (PreparedStatement statement = connection.
                 prepareStatement(SQL_INSERT_ORDER_ID_MEDICINE_ID_PRESCRIPTION_ID_QUANTITY_INTO_M2M_ORDER_MEDICINE)) {
             statement.setLong(1, orderId);
@@ -123,7 +158,8 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
-    public boolean addPositionToOrder(long orderId, long medicineId, int quantity) throws DaoException {
+    public boolean addPositionWithoutPrescriptionIdToOrder(long orderId, long medicineId,
+                                                           int quantity) throws DaoException {
         try (PreparedStatement statement = connection.
                 prepareStatement(SQL_INSERT_ORDER_ID_MEDICINE_ID_QUANTITY_INTO_M2M_ORDER_MEDICINE)) {
             statement.setLong(1, orderId);
@@ -160,6 +196,51 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
+    public long findNextPaidOrderId() throws DaoException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_SELECT_FIRST_ORDER_ID_WITH_PAID_STATE)) {
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getLong(1);
+                } else {
+                    return NOT_EXISTS_ORDER_ID_VALUE;
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find paid order id", e);
+            throw new DaoException("Exception when find paid order id", e);
+        }
+    }
+
+    @Override
+    public boolean updateOrderStateByOrderId(long orderId, Order.State state) throws DaoException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_UPDATE_ORDER_STATE)) {
+            statement.setString(1, state.name());
+            statement.setLong(2, orderId);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when update order state. id=" + orderId + ", state=" + state, e);
+            throw new DaoException("Exception when update order state. id=" + orderId + ", state=" + state, e);
+        }
+    }
+
+    @Override
+    public boolean updateOrderPharmacistId(long orderId, long pharmacistId) throws DaoException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_UPDATE_ORDER_PHARMACIST_ID)) {
+            statement.setLong(1, pharmacistId);
+            statement.setLong(2, orderId);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when update pharmacistId. orderId=" + orderId +
+                    ", pharmacistId=" + pharmacistId, e);
+            throw new DaoException("Exception when update pharmacistId. orderId=" + orderId +
+                    ", pharmacistId=" + pharmacistId, e);
+        }
+    }
+
+    @Override
     public Set<OrderPosition> findOrderPositions(long orderId) throws DaoException {
         Set<OrderPosition> positions = new HashSet<>();
         try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDER_POSITIONS)) {
@@ -182,8 +263,9 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     @Override
     public long getOrderIdWithoutPaymentIfExists(long customerId) throws DaoException {
         try (PreparedStatement statement =
-                     connection.prepareStatement(SQL_SELECT_ORDER_ID_WITH_CUSTOMER_ID_WITH_CREATED_STATE)) {
+                     connection.prepareStatement(SQL_SELECT_ORDER_ID_WITH_CUSTOMER_ID_AND_STATE)) {
             statement.setLong(1, customerId);
+            statement.setString(2, Order.State.CREATED.name());
             try (ResultSet resultSet = statement.executeQuery()) {
                 long id;
                 if (resultSet.next()) {
@@ -372,6 +454,59 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     }
 
     @Override
+    public Set<Order> findAllWithCustomerId(long id) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDERS_INFO_WITH_CUSTOMER_ID_NOT_CREATED)) {
+            statement.setLong(1, id);
+            return extractOrders(statement);
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find orders with customerId=" + id, e);
+            throw new DaoException("Exception when find orders with customerId=" + id, e);
+        }
+    }
+
+    @Override
+    public Set<Order> findAllWithPharmacistId(long id) throws DaoException {
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ORDERS_INFO_WITH_PHARMACIST_ID)) {
+            statement.setLong(1, id);
+            return extractOrders(statement);
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find orders with pharmacistId=" + id, e);
+            throw new DaoException("Exception when find orders with pharmacistId=" + id, e);
+        }
+    }
+
+    @Override
+    public Set<Order> findAllWithPharmacistIdAndState(long id, Order.State state) throws DaoException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_SELECT_ORDERS_INFO_WITH_PHARMACIST_ID_AND_STATE)) {
+            statement.setLong(1, id);
+            statement.setString(2, state.name());
+            return extractOrders(statement);
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find orders with pharmacistId=" + id + ", state=" + state, e);
+            throw new DaoException("Exception when find orders with pharmacistId=" + id + ", state=" + state, e);
+        }
+    }
+
+    @Override
+    public int findPaidOrdersQuantity() throws DaoException {
+        try (PreparedStatement statement =
+                     connection.prepareStatement(SQL_SELECT_PAID_ORDERS_QUANTITY);
+             ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                return resultSet.getInt(1);
+            } else {
+                LOGGER.warn("Not found paid order quantity.");
+                return ORDERS_QUANTITY_IF_NOT_FOUND;
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find paid orders quantity", e);
+            throw new DaoException("Exception when find paid orders quantity", e);
+        }
+    }
+
+
+    @Override
     public boolean existsPrescriptionInOrders(long prescriptionId) throws DaoException {
         try (PreparedStatement statement = connection.prepareStatement(SQL_EXISTS_PRESCRIPTION_ID)) {
             statement.setLong(1, prescriptionId);
@@ -430,5 +565,18 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
             throw new DaoException("Exception when change quantity in order position. orderId=" + orderId +
                     " medicineId=" + medicineId + " prescriptionId=" + prescriptionId + " quantity=" + quantity, e);
         }
+    }
+
+    private Set<Order> extractOrders(PreparedStatement statement) throws SQLException, DaoException {
+        Set<Order> orders = new LinkedHashSet<>();
+        try (ResultSet resultSet = statement.executeQuery()) {
+            OrderRowMapper mapper = OrderRowMapper.getInstance();
+            Optional<Order> currentOrder;
+            while (resultSet.next()) {
+                currentOrder = mapper.mapRow(resultSet);
+                currentOrder.ifPresent(orders::add);
+            }
+        }
+        return orders;
     }
 }

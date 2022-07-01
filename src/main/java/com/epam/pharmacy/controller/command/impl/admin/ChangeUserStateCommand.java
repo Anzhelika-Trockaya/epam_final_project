@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.admin;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.ServiceProvider;
@@ -27,14 +27,14 @@ public class ChangeUserStateCommand implements Command {
         try {
             boolean changed = userService.changeState(idString, stateString);
             Router router = new Router(PagePath.USERS);
-            HttpSession session = request.getSession();
             if (changed) {
+                HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.USERS_STATE_CHANGED_MESSAGE);
                 router.setTypeRedirect();
             } else {
-                session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.USERS_STATE_NOT_CHANGED_MESSAGE);
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addUsersExceptCurrent(request);
+                request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.USERS_STATE_NOT_CHANGED_MESSAGE);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addUsersExceptCurrent(request);
             }
             return router;
         } catch (ServiceException e) {

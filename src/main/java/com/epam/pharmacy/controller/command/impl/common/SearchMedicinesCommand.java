@@ -4,7 +4,7 @@ import com.epam.pharmacy.controller.AttributeName;
 import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.UserRole;
@@ -47,10 +47,10 @@ public class SearchMedicinesCommand implements Command {
             }
             request.setAttribute(MEDICINES_DATA_MAP, medicinesData);
             request.setAttribute(AttributeName.SHOW_SEARCH_RESULT, true);
-            RequestFiller requestFiller = RequestFiller.getInstance();
-            requestFiller.addDataToRequest(request, paramsMap);
-            requestFiller.addInternationalNames(request);
-            requestFiller.addForms(request);
+            ContentFiller contentFiller = ContentFiller.getInstance();
+            contentFiller.addDataToRequest(request, paramsMap);
+            contentFiller.addInternationalNames(request);
+            contentFiller.addForms(request);
             return router;
         } catch (ServiceException e) {
             LOGGER.error("Exception in the SearchMedicineCommand", e);

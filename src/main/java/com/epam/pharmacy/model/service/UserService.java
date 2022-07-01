@@ -19,7 +19,7 @@ public interface UserService {
 
     boolean updatePassword(String idString, String password) throws ServiceException;
 
-    Optional<User> findById(String id) throws ServiceException;
+    Optional<User> findById(long id) throws ServiceException;
 
     List<User> findAllExceptId(long id) throws ServiceException;
 
@@ -32,4 +32,6 @@ public interface UserService {
     List<User> findByParams(Map<String, String> paramsMap) throws ServiceException;
 
     BigDecimal findAccountBalance(long customerId) throws ServiceException;
+
+    boolean increaseAccountBalance(long customerId, String value) throws ServiceException;
 }

@@ -18,4 +18,4 @@
         </a>
     </div>
 </div>
-<a href="${pageContext.request.contextPath}/controller?command=go_orders_page">${orders_nav_title}</a>
+<a href="${pageContext.request.contextPath}/jsp/common/orders.jsp">${orders_nav_title}</a>

@@ -55,7 +55,7 @@ public class MedicineServiceImpl implements MedicineService {
     }
 
     @Override
-    public Map<String, Object> findMedicineContentById(long id, long customerId) throws ServiceException {
+    public Map<String, Object> findMedicineContentById(long id) throws ServiceException {
         MedicineDaoImpl medicineDao = new MedicineDaoImpl();
         InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
         ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
@@ -241,7 +241,7 @@ public class MedicineServiceImpl implements MedicineService {
         return resultMap;
     }
 
-    public Map<String, Object> buildMedicineDataMap(Medicine medicine,
+    private Map<String, Object> buildMedicineDataMap(Medicine medicine,
                                                      InternationalMedicineNameDaoImpl internationalNameDao,
                                                      ManufacturerDaoImpl manufacturerDao,
                                                      MedicineFormDaoImpl formDao) throws DaoException, ServiceException {

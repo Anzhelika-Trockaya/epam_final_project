@@ -14,6 +14,9 @@ public final class PagePath {
     public static final String CUSTOMERS = "jsp/doctor/customers.jsp";
     public static final String ADD_PRESCRIPTION = "jsp/doctor/add_prescription.jsp";
     public static final String CART = "jsp/customer/cart.jsp";
+    public static final String USER = "jsp/common/user.jsp";
+    public static final String ORDERS = "jsp/common/orders.jsp";
+    public static final String ORDER = "jsp/common/order.jsp";
 
     private PagePath(){}
 }

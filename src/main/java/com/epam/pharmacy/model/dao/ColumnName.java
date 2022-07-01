@@ -51,6 +51,11 @@ public final class ColumnName {
     public static final String PRESCRIPTION_UNIT = "prescription_unit";
     public static final String ORDER_MEDICINE_PRICE = "order_medicine_price";
     public static final String QUANTITY = "quantity";
+    public static final String CUSTOMER_ID = "customer_id";
+    public static final String PHARMACIST_ID = "pharmacist_id";
+    public static final String ORDER_STATE = "order_state";
+    public static final String ORDER_PAYMENT_DATE = "order_payment_date";
+    public static final String ORDER_TOTAL_COST = "order_total_cost";
 
     private ColumnName() {
     }

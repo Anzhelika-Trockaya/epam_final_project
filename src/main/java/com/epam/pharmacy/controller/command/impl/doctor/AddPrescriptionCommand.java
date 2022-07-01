@@ -2,7 +2,7 @@ package com.epam.pharmacy.controller.command.impl.doctor;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.PrescriptionService;
@@ -38,9 +38,9 @@ public class AddPrescriptionCommand implements Command {
             } else {
                 router = new Router(PagePath.ADD_PRESCRIPTION);
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.ADD_PRESCRIPTION_NOT_ADDED);
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addDataToRequest(request, data);
-                requestFiller.addInternationalNames(request);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addDataToRequest(request, data);
+                contentFiller.addInternationalNames(request);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the AddPrescriptionCommand", e);

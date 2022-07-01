@@ -42,6 +42,7 @@ public class DataValidatorImpl implements DataValidator {
     private static final String COUNTRY_REGEX = "[A-ZА-ЯЁІЎ][a-zA-Zа-яА-ЯёЁіІўЎ.'\\s-]{0,44}";
     private static final String FORM_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁіІўЎ/,_:;.'\"\\s-]{1,100}";
     private static final String FORM_UNIT_REGEX = "(PIECES|TABLES|MILLILITERS)";
+    private static final String INCREASE_BALANCE_VALUE_REGEX = "([1-9]\\d?(.\\d{2})?|100(.00)?)";
 
     private DataValidatorImpl() {
     }
@@ -199,6 +200,11 @@ public class DataValidatorImpl implements DataValidator {
     public boolean isCorrectMedicineSearchParamsMap(Map<String, String> paramsMap) {
         String dosage = paramsMap.get(MEDICINE_DOSAGE);
         return (!paramsMap.isEmpty()) && (dosage.isEmpty() || isCorrectQuantity(dosage));
+    }
+
+    @Override
+    public boolean isCorrectValueToIncreaseBalance(String value) {
+        return isNotEmpty(value) && value.matches(INCREASE_BALANCE_VALUE_REGEX);
     }
 
     @Override

@@ -3,7 +3,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.CommandType;
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineService;
@@ -49,11 +49,11 @@ public class EditMedicineCommand implements Command {
                 request.setAttribute(FAILED_CHANGE_MESSAGE, EDIT_MEDICINE_NOT_EDITED);
                 request.setAttribute(MEDICINE_ID, medicineData.get(MEDICINE_ID));
                 updateTotalPackages(medicineData);
-                RequestFiller requestFiller = RequestFiller.getInstance();
-                requestFiller.addDataToRequest(request, medicineData);
-                requestFiller.addManufacturers(request);
-                requestFiller.addForms(request);
-                requestFiller.addInternationalNames(request);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addDataToRequest(request, medicineData);
+                contentFiller.addManufacturers(request);
+                contentFiller.addForms(request);
+                contentFiller.addInternationalNames(request);
                 router=new Router(PagePath.ADD_MEDICINE);
             }
         } catch (ServiceException e) {

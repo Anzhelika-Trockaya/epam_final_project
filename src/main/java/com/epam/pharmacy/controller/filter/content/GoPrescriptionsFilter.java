@@ -1,6 +1,6 @@
 package com.epam.pharmacy.controller.filter.content;
 
-import com.epam.pharmacy.controller.command.RequestFiller;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.*;
@@ -22,13 +22,13 @@ public class GoPrescriptionsFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        RequestFiller requestFiller = RequestFiller.getInstance();
+        ContentFiller contentFiller = ContentFiller.getInstance();
         HttpSession session = httpServletRequest.getSession();
         try {
             if (session.getAttribute(TEMP_SHOW_RENEWAL_REQUESTS) != null) {
-                requestFiller.addPrescriptionRenewalRequests(httpServletRequest);
+                contentFiller.addPrescriptionRenewalRequests(httpServletRequest);
             } else {
-                requestFiller.addPrescriptions(httpServletRequest);
+                contentFiller.addPrescriptions(httpServletRequest);
             }
         } catch (CommandException e) {
             LOGGER.error("Exception when fill page prescriptions.jsp", e);

@@ -73,6 +73,11 @@ public final class ParameterName {
     public static final String IS_ACTIVE = "is_active";
     public static final String PRESCRIPTION = "prescription";
     public static final String TOTAL_COST = "total_cost";
+    public static final String VALUE = "value";
+    public static final String STATE_TO_SHOW = "state_to_show";
+    public static final String POSITION = "position";
+    public static final String TEMP_ORDER="temp_order";
+    public static final String ORDER_ID = "order_id";
 
 
     private ParameterName() {
