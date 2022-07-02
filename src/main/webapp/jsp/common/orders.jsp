@@ -15,6 +15,7 @@
 <fmt:message key="order.creation_date" var="creation_date_label"/>
 <fmt:message key="order.state" var="state_label"/>
 <fmt:message key="order.completed" var="completed"/>
+<fmt:message key="order.paid" var="paid"/>
 <fmt:message key="order.in_progress" var="in_progress"/>
 <fmt:message key="cart.total_cost" var="total_cost_label"/>
 <fmt:message key="medicines.prescription" var="prescription_title"/>
@@ -71,6 +72,9 @@
                 </c:when>
                 <c:when test="${order.state eq 'COMPLETED'}">
                     <span style="color: darkblue">${completed}</span>
+                </c:when>
+                <c:when test="${order.state eq 'PAID'}">
+                    <span style="color: darkblue">${paid}</span>
                 </c:when>
             </c:choose>
         </p>

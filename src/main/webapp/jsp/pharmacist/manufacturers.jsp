@@ -84,7 +84,7 @@
 </div>
 </body>
 <script>
-    const namePattern = /^[A-ZА-ЯЁІЎ][a-zA-Z0-9а-яА-ЯёЁіІўЎ/,_:;.'"-&\s]{0,44}$/;
+    const namePattern = /^[A-ZА-ЯЁІЎ][a-zA-Z0-9а-яА-ЯёЁіІўЎ/,_:;.'"&\s-]{0,44}$/;
     const countryPattern = /^[A-ZА-ЯЁІЎ][a-zA-Zа-яА-ЯёЁіІўЎ.'\s-]{0,44}$/;
     function validateName(input, msgPlace) {
         return validatePatternMismatch(input, namePattern, msgPlace, "${msg_text_incorrect_name}");
