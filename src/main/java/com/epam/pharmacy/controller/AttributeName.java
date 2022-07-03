@@ -46,19 +46,19 @@ public final class AttributeName {
     public static final String INCORRECT_TOTAL_PACKAGES = "incorrect_total_packages";
     public static final String INCORRECT_CHANGE_TOTAL_VALUE = "incorrect_change_total_value";
     public static final String INCORRECT_PRICE = "incorrect_price";
-    public static final String MEDICINE_NAME="medicine_name";
-    public static final String MEDICINE_INTERNATIONAL_NAME_ID="medicine_international_name_id";
-    public static final String MEDICINE_FORM_ID="medicine_form_id";
-    public static final String MEDICINE_DOSAGE="medicine_dosage";
-    public static final String MEDICINE_DOSAGE_UNIT="medicine_dosage_unit";
-    public static final String MEDICINE_NEED_PRESCRIPTION="medicine_need_prescription";
-    public static final String MEDICINE_MANUFACTURER_ID="medicine_manufacturer_id";
-    public static final String MEDICINE_NUMBER_IN_PACKAGE ="medicine_number_in_package";
-    public static final String MEDICINE_TOTAL_PACKAGES ="medicine_total_packages";
-    public static final String MEDICINE_PRICE="medicine_price";
-    public static final String MEDICINE_IMAGE_LINK="medicine_image_link";
+    public static final String MEDICINE_NAME = "medicine_name";
+    public static final String MEDICINE_INTERNATIONAL_NAME_ID = "medicine_international_name_id";
+    public static final String MEDICINE_FORM_ID = "medicine_form_id";
+    public static final String MEDICINE_DOSAGE = "medicine_dosage";
+    public static final String MEDICINE_DOSAGE_UNIT = "medicine_dosage_unit";
+    public static final String MEDICINE_NEED_PRESCRIPTION = "medicine_need_prescription";
+    public static final String MEDICINE_MANUFACTURER_ID = "medicine_manufacturer_id";
+    public static final String MEDICINE_NUMBER_IN_PACKAGE = "medicine_number_in_package";
+    public static final String MEDICINE_TOTAL_PACKAGES = "medicine_total_packages";
+    public static final String MEDICINE_PRICE = "medicine_price";
+    public static final String MEDICINE_IMAGE_LINK = "medicine_image_link";
     public static final String TEMP_SUCCESSFUL_ADDED = "temp_successful_added";
-    public static final String INCORRECT_FILE ="incorrect_file" ;
+    public static final String INCORRECT_FILE = "incorrect_file";
     public static final String CART_CONTENT_LIST = "cart_content_list";
     public static final String MEDICINE = "medicine";
     public static final String INCORRECT_DATA = "incorrect_data";
@@ -93,6 +93,8 @@ public final class AttributeName {
     public static final String CURRENT_USER_FULL_NAME = "current_user_full_name";
     public static final String CURRENT_USER_BALANCE = "current_user_balance";
     public static final String USER = "user";
+    public static final String SHOW_EDIT_FORM = "show_edit_form";
+    public static final String SHOW_CHANGE_PASSWORD_FORM = "show_change_password_form";
 
 
     private AttributeName() {

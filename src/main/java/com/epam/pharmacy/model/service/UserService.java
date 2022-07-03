@@ -15,7 +15,7 @@ public interface UserService {
 
     boolean changeState(String id, String state) throws ServiceException;
 
-    boolean updatePassword(String idString, String password) throws ServiceException;
+    boolean updatePassword(long userId, Map<String, String> passwordData) throws ServiceException;
 
     Optional<User> findById(long id) throws ServiceException;
 
@@ -34,4 +34,6 @@ public interface UserService {
     boolean depositToCustomerAccount(long customerId, String value) throws ServiceException;
 
     BigDecimal findUserBalance(long id) throws ServiceException;
+
+    String findUserFullName(long id) throws ServiceException;
 }

@@ -1,5 +1,7 @@
 package com.epam.pharmacy.validator.impl;
 
+import com.epam.pharmacy.controller.ParameterName;
+import com.epam.pharmacy.controller.PropertyKey;
 import com.epam.pharmacy.validator.DataValidator;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
@@ -9,11 +11,14 @@ import static com.epam.pharmacy.controller.ParameterName.MEDICINE_DOSAGE_UNIT;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_FORM_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_INTERNATIONAL_NAME_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_NAME;
+import static com.epam.pharmacy.controller.ParameterName.USER_ADDRESS;
 import static com.epam.pharmacy.controller.ParameterName.USER_BIRTHDAY_DATE;
 import static com.epam.pharmacy.controller.ParameterName.USER_LASTNAME;
 import static com.epam.pharmacy.controller.ParameterName.USER_NAME;
 import static com.epam.pharmacy.controller.ParameterName.USER_PATRONYMIC;
+import static com.epam.pharmacy.controller.ParameterName.USER_PHONE;
 import static com.epam.pharmacy.controller.ParameterName.USER_ROLE;
+import static com.epam.pharmacy.controller.ParameterName.USER_SEX;
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
 import java.time.LocalDate;
@@ -284,6 +289,28 @@ public class DataValidatorImpl implements DataValidator {
         }
         if (!isNotEmpty(imageLink)) {
             result = false;
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isCorrectChangePasswordData(Map<String, String> passwordData) {
+        String oldPassword = passwordData.get(OLD_PASSWORD);
+        String newPassword = passwordData.get(NEW_PASSWORD);
+        String passwordRepeat = passwordData.get(REPEAT_PASSWORD);
+        boolean result=true;
+        if(!isCorrectPassword(oldPassword)){
+            result = false;
+            passwordData.put(ParameterName.INCORRECT_OLD_PASSWORD, ParameterName.INCORRECT_OLD_PASSWORD);
+        }
+        if(!isCorrectPassword(newPassword)){
+            result = false;
+            passwordData.put(ParameterName.INCORRECT_NEW_PASSWORD, ParameterName.INCORRECT_NEW_PASSWORD);
+        }else {
+            if (!newPassword.equals(passwordRepeat)) {
+                result = false;
+                passwordData.put(INCORRECT_REPEAT_PASSWORD, INCORRECT_REPEAT_PASSWORD);
+            }
         }
         return result;
     }

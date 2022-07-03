@@ -1,9 +1,7 @@
 package com.epam.pharmacy.controller.command;
 
 import com.epam.pharmacy.controller.AttributeName;
-import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.ParameterName;
-import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.*;

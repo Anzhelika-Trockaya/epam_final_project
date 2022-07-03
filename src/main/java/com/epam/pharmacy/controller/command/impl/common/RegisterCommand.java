@@ -20,6 +20,9 @@ import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.AttributeName.LOGIN;
 import static com.epam.pharmacy.controller.AttributeName.PASSWORD;
 import static com.epam.pharmacy.controller.ParameterName.*;
+import static com.epam.pharmacy.controller.ParameterName.USER_ADDRESS;
+import static com.epam.pharmacy.controller.ParameterName.USER_PHONE;
+import static com.epam.pharmacy.controller.ParameterName.USER_SEX;
 
 public class RegisterCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();

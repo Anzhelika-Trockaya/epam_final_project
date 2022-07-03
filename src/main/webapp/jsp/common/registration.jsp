@@ -283,6 +283,7 @@
         }
         makeInputCorrect(repeatPasswordInput, "incorrect_repeat_password_msg");
         return true;
-    }</script>
+    }
+</script>
 </html>
 

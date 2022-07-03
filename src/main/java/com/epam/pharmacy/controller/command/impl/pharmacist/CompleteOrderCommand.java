@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import static com.epam.pharmacy.controller.AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE;
 import static com.epam.pharmacy.controller.ParameterName.ORDER_ID;
 
 public class CompleteOrderCommand implements Command {//fixme
@@ -29,10 +30,10 @@ public class CompleteOrderCommand implements Command {//fixme
         try {
             boolean completed = orderService.completeOrder(orderId);
             Router router = new Router(PagePath.ORDER);
-            HttpSession session= request.getSession();
+            HttpSession session = request.getSession();
             if (completed) {
                 router.setTypeRedirect();
-                ContentFiller contentFiller=ContentFiller.getInstance();
+                ContentFiller contentFiller = ContentFiller.getInstance();
                 contentFiller.addOrderContentToSession(session, orderId);
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.ORDER_NOT_COMPLETED_MSG);

@@ -21,11 +21,14 @@ import java.time.Period;
 import java.util.*;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
+import static com.epam.pharmacy.controller.ParameterName.NEW_PASSWORD;
+import static com.epam.pharmacy.controller.ParameterName.OLD_PASSWORD;
 
 public class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LogManager.getLogger();
     public static final int LEGAL_AGE = 18;
     private static final String PERCENT = "%";
+    private static final char DELIMITER = ' ';
 
     @Override
     public Optional<User> authenticate(String login, String password) throws ServiceException {
@@ -100,25 +103,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updatePassword(String idString, String password) throws ServiceException {
+    public boolean updatePassword(long userId, Map<String, String> passwordData) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        if (!validator.isCorrectPassword(password)) {
+        if (!validator.isCorrectChangePasswordData(passwordData)) {
             return false;
         }
         UserDaoImpl userDao = new UserDaoImpl();
-        long idValue = Long.parseLong(idString);
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
-            Optional<User> optionalUser = userDao.findById(idValue);
+            Optional<User> optionalUser = userDao.findById(userId);
             if (!optionalUser.isPresent()) {
+                LOGGER.warn("User not found. id=" + userId);
                 return false;
             }
-            return userDao.updatePassword(idValue, password);
+            User user = optionalUser.get();
+            String encryptedOldPasswordFromPage = PasswordEncryptor.encrypt(passwordData.get(OLD_PASSWORD));
+            if (encryptedOldPasswordFromPage.equals(user.getPassword())) {
+                String encryptedNewPassword = PasswordEncryptor.encrypt(passwordData.get(NEW_PASSWORD));
+                return userDao.updatePassword(userId, encryptedNewPassword);
+            } else {
+                return false;
+            }
         } catch (DaoException daoException) {
-            LOGGER.error("Exception when update password user id=" + idString + " password=" + password,
-                    daoException);
-            throw new ServiceException("Exception when update password user id=" + idString + " password=" + password,
-                    daoException);
+            LOGGER.error("Exception when update password user id=" + userId, daoException);
+            throw new ServiceException("Exception when update password user id=" + userId, daoException);
         }
     }
 
@@ -238,6 +246,26 @@ public class UserServiceImpl implements UserService {
         } catch (DaoException e) {
             LOGGER.error("Exception when find account balance. CustomerId=" + customerId, e);
             throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId, e);
+        }
+    }
+
+    @Override
+    public String findUserFullName(long id) throws ServiceException {
+        UserDaoImpl userDao = new UserDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
+            Optional<User> optionalUser= userDao.findById(id);
+            if(!optionalUser.isPresent()){
+                LOGGER.warn("User with id="+id+" not found");
+                throw new ServiceException("User with id="+id+" not found");
+            }
+            User user = optionalUser.get();
+            StringBuilder fullNameBuilder = new StringBuilder(user.getLastname());
+            fullNameBuilder.append(DELIMITER).append(user.getName()).append(DELIMITER).append(user.getPatronymic());
+            return fullNameBuilder.toString();
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find user full name. Id=" + id, e);
+            throw new ServiceException("Exception when find user full name. Id=" + id, e);
         }
     }
 

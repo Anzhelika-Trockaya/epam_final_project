@@ -71,6 +71,8 @@ public final class PropertyKey {
     public static final String BALANCE_INCORRECT_VALUE = "balance.incorrect_value";
     public static final String ORDER_NOT_COMPLETED_MSG = "order.not_completed_msg";
     public static final String ORDER_COMPLETED_MSG = "order.completed_msg";
+    public static final String USER_SUCCESSFUL_UPDATED = "user.successful_updated";
+    public static final String USER_PASSWORD_CHANGED = "user.password_changed";
 
 
     private PropertyKey() {

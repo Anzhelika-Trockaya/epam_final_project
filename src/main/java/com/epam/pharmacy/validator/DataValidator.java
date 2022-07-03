@@ -58,4 +58,6 @@ public interface DataValidator {
     boolean isCorrectMedicineSearchParamsMap(Map<String, String> paramsMap);
 
     boolean isCorrectDepositValue(String value);
+
+    boolean isCorrectChangePasswordData(Map<String, String> passwordData);
 }

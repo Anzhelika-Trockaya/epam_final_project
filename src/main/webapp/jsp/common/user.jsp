@@ -8,7 +8,6 @@
 <fmt:message key="user.old_password" var="label_old_password"/>
 <fmt:message key="user.new_password" var="label_new_password"/>
 <fmt:message key="user.repeat_new_password" var="label_repeat_new_password"/>
-<fmt:message key="user.incorrect_new_password" var="msg_text_incorrect_new_password"/>
 <fmt:message key="user.incorrect_old_password" var="msg_text_incorrect_old_password"/>
 <fmt:message key="action.edit" var="edit"/>
 <fmt:message key="action.save" var="save"/>
@@ -30,7 +29,8 @@
 <fmt:message key="registration.incorrect_address" var="msg_text_incorrect_address"/>
 <fmt:message key="registration.required_field" var="msg_text_required"/>
 <fmt:message key="registration.incorrect_birthday_date" var="msg_text_incorrect_birthday_date"/>
-<fmt:message key="registration.incorrect_repeat_password" var="msg_text_incorrect_repeat_pass"/>
+<fmt:message key="registration.incorrect_password" var="msg_text_incorrect_new_password"/>
+<fmt:message key="registration.incorrect_repeat_password" var="msg_text_incorrect_repeat_password"/>
 <c:if test="${not empty user}">
     <c:set value="${user.lastname}" var="user_lastname"/>
     <c:set value="${user.name}" var="user_name"/>
@@ -47,6 +47,10 @@
 </head>
 <body>
 <br>
+<c:if test="${not empty temp_successful_change_message}">
+    <div><p class="successful_msg"><fmt:message key="${temp_successful_change_message}"/></p></div>
+    <br>
+</c:if>
 <form id="user_info" <c:if test="${empty user}">hidden</c:if>>
     <h4>${user.lastname} ${user.name} ${user.patronymic}</h4>
     <p>${birthday_title}: ${user.birthdayDate}</p>
@@ -59,12 +63,12 @@
     <p>${phone_title}: ${user.phone}</p>
     <p>${address_title}: ${user.address}</p>
     <input type="button" onclick="showEditForm(document.getElementById('edit_form'))" value="${edit}">
-    <br>
+    <br><br>
     <input type="button" onclick="showEditForm(document.getElementById('change_password_form'))" value="${change_pass}">
 </form>
 <form id="edit_form"
-      <c:if test="${!(empty user)}">hidden</c:if> action="${context_path}/controller" method="post"
-      onsubmit="return validate()">
+      <c:if test="${empty show_edit_form}">hidden</c:if> action="${context_path}/controller" method="post"
+      onsubmit="return validateEditForm()">
     <input type="hidden" name="command" value="edit_user_data"/>
     <label for="lastname">${lastname_title}</label>
     <input type="text" id="lastname" name="user_lastname" value="${user_lastname}"/>
@@ -128,24 +132,24 @@
         </c:if>
     </p>
     <br>
-    <input type="button" value="${cancel}" onclick="hideEditForm(this.form)"/>
+    <input type="submit" form="refresh" value="${cancel}"/>
     <input type="submit" value="${save}"/>
 </form>
 <form id="change_password_form"
-      <c:if test="${!(empty user)}">hidden</c:if> action="${context_path}/controller" method="post"
-      onsubmit="return validate()">
+      <c:if test="${empty show_change_password_form}">hidden</c:if> action="${context_path}/controller" method="post"
+      onsubmit="return validateChangePasswordForm()">
     <input type="hidden" name="command" value="change_password"/>
     <label for="password">${label_old_password}</label>
-    <input type="password" id="password" name="password" value="${user_password}"/>
-    <p id="incorrect_password_msg" class="incorrect_data_msg">
+    <input type="password" id="password" name="old_password" value="${old_password}"/>
+    <p id="incorrect_old_password_msg" class="incorrect_data_msg">
         <c:if test="${not empty incorrect_old_password}">
-            ${msg_text_incorrect_old_password}<!--fixme fmt message-->
+            ${msg_text_incorrect_old_password}
         </c:if>
     </p>
     <br>
     <label for="password">${label_new_password}</label>
-    <input type="password" id="password" name="password" value="${user_password}"/>
-    <p id="incorrect_password_msg" class="incorrect_data_msg">
+    <input type="password" id="password" name="new_password" value="${new_password}"/>
+    <p id="incorrect_new_password_msg" class="incorrect_data_msg">
         <c:if test="${not empty incorrect_new_password}">
             ${msg_text_incorrect_new_password}
         </c:if>
@@ -155,25 +159,144 @@
     <input type="password" id="repeat_password" name="repeat_password" value="${repeat_password}"/>
     <p id="incorrect_repeat_password_msg" class="incorrect_data_msg">
         <c:if test="${not empty incorrect_repeat_password}">
-            ${msg_text_incorrect_repeat_pass}
+            ${msg_text_incorrect_repeat_password}
         </c:if>
     </p>
     <br>
-    <input type="button" value="${cancel}" onclick="hideEditForm(this.form)"/>
+    <input type="submit" form="refresh" value="${cancel}"/>
     <input type="submit" value="${save}"/>
 </form>
+<form id="refresh" action="${context_path}/jsp/common/user.jsp"></form>
 </body>
 <script>
     const userInfo = document.getElementById('user_info');
-
-    function hideEditForm(form) {
-        form.hidden = true;
-        userInfo.hidden = false;
-    }
+    const passwordPattern =
+        /^(?=.*[0-9])(?=.*[!@#$%^&*])(?=.*[a-zа-яёіў])(?=.*[A-ZА-ЯЁІЎ])[0-9a-zA-Zа-яА-ЯёЁІіЎў!@#$%^&*]{6,45}$/;
+    const namePattern = /^[A-Za-zА-Яа-яёЁІіЎў][A-Za-zА-Яа-яёЁІіЎў-]{0,44}$/;
+    const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
+    const addressPattern = /^[a-zA-Z0-9а-яА-ЯёЁўІіЎ\s/,_:;.'"-]+$/;
+    const lastnameInput = document.forms["edit_form"]["user_lastname"];
+    const nameInput = document.forms["edit_form"]["user_name"];
+    const patronymicInput = document.forms["edit_form"]["user_patronymic"];
+    const sexInput = document.forms["edit_form"]["user_sex"];
+    const phoneInput = document.forms["edit_form"]["user_phone"];
+    const addressInput = document.forms["edit_form"]["user_address"];
+    const birthdayDateInput = document.forms["edit_form"]["user_birthday_date"];
+    const oldPasswordInput = document.forms["change_password_form"]["old_password"];
+    const newPasswordInput = document.forms["change_password_form"]["new_password"];
+    const repeatPasswordInput = document.forms["change_password_form"]["repeat_password"];
 
     function showEditForm(form) {
         userInfo.hidden = true;
         form.hidden = false;
     }
+
+    function validateEditForm() {
+        let result = true;
+        if (!(validateRequired(lastnameInput, "incorrect_lastname_msg", "${msg_text_required}") &&
+            validatePatternMismatch(lastnameInput, namePattern, "incorrect_lastname_msg", "${msg_text_incorrect_lastname}"))) {
+            result = false;
+        }
+        if (!(validateRequired(nameInput, "incorrect_name_msg", "${msg_text_required}") &&
+            validatePatternMismatch(nameInput, namePattern, "incorrect_name_msg", "${msg_text_incorrect_name}"))) {
+            result = false;
+        }
+        if (!(validateRequired(patronymicInput, "incorrect_patronymic_msg", "${msg_text_required}") &&
+            validatePatternMismatch(patronymicInput, namePattern, "incorrect_patronymic_msg", "${msg_text_incorrect_patronymic}"))) {
+            result = false;
+        }
+        if (!(validateRequired(phoneInput, "incorrect_phone_msg", "${msg_text_required}") &&
+            validatePatternMismatch(phoneInput, phonePattern, "incorrect_phone_msg", "${msg_text_incorrect_phone}"))) {
+            result = false;
+        }
+        if (!(validateRequired(addressInput, "incorrect_address_msg", "${msg_text_required}") &&
+            validatePatternMismatch(addressInput, addressPattern, "incorrect_address_msg", "${msg_text_incorrect_address}"))) {
+            result = false;
+        }
+        if (!validateRequired(sexInput, "incorrect_sex_msg", "${msg_text_required}")) {
+            result = false;
+        }
+        if (!(validateRequired(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_required}") &&
+            validateBirthdayDate(birthdayDateInput))) {
+            result = false;
+        }
+        return result;
+    }
+
+    function validateChangePasswordForm() {
+        let result = true;
+        if (!(validateRequired(oldPasswordInput, "incorrect_old_password_msg", "${msg_text_required}") &&
+            validatePatternMismatch(oldPasswordInput,
+                passwordPattern, "incorrect_old_password_msg", "${msg_text_incorrect_old_password}"))) {
+            result = false;
+        }
+        if (!(validateRequired(newPasswordInput, "incorrect_new_password_msg", "${msg_text_required}") &&
+            validatePatternMismatch(newPasswordInput,
+                passwordPattern, "incorrect_new_password_msg", "${msg_text_incorrect_new_password}"))) {
+            result = false;
+        }
+        if(!validatePasswordRepeat()){
+            result=false;
+        }
+        return result;
+    }
+
+    function validateBirthdayDate(birthdayDateInput) {
+        const dateValue = new Date(birthdayDateInput.value);
+        const now = new Date();
+        const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const birthdayDateThisYear = new Date(today.getFullYear(), dateValue.getMonth(), dateValue.getDate());
+        let age = today.getFullYear() - dateValue.getFullYear();
+        if (today < birthdayDateThisYear) {
+            age = age - 1;
+        }
+        if (age > 17) {
+            makeInputCorrect(birthdayDateInput, "incorrect_birthday_date_msg");
+            return true;
+        } else {
+            makeInputIncorrect(birthdayDateInput, "incorrect_birthday_date_msg", "${msg_text_incorrect_birthday_date}");
+            return false;
+        }
+    }
+
+    function validateRequired(input, msgPlaceId, msg) {
+        const value = input.value;
+        if (value === "") {
+            makeInputIncorrect(input, msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(input, msgPlaceId);
+        return true;
+    }
+
+    function validatePatternMismatch(input, pattern, msgPlaceId, msg) {
+        const value = input.value;
+        if (!pattern.test(value)) {
+            makeInputIncorrect(input, msgPlaceId, msg);
+            return false;
+        }
+        makeInputCorrect(input, msgPlaceId);
+        return true;
+    }
+
+    function makeInputIncorrect(input, msgPlaceId, msg) {
+        document.getElementById(msgPlaceId).innerHTML = msg;
+    }
+
+    function makeInputCorrect(input, msgPlaceId) {
+        document.getElementById(msgPlaceId).innerHTML = "";
+    }
+
+    function validatePasswordRepeat() {
+        const passwordValue = newPasswordInput.value;
+        const repeatPasswordValue = repeatPasswordInput.value;
+        if (passwordValue !== repeatPasswordValue) {
+            makeInputIncorrect(repeatPasswordInput, "incorrect_repeat_password_msg", "${msg_text_incorrect_repeat_password}");
+            return false;
+        }
+        makeInputCorrect(repeatPasswordInput, "incorrect_repeat_password_msg");
+        return true;
+    }
+
 </script>
 </html>

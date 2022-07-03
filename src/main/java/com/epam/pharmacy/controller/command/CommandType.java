@@ -25,6 +25,7 @@ public enum CommandType {
     GO_ORDER_PAGE(new GoOrderPageCommand()),
     GO_CART(new GoCartCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
+    CHANGE_PASSWORD(new ChangePasswordCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
     CHANGE_MEDICINE_QUANTITY_IN_CART(new ChangeMedicineQuantityInCartCommand()),
     CLEAR_CART(new ClearCartCommand()),
@@ -33,6 +34,7 @@ public enum CommandType {
     EDIT_MEDICINE(new EditMedicineCommand()),
     EDIT_MEDICINE_FORM(new EditMedicineFormCommand()),
     EDIT_MANUFACTURER(new EditManufacturerCommand()),
+    EDIT_USER_DATA(new EditUserDataCommand()),
     DELETE_INTERNATIONAL_NAME(new DeleteInternationalNameCommand()),
     DELETE_MEDICINE_FORM(new DeleteMedicineFormCommand()),
     DELETE_MANUFACTURER(new DeleteManufacturerCommand()),
@@ -48,8 +50,7 @@ public enum CommandType {
     SEARCH_MEDICINES(new SearchMedicinesCommand()),
     SEARCH_USER(new SearchUserCommand()),
     SHOW_MEDICINES_FOR_PRESCRIPTION(new ShowMedicinesForPrescriptionCommand()),
-    SIGN_IN(new SignInCommand()),
-    CHANGE_PASSWORD(new ChangePasswordCommand());
+    SIGN_IN(new SignInCommand());
 
     private final Command command;
 

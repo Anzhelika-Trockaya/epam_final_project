@@ -14,6 +14,7 @@ import java.io.IOException;
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoUserFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
