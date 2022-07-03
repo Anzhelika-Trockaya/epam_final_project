@@ -2,7 +2,6 @@ package com.epam.pharmacy.controller.command;
 
 import com.epam.pharmacy.controller.command.impl.*;
 import com.epam.pharmacy.controller.command.impl.admin.ChangeUserStateCommand;
-import com.epam.pharmacy.controller.command.impl.admin.DeleteUserCommand;
 import com.epam.pharmacy.controller.command.impl.admin.SearchUserCommand;
 import com.epam.pharmacy.controller.command.impl.common.*;
 import com.epam.pharmacy.controller.command.impl.customer.*;
@@ -24,7 +23,6 @@ public enum CommandType {
     GO_PRESCRIPTIONS_PAGE(new GoPrescriptionsPageCommand()),
     GO_ORDERS_PAGE(new GoOrdersPageCommand()),
     GO_ORDER_PAGE(new GoOrderPageCommand()),
-    GO_USER_PAGE(new GoUserPageCommand()),//todo delete?
     GO_CART(new GoCartCommand()),
     CHANGE_LANGUAGE(new ChangeLanguageCommand()),
     CHANGE_USER_STATE(new ChangeUserStateCommand()),
@@ -35,14 +33,13 @@ public enum CommandType {
     EDIT_MEDICINE(new EditMedicineCommand()),
     EDIT_MEDICINE_FORM(new EditMedicineFormCommand()),
     EDIT_MANUFACTURER(new EditManufacturerCommand()),
-    DELETE_USER(new DeleteUserCommand()),
     DELETE_INTERNATIONAL_NAME(new DeleteInternationalNameCommand()),
     DELETE_MEDICINE_FORM(new DeleteMedicineFormCommand()),
     DELETE_MANUFACTURER(new DeleteManufacturerCommand()),
     DELETE_PRESCRIPTION(new DeletePrescriptionCommand()),
     DELETE_POSITION_FROM_CART(new DeletePositionFromCartCommand()),
     DEFAULT(new DefaultCommand()),
-    FILL_UP_ACCOUNT(new FillUpAccountCommand()),//fixme
+    DEPOSIT_TO_USER_ACCOUNT(new DepositToUserAccountCommand()),
     ORDER(new OrderCommand()),
     RENEWAL_PRESCRIPTION(new RenewalPrescriptionCommand()),
     REQUEST_RENEWAL_PRESCRIPTION(new RequestRenewalPrescriptionCommand()),
@@ -52,7 +49,7 @@ public enum CommandType {
     SEARCH_USER(new SearchUserCommand()),
     SHOW_MEDICINES_FOR_PRESCRIPTION(new ShowMedicinesForPrescriptionCommand()),
     SIGN_IN(new SignInCommand()),
-    UPDATE_PASSWORD(new UpdatePasswordCommand());
+    CHANGE_PASSWORD(new ChangePasswordCommand());
 
     private final Command command;
 

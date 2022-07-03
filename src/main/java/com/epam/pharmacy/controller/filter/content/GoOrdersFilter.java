@@ -29,6 +29,7 @@ public class GoOrdersFilter implements Filter {
         try {
             if (UserRole.CUSTOMER == currentUserRole) {
                 contentFiller.addCurrentUserOrders(httpServletRequest);
+                contentFiller.updateBalanceInSession(httpServletRequest);
             } else {
                 contentFiller.addCurrentPharmacistOrdersWithState(httpServletRequest, Order.State.IN_PROGRESS);
                 contentFiller.addNewOrdersQuantity(httpServletRequest);

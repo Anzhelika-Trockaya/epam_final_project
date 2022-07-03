@@ -90,6 +90,9 @@ public final class AttributeName {
     public static final String TEMP_CUSTOMER = "temp_customer";
     public static final String TEMP_ORDER_CONTENT_LIST = "temp_order_content_list";
     public static final String NEW_ORDERS_QUANTITY = "new_orders_quantity";
+    public static final String CURRENT_USER_FULL_NAME = "current_user_full_name";
+    public static final String CURRENT_USER_BALANCE = "current_user_balance";
+    public static final String USER = "user";
 
 
     private AttributeName() {

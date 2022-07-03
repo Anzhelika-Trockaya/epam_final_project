@@ -12,6 +12,7 @@ public class GoCartCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         ContentFiller contentFiller = ContentFiller.getInstance();
         contentFiller.addCartContent(request);
+        contentFiller.updateBalanceInSession(request);
         return new Router(PagePath.CART);
     }
 }

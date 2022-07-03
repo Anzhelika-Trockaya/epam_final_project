@@ -1,6 +1,5 @@
 package com.epam.pharmacy.validator;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public interface DataValidator {
@@ -58,5 +57,5 @@ public interface DataValidator {
 
     boolean isCorrectMedicineSearchParamsMap(Map<String, String> paramsMap);
 
-    boolean isCorrectValueToIncreaseBalance(String value);
+    boolean isCorrectDepositValue(String value);
 }

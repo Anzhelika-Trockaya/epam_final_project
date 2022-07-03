@@ -23,9 +23,9 @@
 <body>
 <header>
     <fmt:message key="header.pharmacy" var="label_pharmacy"/>
-    <fmt:message key="header.cabinet" var="cabinet"/>
     <fmt:message key="header.sign_in" var="sign_in"/>
     <fmt:message key="header.log_out" var="log_out"/>
+    <fmt:message key="header.balance" var="balance"/>
     <fmt:message key="header.cart" var="cart"/>
     <fmt:message key="language" var="lang"/>
     <fmt:message key="navigation.users" var="users_nav_title"/>
@@ -62,7 +62,16 @@
                 </td>
                 <td>
                     <c:if test="${not empty sessionScope.current_user_role}">
-                        <a href="${pageContext.request.contextPath}/controller?command=get_user_info">${cabinet}</a>
+                        <a href="${pageContext.request.contextPath}/jsp/common/user.jsp">
+                                ${current_user_full_name}
+                        </a>
+                    </c:if>
+                </td>
+                <td>
+                    <c:if test="${sessionScope.current_user_role eq 'CUSTOMER'}">
+                        <a href="${pageContext.request.contextPath}/jsp/customer/balance.jsp">
+                                ${balance}:${current_user_balance}BYN
+                        </a>
                     </c:if>
                 </td>
                 <td>
@@ -82,16 +91,33 @@
     <div class="navbar">
         <c:choose>
             <c:when test="${current_user_role eq 'ADMIN'}">
-                <%@include file="fragment/admin_fragment.jspf" %>
+                <a href="${pageContext.request.contextPath}/jsp/admin/users.jsp">${users_nav_title}</a>
+                <%@include file="fragment/pharmacist_fragment.jspf" %>
             </c:when>
             <c:when test="${current_user_role eq 'PHARMACIST'}">
                 <%@include file="fragment/pharmacist_fragment.jspf" %>
             </c:when>
             <c:when test="${current_user_role eq 'DOCTOR'}">
-                <%@include file="fragment/doctor_fragment.jspf" %>
+                <a class="menu_a" href="${pageContext.request.contextPath}/jsp/common/medicines.jsp">
+                        ${medicines_nav_title}
+                </a>
+                <a href="${pageContext.request.contextPath}/controller?command=go_prescriptions_page">
+                        ${prescriptions_nav_title}
+                </a>
+                <a href="${pageContext.request.contextPath}/controller?command=go_customers_page">
+                        ${customers_nav_title}
+                </a>
             </c:when>
             <c:when test="${current_user_role eq 'CUSTOMER'}">
-                <%@include file="fragment/customer_fragment.jspf" %>
+                <a class="menu_a" href="${pageContext.request.contextPath}/jsp/common/medicines.jsp">
+                        ${medicines_nav_title}
+                </a>
+                <a class="menu_a" href="${pageContext.request.contextPath}/controller?command=go_prescriptions_page">
+                        ${prescriptions_nav_title}
+                </a>
+                <a class="menu_a" href="${pageContext.request.contextPath}/jsp/common/orders.jsp">
+                        ${orders_nav_title}
+                </a>
             </c:when>
         </c:choose>
     </div>

@@ -51,7 +51,7 @@
         <h3>${medicines_title}</h3>
         <hr>
         <br>
-        <c:if test="${!(current_user_role eq 'CUSTOMER')}">
+        <c:if test="${current_user_role eq 'ADMIN' || current_user_role eq 'PHARMACIST'}">
             <form action="${context_path}/jsp/pharmacist/adding_medicine.jsp">
                 <input type="submit" value="${add_medicine}"/>
             </form>
@@ -214,9 +214,9 @@
                                         </div>
                                     </form>
                                 </c:when>
-                                <c:otherwise>
+                                <c:when test="${current_user_role eq 'ADMIN' || current_user_role eq 'PHARMACIST'}">
                                     <p>${total_number} <c:out value="${medicine.totalPackages}"/></p>
-                                </c:otherwise>
+                                </c:when>
                             </c:choose>
                         </td>
                         <td>
@@ -238,7 +238,7 @@
                                     <h4>${out_of_stock}</h4>
                                 </c:otherwise>
                             </c:choose>
-                            <c:if test="${!(current_user_role eq 'CUSTOMER')}">
+                            <c:if test="${current_user_role eq 'ADMIN' || current_user_role eq 'PHARMACIST'}">
                                 <form action="${context_path}/controller">
                                     <input type="hidden" name="command" value="go_edit_medicine_page"/>
                                     <input type="hidden" name="medicine_id" value="${medicine_id}"/>

@@ -17,6 +17,7 @@ public final class PagePath {
     public static final String USER = "jsp/common/user.jsp";
     public static final String ORDERS = "jsp/common/orders.jsp";
     public static final String ORDER = "jsp/common/order.jsp";
+    public static final String BALANCE = "jsp/customer/balance.jsp";
 
     private PagePath(){}
 }

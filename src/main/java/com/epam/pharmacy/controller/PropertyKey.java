@@ -67,8 +67,8 @@ public final class PropertyKey {
     public static final String CART_NOT_ENOUGH_MONEY_IN_THE_ACCOUNT = "cart.not_enough_money_in_the_account";
     public static final String CART_SUCCESSFULLY_ORDERED = "cart.successfully_ordered";
     public static final String CART_FAILED_ORDER = "cart.failed_order";
-    public static final String USER_ACCOUNT_BALANCE_CHANGED = "user.account_balance_changed";
-    public static final String USER_INCORRECT_VALUE = "user.incorrect_value";
+    public static final String BALANCE_ACCOUNT_BALANCE_CHANGED = "balance.account_balance_changed";
+    public static final String BALANCE_INCORRECT_VALUE = "balance.incorrect_value";
     public static final String ORDER_NOT_COMPLETED_MSG = "order.not_completed_msg";
     public static final String ORDER_COMPLETED_MSG = "order.completed_msg";
 

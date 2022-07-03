@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 
-public class FillUpAccountCommand implements Command {
+public class DepositToUserAccountCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
@@ -24,19 +24,20 @@ public class FillUpAccountCommand implements Command {
         HttpSession session = request.getSession();
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         try {
-            boolean changed = userService.increaseAccountBalance(customerId, valueString);
-            Router router = new Router(PagePath.USER, Router.Type.REDIRECT);
+            boolean changed = userService.depositToCustomerAccount(customerId, valueString);
+            Router router = new Router(PagePath.BALANCE);
             if (changed) {
+                router.setTypeRedirect();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE,
-                        PropertyKey.USER_ACCOUNT_BALANCE_CHANGED);
+                        PropertyKey.BALANCE_ACCOUNT_BALANCE_CHANGED);
             } else {
-                session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE,
-                        PropertyKey.USER_INCORRECT_VALUE);
+                request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE,
+                        PropertyKey.BALANCE_INCORRECT_VALUE);
             }
             return router;
         } catch (ServiceException e) {
-            LOGGER.error("Exception in the FillUpAccountCommand", e);
-            throw new CommandException("Exception in the FillUpAccountCommand", e);//fixme
+            LOGGER.error("Exception in the DepositToUserAccountCommand", e);
+            throw new CommandException("Exception in the DepositToUserAccountCommand", e);
         }
     }
 }

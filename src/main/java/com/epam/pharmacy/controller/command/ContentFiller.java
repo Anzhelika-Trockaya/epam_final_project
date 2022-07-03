@@ -117,6 +117,41 @@ public class ContentFiller {
         }
     }
 
+
+    public void addCurrentUser(HttpServletRequest request) throws CommandException {
+        HttpSession session = request.getSession();
+        long currentUserId = (long) session.getAttribute(CURRENT_USER_ID);
+        ServiceProvider provider = ServiceProvider.getInstance();
+        UserService userService = provider.getUserService();
+        try {
+            Optional<User> userOptional = userService.findById(currentUserId);
+            if (!userOptional.isPresent()) {
+                LOGGER.error("Exception when add current user. currentUserId=" + currentUserId);
+                throw new CommandException("Exception when add current user. currentUserId=" + currentUserId);
+            }
+            User user = userOptional.get();
+            request.setAttribute(AttributeName.USER, user);
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when add current user. currentUserId=" + currentUserId, e);
+            throw new CommandException("Exception when add current user. currentUserId=" + currentUserId, e);
+        }
+    }
+
+    public void updateBalanceInSession(HttpServletRequest request) throws CommandException {
+        ServiceProvider provider = ServiceProvider.getInstance();
+        UserService userService = provider.getUserService();
+        HttpSession session = request.getSession();
+        long customerId = (long) session.getAttribute(CURRENT_USER_ID);
+        try {
+            BigDecimal actualBalance = userService.findAccountBalance(customerId);
+            session.setAttribute(CURRENT_USER_BALANCE, actualBalance);
+        } catch (ServiceException e) {
+            LOGGER.error("Exception when update account balance in session. customerId=" + customerId, e);
+            throw new CommandException("Exception when update account balance in session. customerId=" + customerId, e);
+        }
+
+    }
+
     public void addPrescriptions(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = provider.getPrescriptionService();
@@ -367,5 +402,4 @@ public class ContentFiller {
         }
         return totalCost;
     }
-
 }

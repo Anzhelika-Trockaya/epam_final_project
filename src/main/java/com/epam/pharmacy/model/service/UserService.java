@@ -13,8 +13,6 @@ public interface UserService {
 
     boolean create(Map<String, String> userData) throws ServiceException;
 
-    boolean deleteById(String id) throws ServiceException;
-
     boolean changeState(String id, String state) throws ServiceException;
 
     boolean updatePassword(String idString, String password) throws ServiceException;
@@ -33,5 +31,7 @@ public interface UserService {
 
     BigDecimal findAccountBalance(long customerId) throws ServiceException;
 
-    boolean increaseAccountBalance(long customerId, String value) throws ServiceException;
+    boolean depositToCustomerAccount(long customerId, String value) throws ServiceException;
+
+    BigDecimal findUserBalance(long id) throws ServiceException;
 }

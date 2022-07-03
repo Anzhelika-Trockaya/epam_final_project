@@ -23,6 +23,7 @@ public class GoMedicinesFilter implements Filter {
             contentFiller.addMedicinesData(httpServletRequest);
             contentFiller.addInternationalNames(httpServletRequest);
             contentFiller.addForms(httpServletRequest);
+            contentFiller.updateBalanceInSession(httpServletRequest);
         } catch (CommandException e) {
             LOGGER.error("Exception when fill page medicines.jsp", e);
             throw new ServletException("Exception when fill page medicines.jsp", e);

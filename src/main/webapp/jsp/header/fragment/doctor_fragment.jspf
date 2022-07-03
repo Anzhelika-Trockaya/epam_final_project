@@ -1,2 +1,0 @@
-<a href="${pageContext.request.contextPath}/controller?command=go_prescriptions_page">${prescriptions_nav_title}</a>
-<a href="${pageContext.request.contextPath}/controller?command=go_customers_page">${customers_nav_title}</a>

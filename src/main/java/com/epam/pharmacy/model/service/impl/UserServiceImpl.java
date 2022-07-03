@@ -76,19 +76,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean deleteById(String idString) throws ServiceException {
-        UserDaoImpl userDao = new UserDaoImpl();
-        long idValue = Long.parseLong(idString);
-        try (EntityTransaction transaction = new EntityTransaction()) {
-            transaction.beginWithAutoCommit(userDao);
-            return userDao.deleteById(idValue);
-        } catch (DaoException daoException) {
-            LOGGER.error("Exception when remove user. id=" + idString + " " + daoException);
-            throw new ServiceException("Exception when remove user. id=" + idString, daoException);
-        }
-    }
-
-    @Override
     public boolean changeState(String idString, String stateString) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
         if (!validator.isCorrectState(stateString)) {
@@ -225,9 +212,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean increaseAccountBalance(long customerId, String value) throws ServiceException {
+    public boolean depositToCustomerAccount(long customerId, String value) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        if(!validator.isCorrectValueToIncreaseBalance(value)){
+        if (!validator.isCorrectDepositValue(value)) {
             return false;
         }
         UserDaoImpl userDao = new UserDaoImpl();
@@ -235,10 +222,22 @@ public class UserServiceImpl implements UserService {
             transaction.beginWithAutoCommit(userDao);
             return userDao.increaseAccountBalance(customerId, new BigDecimal(value));
         } catch (DaoException e) {
-            LOGGER.error("Exception when increase account balance. CustomerId=" + customerId+
-                    ", value="+value, e);
-            throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId+
-                    ", value="+value, e);
+            LOGGER.error("Exception when increase account balance. CustomerId=" + customerId +
+                    ", value=" + value, e);
+            throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId +
+                    ", value=" + value, e);
+        }
+    }
+
+    @Override
+    public BigDecimal findUserBalance(long customerId) throws ServiceException {
+        UserDaoImpl userDao = new UserDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(userDao);
+            return userDao.findAccountBalance(customerId);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find account balance. CustomerId=" + customerId, e);
+            throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId, e);
         }
     }
 

@@ -10,22 +10,20 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "GoCartFilter", urlPatterns = "/jsp/customer/cart.jsp",
+@WebFilter(filterName = "GoBalanceFilter",urlPatterns = "/jsp/customer/balance.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
-public class GoCartFilter implements Filter {
+public class GoBalanceFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         ContentFiller contentFiller = ContentFiller.getInstance();
-        try {
-            contentFiller.addCartContent(httpServletRequest);
-            contentFiller.updateBalanceInSession(httpServletRequest);
-        } catch (CommandException e) {
-            LOGGER.error("Exception when fill page cart.jsp", e);
-            throw new ServletException("Exception when fill page cart.jsp", e);
-        }
+        try{
+        contentFiller.updateBalanceInSession(httpServletRequest);
         chain.doFilter(request, response);
+        } catch (CommandException e) {
+            LOGGER.error("Exception in GoBalanceFilter", e);
+            throw new ServletException("Exception in GoBalanceFilter", e);
+        }
     }
 }

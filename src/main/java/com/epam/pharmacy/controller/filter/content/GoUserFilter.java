@@ -10,21 +10,19 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
-@WebFilter(filterName = "GoCartFilter", urlPatterns = "/jsp/customer/cart.jsp",
+@WebFilter(filterName = "GoUserFilter", urlPatterns = "/jsp/common/user.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
-public class GoCartFilter implements Filter {
+public class GoUserFilter implements Filter {
     private static final Logger LOGGER = LogManager.getLogger();
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         ContentFiller contentFiller = ContentFiller.getInstance();
         try {
-            contentFiller.addCartContent(httpServletRequest);
-            contentFiller.updateBalanceInSession(httpServletRequest);
+            contentFiller.addCurrentUser(httpServletRequest);
         } catch (CommandException e) {
-            LOGGER.error("Exception when fill page cart.jsp", e);
-            throw new ServletException("Exception when fill page cart.jsp", e);
+            LOGGER.error("Exception when fill page user.jsp", e);
+            throw new ServletException("Exception when fill page user.jsp", e);
         }
         chain.doFilter(request, response);
     }

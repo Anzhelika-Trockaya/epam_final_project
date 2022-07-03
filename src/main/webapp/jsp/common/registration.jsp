@@ -52,11 +52,11 @@
         <input type="hidden" name="command" value="register"/>
         <c:if test="${current_user_role eq 'ADMIN'}">
             <c:if test="${not empty temp_successful_registration}">
-                <br/>
+                <br>
                 <p class="successful_msg"><fmt:message key="users.successful_msg"/></p>
-                <br/>
+                <br>
             </c:if>
-            <br/>
+            <br>
             <label for="role">${label_role}</label>
             <select id="role" name="role" size="1">
                 <option id="default_role" selected value="">-</option>
@@ -79,7 +79,7 @@
             <c:if test="${not empty incorrect_role}">
                 <p class="incorrect_data_msg"><fmt:message key="${incorrect_role}"/></p>
             </c:if>
-            <br/>
+            <br>
         </c:if>
         <label for="lastname">${label_lastname}</label>
         <input type="text" id="lastname" name="lastname" value="${user_lastname}"/>
@@ -87,21 +87,21 @@
         <c:if test="${not empty incorrect_lastname}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_lastname}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="name">${label_name}</label>
         <input type="text" id="name" name="name" value="${user_name}"/>
         <p id="incorrect_name_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_name}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_name}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="patronymic">${label_patronymic}</label>
         <input type="text" id="patronymic" name="patronymic" value="${user_patronymic}"/>
         <p id="incorrect_patronymic_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_patronymic}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_patronymic}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="sex">${label_sex}</label>
         <select id="sex" name="sex" size="1">
             <option id="default" selected value="">-</option>
@@ -114,51 +114,51 @@
         <c:if test="${not empty incorrect_sex}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_sex}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="birthday_date">${label_birthday_date}</label>
         <input type="date" id="birthday_date" name="birthday_date" value="${user_birthday_date}">
         <p id="incorrect_birthday_date_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_birthday_date}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_birthday_date}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="phone">${label_phone}</label>
         <input type="text" id="phone" name="phone" value="${not empty user_phone? user_phone:"+375"}">
         <p id="incorrect_phone_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_phone}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_phone}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="address">${label_address}</label>
-        <textarea id="address" name="address">${user_address}</textarea>
+        <textarea id="address" name="address" style="width: 500px; height: 100px">${user_address}</textarea>
         <p id="incorrect_address_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_address}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_address}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="login">${label_login}</label>
         <input type="text" id="login" name="login" value="${user_login}"/>
         <p id="incorrect_login_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_login}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_login}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="password">${label_password}</label>
         <input type="password" id="password" name="password" value="${user_password}"/>
         <p id="incorrect_password_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_password}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_password}"/></p>
         </c:if>
-        <br/>
+        <br>
         <label for="repeat_password">${label_repeat_password}</label>
         <input type="password" id="repeat_password" name="repeat_password" value="${repeat_password}"/>
         <p id="incorrect_repeat_password_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_repeat_password}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_repeat_password}"/></p>
         </c:if>
-        <br/>
+        <br>
         <input type="submit" name="sub" value="${register_btn_text}"/>
-        <br/>
+        <br>
     </form>
 </div>
 </body>
