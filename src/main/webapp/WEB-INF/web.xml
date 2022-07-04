@@ -11,12 +11,10 @@
         <error-code>404</error-code>
         <location>/jsp/error/error_404.jsp</location>
     </error-page>
-    <!-- fixme
     <error-page>
         <error-code>500</error-code>
         <location>/jsp/error/error_500.jsp</location>
     </error-page>
-    -->
     <session-config>
         <session-timeout>30</session-timeout>
     </session-config>

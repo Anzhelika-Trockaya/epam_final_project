@@ -119,6 +119,11 @@
                         ${orders_nav_title}
                 </a>
             </c:when>
+            <c:otherwise>
+                <a class="menu_a" href="${pageContext.request.contextPath}/jsp/common/medicines.jsp">
+                        ${medicines_nav_title}
+                </a>
+            </c:otherwise>
         </c:choose>
     </div>
 </header>
