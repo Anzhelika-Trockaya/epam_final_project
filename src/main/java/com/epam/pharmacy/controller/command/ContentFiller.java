@@ -343,7 +343,7 @@ public class ContentFiller {
     }
 
     private boolean checkValidityOfCartContent(List<Map<String, Object>> cartContent,
-                                               Map<Long, Integer> medicineIdWithQuantityFromCart) throws ServiceException {
+                                               Map<Long, Integer> medicineIdWithQuantityFromCart) {
         boolean isValid = true;
         for (Map<String, Object> positionContent : cartContent) {
             isValid = isAvailableQuantity(positionContent, medicineIdWithQuantityFromCart) && isValid;

@@ -24,7 +24,6 @@ import static com.epam.pharmacy.controller.ParameterName.*;
 public class PrescriptionServiceImpl implements PrescriptionService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int RENEWAL_MONTH_QUANTITY = 1;
-    private static final int NOT_USING_PRESCRIPTION_SOLD_QUANTITY = 0;
 
     @Override
     public boolean renewalForAMonth(String prescriptionId) throws ServiceException {

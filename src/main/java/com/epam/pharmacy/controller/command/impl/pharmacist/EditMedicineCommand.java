@@ -44,7 +44,7 @@ public class EditMedicineCommand implements Command {
             if (isUpdated) {
                 HttpSession session = request.getSession();
                 session.setAttribute(TEMP_SUCCESSFUL_CHANGE_MESSAGE, EDIT_MEDICINE_SUCCESSFUL_EDITED);
-                router=new Router(PagePath.MEDICINES, Router.Type.REDIRECT);
+                router=new Router(PagePath.MEDICINES_PAGE, Router.Type.REDIRECT);
             } else {
                 request.setAttribute(FAILED_CHANGE_MESSAGE, EDIT_MEDICINE_NOT_EDITED);
                 request.setAttribute(MEDICINE_ID, medicineData.get(MEDICINE_ID));
@@ -54,7 +54,7 @@ public class EditMedicineCommand implements Command {
                 contentFiller.addManufacturers(request);
                 contentFiller.addForms(request);
                 contentFiller.addInternationalNames(request);
-                router=new Router(PagePath.ADD_MEDICINE);
+                router=new Router(PagePath.ADD_MEDICINE_PAGE);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the EditMedicineCommand", e);

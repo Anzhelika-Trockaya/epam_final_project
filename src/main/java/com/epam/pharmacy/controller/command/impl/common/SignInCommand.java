@@ -1,7 +1,6 @@
 package com.epam.pharmacy.controller.command.impl.common;
 
 import com.epam.pharmacy.controller.*;
-import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.User;
@@ -37,7 +36,7 @@ public class SignInCommand implements Command {
                 if (User.State.BLOCKED == user.getState()) {
                     request.setAttribute(BLOCKED, true);
                     addSignInAttrsToRequest(request);
-                    router.setPage(PagePath.SIGN_IN);
+                    router.setPage(PagePath.SIGN_IN_PAGE);
                 }
                 session.setAttribute(AttributeName.CURRENT_USER_ID, user.getId());
                 session.setAttribute(AttributeName.CURRENT_USER_ROLE, user.getRole());
@@ -47,23 +46,23 @@ public class SignInCommand implements Command {
                 session.setAttribute(AttributeName.CURRENT_USER_FULL_NAME, fullName);
                 switch (user.getRole()) {
                     case DOCTOR:
-                        router.setPage(PagePath.PRESCRIPTIONS);
+                        router.setPage(PagePath.PRESCRIPTIONS_PAGE);
                         break;
                     case CUSTOMER:
                         BigDecimal userBalance = userService.findUserBalance(user.getId());
                         session.setAttribute(AttributeName.CURRENT_USER_BALANCE, userBalance);
                     case PHARMACIST:
-                        router.setPage(PagePath.MEDICINES);
+                        router.setPage(PagePath.MEDICINES_PAGE);
                         break;
                     default:
-                        router.setPage(PagePath.USERS);
+                        router.setPage(PagePath.USERS_PAGE);
                         break;
                 }
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(INCORRECT_DATA, true);
                 addSignInAttrsToRequest(request);
-                router.setPage(PagePath.SIGN_IN);
+                router.setPage(PagePath.SIGN_IN_PAGE);
             }
             return router;
         } catch (ServiceException e) {

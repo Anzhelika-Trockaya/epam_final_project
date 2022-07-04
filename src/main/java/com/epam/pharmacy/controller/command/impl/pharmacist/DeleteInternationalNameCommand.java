@@ -26,7 +26,7 @@ public class DeleteInternationalNameCommand implements Command {
         InternationalNameService internationalNameService = provider.getInternationalNameService();
         try {
             boolean deleted = internationalNameService.delete(idString);
-            Router router = new Router(PagePath.INTERNATIONAL_NAMES, Router.Type.REDIRECT);
+            Router router = new Router(PagePath.INTERNATIONAL_NAMES_PAGE, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_DELETED);

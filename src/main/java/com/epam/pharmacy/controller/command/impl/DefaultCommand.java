@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 public class DefaultCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {
-        String page = PagePath.ERROR_500;
+        String page = PagePath.ERROR_500_PAGE;
         return new Router(page, Router.Type.REDIRECT);
     }
 }

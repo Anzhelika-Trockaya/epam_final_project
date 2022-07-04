@@ -33,7 +33,7 @@ public class ChangeMedicineQuantityInCartCommand implements Command {
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
-        Router router = new Router(PagePath.CART);
+        Router router = new Router(PagePath.CART_PAGE);
         try {
             boolean result = orderService.changePositionQuantityInCart(medicineId,
                     prescriptionId, quantity, customerId);

@@ -31,7 +31,7 @@ public class EditMedicineFormCommand implements Command {
         Router router;
         try {
             Optional<MedicineForm> formOptional = formService.update(id, name, unit);
-            router = new Router(PagePath.FORMS);
+            router = new Router(PagePath.FORMS_PAGE);
             if (formOptional.isPresent()) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, FORMS_EDITED);

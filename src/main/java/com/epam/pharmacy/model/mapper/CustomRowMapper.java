@@ -12,8 +12,7 @@ public interface CustomRowMapper<T extends CustomEntity> {
      *
      * @param resultSet the result set
      * @return the optional
-     * @throws DaoException the dao exception
      */
 //fixme doc
-    Optional<T> mapRow(ResultSet resultSet) throws DaoException;
+    Optional<T> mapRow(ResultSet resultSet);
 }

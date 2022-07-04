@@ -28,7 +28,7 @@ public class AddManufacturerCommand implements Command {
         Router router;
         try {
             boolean isCreated = manufacturerService.create(name, country);
-            router = new Router(PagePath.MANUFACTURERS);
+            router = new Router(PagePath.MANUFACTURERS_PAGE);
             if (isCreated) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, MANUFACTURERS_ADDED);

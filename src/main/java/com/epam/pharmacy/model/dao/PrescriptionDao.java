@@ -1,12 +1,8 @@
 package com.epam.pharmacy.model.dao;
 
 import com.epam.pharmacy.exception.DaoException;
-import com.epam.pharmacy.model.entity.FormUnit;
-import com.epam.pharmacy.model.entity.Medicine;
-import com.epam.pharmacy.model.entity.Prescription;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
 
 public interface PrescriptionDao {

@@ -34,7 +34,7 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
         MedicineService medicineService = serviceProvider.getMedicineService();
         PrescriptionService prescriptionService = serviceProvider.getPrescriptionService();
         OrderService orderService = serviceProvider.getOrderService();
-        Router router = new Router(PagePath.MEDICINES);
+        Router router = new Router(PagePath.MEDICINES_PAGE);
         String prescriptionId = request.getParameter(PRESCRIPTION_ID);
         try {
             Optional<Prescription> prescriptionOptional = prescriptionService.findById(prescriptionId);
@@ -60,7 +60,7 @@ public class ShowMedicinesForPrescriptionCommand implements Command {
                 request.setAttribute(AttributeName.PRESCRIPTION_EXPIRATION_DATE, prescription.getExpirationDate());
                 request.setAttribute(AttributeName.PRESCRIPTION_AVAILABLE_QUANTITY, prescriptionAvailableNumber);
             } else {
-                router = new Router(PagePath.PRESCRIPTIONS);
+                router = new Router(PagePath.PRESCRIPTIONS_PAGE);
                 request.setAttribute(FAILED_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_NOT_AVAILABLE_IN_CART_YET);
                 ContentFiller contentFiller = ContentFiller.getInstance();
                 contentFiller.addPrescriptions(request);

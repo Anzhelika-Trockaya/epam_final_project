@@ -28,7 +28,7 @@ public class GetOrderForProcessCommand implements Command {
         OrderService orderService = provider.getOrderService();
         UserService userService = provider.getUserService();
         try {
-            Router router = new Router(PagePath.ORDERS);
+            Router router = new Router(PagePath.ORDERS_PAGE);
             HttpSession session = request.getSession();
             long customerId = (long) session.getAttribute(CURRENT_USER_ID);
             Optional<Order> orderOptional = orderService.findNextPaidOrder(customerId);
@@ -39,7 +39,7 @@ public class GetOrderForProcessCommand implements Command {
                     LOGGER.warn("Customer not found. CustomerId=" + order.getCustomerId());
                     return router;
                 }
-                router = new Router(PagePath.ORDER, Router.Type.REDIRECT);
+                router = new Router(PagePath.ORDER_PAGE, Router.Type.REDIRECT);
                 session.setAttribute(TEMP_CUSTOMER, customerOptional.get());
                 session.setAttribute(TEMP_ORDER, order);
                 List<Map<String, Object>> orderContent = orderService.findOrderContent(order.getId());

@@ -25,7 +25,7 @@ public class DepositToUserAccountCommand implements Command {
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         try {
             boolean changed = userService.depositToCustomerAccount(customerId, valueString);
-            Router router = new Router(PagePath.BALANCE);
+            Router router = new Router(PagePath.BALANCE_PAGE);
             if (changed) {
                 router.setTypeRedirect();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE,

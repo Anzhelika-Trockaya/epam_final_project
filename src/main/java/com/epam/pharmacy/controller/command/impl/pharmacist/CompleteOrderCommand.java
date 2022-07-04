@@ -15,10 +15,9 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.epam.pharmacy.controller.AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE;
 import static com.epam.pharmacy.controller.ParameterName.ORDER_ID;
 
-public class CompleteOrderCommand implements Command {//fixme
+public class CompleteOrderCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
@@ -29,7 +28,7 @@ public class CompleteOrderCommand implements Command {//fixme
         OrderService orderService = provider.getOrderService();
         try {
             boolean completed = orderService.completeOrder(orderId);
-            Router router = new Router(PagePath.ORDER);
+            Router router = new Router(PagePath.ORDER_PAGE);
             HttpSession session = request.getSession();
             if (completed) {
                 router.setTypeRedirect();

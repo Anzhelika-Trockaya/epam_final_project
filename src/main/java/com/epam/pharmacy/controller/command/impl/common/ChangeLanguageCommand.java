@@ -6,8 +6,6 @@ import com.epam.pharmacy.validator.DataValidator;
 import com.epam.pharmacy.validator.impl.DataValidatorImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_PAGE;
 import static com.epam.pharmacy.controller.ParameterName.LANGUAGE;

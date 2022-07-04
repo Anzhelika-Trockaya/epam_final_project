@@ -31,7 +31,7 @@ public class PrescriptionRowMapper implements CustomRowMapper<Prescription> {
     }
 
     @Override
-    public Optional<Prescription> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<Prescription> mapRow(ResultSet resultSet) {
         Optional<Prescription> optionalPrescription;
         try {
             long id = resultSet.getLong(PRESCRIPTION_ID);

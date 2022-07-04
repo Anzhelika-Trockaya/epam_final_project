@@ -19,7 +19,7 @@ public class RenewalPrescriptionCommand implements Command {
         String prescriptionId = request.getParameter(ParameterName.PRESCRIPTION_ID);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = serviceProvider.getPrescriptionService();
-        Router router=new Router(PagePath.PRESCRIPTIONS);
+        Router router=new Router(PagePath.PRESCRIPTIONS_PAGE);
         try {
             boolean result = prescriptionService.renewalForAMonth(prescriptionId);
             if(result){

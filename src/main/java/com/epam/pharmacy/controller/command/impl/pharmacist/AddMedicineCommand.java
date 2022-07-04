@@ -37,7 +37,7 @@ public class AddMedicineCommand implements Command {
         try {
             medicineData.put(MEDICINE_IMAGE_LINK, link);
             boolean isCreated = medicineService.create(medicineData);
-            router = new Router(PagePath.ADD_MEDICINE);
+            router = new Router(PagePath.ADD_MEDICINE_PAGE);
             if (isCreated) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_ADDED, true);

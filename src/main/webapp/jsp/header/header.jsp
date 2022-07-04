@@ -61,7 +61,7 @@
                     </c:if>
                 </td>
                 <td>
-                    <c:if test="${not empty sessionScope.current_user_role}">
+                    <c:if test="${!(sessionScope.current_user_role eq 'GUEST')}">
                         <a href="${pageContext.request.contextPath}/jsp/common/user.jsp">
                                 ${current_user_full_name}
                         </a>
@@ -76,7 +76,7 @@
                 </td>
                 <td>
                     <c:choose>
-                        <c:when test="${sessionScope.current_user_role == null}">
+                        <c:when test="${sessionScope.current_user_role eq 'GUEST'}">
                             <a href="${pageContext.request.contextPath}/jsp/common/sign_in.jsp">${sign_in}</a>
                         </c:when>
                         <c:otherwise>

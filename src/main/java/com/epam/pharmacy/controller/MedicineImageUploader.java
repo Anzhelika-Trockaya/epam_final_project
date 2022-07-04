@@ -87,7 +87,7 @@ public class MedicineImageUploader {
                 return EMPTY_STRING;
             }
             try (InputStream inputStream = part.getInputStream()) {
-                String pathString = UPLOAD_DIRECTORY + generateFileName(request, extension);
+                String pathString = UPLOAD_DIRECTORY + generateFileName(extension);
                 Path imagePath = new File(pathString).toPath();
                 long bytes = Files.copy(
                         inputStream,
@@ -102,7 +102,7 @@ public class MedicineImageUploader {
         }
     }
 
-    private String generateFileName(HttpServletRequest request, String extension) {
+    private String generateFileName(String extension) {
         return new StringBuilder().
                 append(UUID.randomUUID()).
                 append(extension).

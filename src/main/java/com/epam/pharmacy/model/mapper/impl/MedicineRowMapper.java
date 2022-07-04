@@ -29,7 +29,7 @@ public class MedicineRowMapper implements CustomRowMapper<Medicine> {
     }
 
     @Override
-    public Optional<Medicine> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<Medicine> mapRow(ResultSet resultSet) {
         Optional<Medicine> optionalMedicine;
         try {
             long id = resultSet.getLong(MEDICINE_ID);

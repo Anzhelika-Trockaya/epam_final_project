@@ -26,7 +26,7 @@ public class ChangeUserStateCommand implements Command {
         UserService userService = provider.getUserService();
         try {
             boolean changed = userService.changeState(idString, stateString);
-            Router router = new Router(PagePath.USERS);
+            Router router = new Router(PagePath.USERS_PAGE);
             if (changed) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.USERS_STATE_CHANGED_MESSAGE);

@@ -7,7 +7,6 @@ import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
-import com.epam.pharmacy.model.service.InternationalNameService;
 import com.epam.pharmacy.model.service.MedicineFormService;
 import com.epam.pharmacy.model.service.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +26,7 @@ public class DeleteMedicineFormCommand implements Command {
         MedicineFormService formService = provider.getMedicineFormService();
         try {
             boolean deleted = formService.delete(idString);
-            Router router = new Router(PagePath.FORMS, Router.Type.REDIRECT);
+            Router router = new Router(PagePath.FORMS_PAGE, Router.Type.REDIRECT);
             HttpSession session = request.getSession();
             if (deleted) {
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.FORMS_DELETED);

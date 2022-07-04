@@ -36,7 +36,6 @@ public final class ParameterName {
     public static final String OLD_IMAGE_PATH = "old_image_path";
     public static final String PRESCRIPTION_ID = "prescription_id";
     public static final String PRESCRIPTION_INTERNATIONAL_NAME_ID = "prescription_international_name_id";
-    public static final String PRESCRIPTION_DOCTOR_ID = "prescription_doctor_id";
     public static final String PRESCRIPTION_CUSTOMER_ID = "prescription_customer_id";
     public static final String PRESCRIPTION_QUANTITY = "prescription_quantity";
     public static final String PRESCRIPTION_VALIDITY = "prescription_validity";

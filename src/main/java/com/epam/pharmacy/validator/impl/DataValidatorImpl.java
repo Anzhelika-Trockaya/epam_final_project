@@ -1,7 +1,6 @@
 package com.epam.pharmacy.validator.impl;
 
 import com.epam.pharmacy.controller.ParameterName;
-import com.epam.pharmacy.controller.PropertyKey;
 import com.epam.pharmacy.validator.DataValidator;
 
 import static com.epam.pharmacy.controller.AttributeName.*;

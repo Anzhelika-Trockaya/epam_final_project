@@ -31,7 +31,7 @@ public class AddMedicineToCartCommand implements Command {
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         String medicineId = request.getParameter(ORDER_MEDICINE_ID);
         String quantity = request.getParameter(ORDER_MEDICINE_NUMBER);
-        Router router = new Router(PagePath.MEDICINES);
+        Router router = new Router(PagePath.MEDICINES_PAGE);
         try {
             Map<String, String> positionParams = createParamsMap(medicineId, quantity);
             Optional<Medicine> medicineOptional = medicineService.findById(medicineId);
@@ -46,7 +46,7 @@ public class AddMedicineToCartCommand implements Command {
                 positionParams.put(PRESCRIPTION_ID, prescriptionId);
                 boolean isAdded = orderService.addToCartWithPrescription(customerId, positionParams);
                 if(isAdded){
-                    router.setPage(PagePath.PRESCRIPTIONS);
+                    router.setPage(PagePath.PRESCRIPTIONS_PAGE);
                     router.setTypeRedirect();
                     session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
                 } else{
@@ -58,7 +58,6 @@ public class AddMedicineToCartCommand implements Command {
                     session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
                     router.setTypeRedirect();
                 } else {
-                    //fixme if pagination
                     request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_NOT_ADDED_TO_CART);
                 }
             }

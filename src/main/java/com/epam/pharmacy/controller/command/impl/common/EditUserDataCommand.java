@@ -34,7 +34,7 @@ public class EditUserDataCommand implements Command {
         Map<String, String> userData = createUserDataMap(request);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
-        Router router = new Router(PagePath.USER);
+        Router router = new Router(PagePath.USER_PAGE);
         try {
             HttpSession session = request.getSession();
             long id = (long) session.getAttribute(CURRENT_USER_ID);

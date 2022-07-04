@@ -2,7 +2,6 @@ package com.epam.pharmacy.model.service;
 
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Order;
-import com.epam.pharmacy.model.entity.OrderPosition;
 import com.epam.pharmacy.model.entity.UserRole;
 
 import java.math.BigDecimal;

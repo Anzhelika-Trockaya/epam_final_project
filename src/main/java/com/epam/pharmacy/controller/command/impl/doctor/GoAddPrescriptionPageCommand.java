@@ -39,6 +39,6 @@ public class GoAddPrescriptionPageCommand implements Command {
             LOGGER.warn("Customer with id=" + customerId + " not found.");
             throw new CommandException("Customer with id=" + customerId + " not found.");
         }
-        return new Router(PagePath.ADD_PRESCRIPTION);
+        return new Router(PagePath.ADD_PRESCRIPTION_PAGE);
     }
 }

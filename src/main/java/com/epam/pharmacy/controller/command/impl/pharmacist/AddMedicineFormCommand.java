@@ -27,7 +27,7 @@ public class AddMedicineFormCommand implements Command {
         Router router;
         try {
             boolean isCreated = formService.create(name, unit);
-            router = new Router(PagePath.FORMS);
+            router = new Router(PagePath.FORMS_PAGE);
             if (isCreated) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, FORMS_ADDED);

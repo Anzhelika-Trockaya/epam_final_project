@@ -18,7 +18,6 @@ public enum CommandType {
     GET_ORDER_FOR_PROCESS(new GetOrderForProcessCommand()),
     GO_CUSTOMERS_PAGE(new GoCustomersPageCommand()),
     GO_ADD_PRESCRIPTION_PAGE(new GoAddPrescriptionPageCommand()),
-    GO_HOME_PAGE(new GoHomePageCommand()),
     GO_EDIT_MEDICINE_PAGE(new GoEditMedicinePageCommand()),
     GO_PRESCRIPTIONS_PAGE(new GoPrescriptionsPageCommand()),
     GO_ORDERS_PAGE(new GoOrdersPageCommand()),

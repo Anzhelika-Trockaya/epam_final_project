@@ -34,7 +34,7 @@ public class SearchMedicinesCommand implements Command {
         MedicineService medicineService = serviceProvider.getMedicineService();
         Map<String, String> paramsMap = createSearchParamsMap(request, MEDICINE_NAME,
                 MEDICINE_INTERNATIONAL_NAME_ID, MEDICINE_FORM_ID, MEDICINE_DOSAGE, MEDICINE_DOSAGE_UNIT);
-        Router router = new Router(PagePath.MEDICINES);
+        Router router = new Router(PagePath.MEDICINES_PAGE);
         try {
             HttpSession session = request.getSession();
             UserRole currentUserRole = (UserRole) session.getAttribute(CURRENT_USER_ROLE);

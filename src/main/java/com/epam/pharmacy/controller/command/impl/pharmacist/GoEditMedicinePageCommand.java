@@ -35,7 +35,7 @@ public class GoEditMedicinePageCommand implements Command {
                 contentFiller.addManufacturers(request);
                 contentFiller.addForms(request);
                 contentFiller.addInternationalNames(request);
-                router = new Router(PagePath.ADD_MEDICINE);
+                router = new Router(PagePath.ADD_MEDICINE_PAGE);
             } else {
                 request.setAttribute(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_NOT_FOUND);
                 HttpSession session = request.getSession();

@@ -31,7 +31,7 @@ public class OrderRowMapper implements CustomRowMapper<Order> {
     }
 
     @Override
-    public Optional<Order> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<Order> mapRow(ResultSet resultSet) {
         Optional<Order> optionalOrder;
         try {
             long orderId = resultSet.getLong(ORDER_ID);

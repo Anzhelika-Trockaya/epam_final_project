@@ -30,7 +30,7 @@ public class MedicineFormRowMapper implements CustomRowMapper<MedicineForm> {
     }
 
     @Override
-    public Optional<MedicineForm> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<MedicineForm> mapRow(ResultSet resultSet) {
         Optional<MedicineForm> optionalForm;
         try {
             long id = resultSet.getLong(FORM_ID);

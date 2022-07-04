@@ -12,6 +12,6 @@ public class GoCustomersPageCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         ContentFiller contentFiller = ContentFiller.getInstance();
         contentFiller.addActiveCustomers(request);
-        return new Router(PagePath.CUSTOMERS);
+        return new Router(PagePath.CUSTOMERS_PAGE);
     }
 }

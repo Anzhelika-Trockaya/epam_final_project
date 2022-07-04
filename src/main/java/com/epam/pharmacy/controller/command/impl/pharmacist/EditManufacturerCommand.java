@@ -30,7 +30,7 @@ public class EditManufacturerCommand implements Command {
         Router router;
         try {
             Optional<Manufacturer> manufacturerOptional = manufacturerService.update(id, name, country);
-            router = new Router(PagePath.MANUFACTURERS);
+            router = new Router(PagePath.MANUFACTURERS_PAGE);
             if (manufacturerOptional.isPresent()) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, MANUFACTURERS_EDITED);

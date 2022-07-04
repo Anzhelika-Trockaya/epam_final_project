@@ -43,7 +43,7 @@ public class RegisterCommand implements Command {
             if (isCreated) {
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_REGISTRATION, true);
                 if (session.getAttribute(CURRENT_USER_ROLE) == null) {
-                    page = PagePath.SIGN_IN;
+                    page = PagePath.SIGN_IN_PAGE;
                 }
                 router = new Router(page, Router.Type.REDIRECT);
             } else {

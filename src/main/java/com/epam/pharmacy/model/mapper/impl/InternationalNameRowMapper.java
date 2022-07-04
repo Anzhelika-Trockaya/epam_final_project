@@ -28,7 +28,7 @@ public class InternationalNameRowMapper implements CustomRowMapper<International
     }
 
     @Override
-    public Optional<InternationalMedicineName> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<InternationalMedicineName> mapRow(ResultSet resultSet) {
         Optional<InternationalMedicineName> optionalInternationalName;
         try {
             long id = resultSet.getLong(INTERNATIONAL_MEDICINE_NAME_ID);

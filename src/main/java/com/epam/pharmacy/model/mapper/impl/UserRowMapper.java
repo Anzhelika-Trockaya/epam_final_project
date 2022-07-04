@@ -30,7 +30,7 @@ public class UserRowMapper implements CustomRowMapper<User> {
     }
 
     @Override
-    public Optional<User> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<User> mapRow(ResultSet resultSet) {
         Optional<User> optionalUser;
         try {
             long id = resultSet.getLong(USER_ID);

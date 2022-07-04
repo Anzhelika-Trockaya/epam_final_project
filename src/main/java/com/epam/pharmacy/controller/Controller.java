@@ -3,7 +3,6 @@ package com.epam.pharmacy.controller;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.CommandType;
 import com.epam.pharmacy.exception.CommandException;
-import com.epam.pharmacy.model.pool.ConnectionPool;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -23,10 +22,6 @@ public class Controller extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override
-    public void init() {
-    }
-
-    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         processRequest(request, response);
     }
@@ -37,7 +32,6 @@ public class Controller extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        //response.setContentType("text/html");//todo to filter
         String commandStr = request.getParameter(ParameterName.COMMAND);
         Command command = CommandType.commandOf(commandStr);
         try {
@@ -54,13 +48,8 @@ public class Controller extends HttpServlet {
                     break;
             }
         } catch (CommandException e) {
-            request.setAttribute(AttributeName.ERROR_MSG, e.getMessage());
-            request.getRequestDispatcher(PagePath.ERROR_500).forward(request, response);
+            request.setAttribute(AttributeName.ERROR_MSG, e.getMessage());//todo
+            request.getRequestDispatcher(PagePath.ERROR_500_PAGE).forward(request, response);
         }
-    }
-
-    @Override
-    public void destroy() {
-
     }
 }

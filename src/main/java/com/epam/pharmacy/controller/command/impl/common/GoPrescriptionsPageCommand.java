@@ -17,6 +17,6 @@ public class GoPrescriptionsPageCommand implements Command {
         } else {
             contentFiller.addPrescriptions(request);
         }
-        return new Router(PagePath.PRESCRIPTIONS);
+        return new Router(PagePath.PRESCRIPTIONS_PAGE);
     }
 }

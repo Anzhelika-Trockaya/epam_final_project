@@ -19,7 +19,6 @@ public final class ColumnName {
     public static final String MANUFACTURER_ID="manufacturer_id";
     public static final String MANUFACTURER_NAME="manufacturer_name";
     public static final String MANUFACTURER_COUNTRY="manufacturer_country";
-    public static final String MANUFACTURER_ADDRESS="manufacturer_address";
     public static final String INTERNATIONAL_MEDICINE_NAME_ID="international_medicine_name_id";
     public static final String INTERNATIONAL_MEDICINE_NAME="international_medicine_name";
     public static final String MEDICINE_ID="medicine_id";

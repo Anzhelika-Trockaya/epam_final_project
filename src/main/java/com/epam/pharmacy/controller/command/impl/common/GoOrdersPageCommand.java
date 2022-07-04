@@ -21,6 +21,6 @@ public class GoOrdersPageCommand implements Command {
             contentFiller.addCurrentUserOrders(request);
         }
         contentFiller.addNewOrdersQuantity(request);
-        return new Router(PagePath.ORDERS);
+        return new Router(PagePath.ORDERS_PAGE);
     }
 }

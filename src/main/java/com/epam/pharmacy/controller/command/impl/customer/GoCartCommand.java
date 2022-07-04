@@ -13,6 +13,6 @@ public class GoCartCommand implements Command {
         ContentFiller contentFiller = ContentFiller.getInstance();
         contentFiller.addCartContent(request);
         contentFiller.updateBalanceInSession(request);
-        return new Router(PagePath.CART);
+        return new Router(PagePath.CART_PAGE);
     }
 }

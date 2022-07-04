@@ -16,6 +16,6 @@ public class LogoutCommand implements Command {
         while(attrNames.hasMoreElements()){
             session.removeAttribute(attrNames.nextElement());
         }
-        return new Router(PagePath.HOME, Router.Type.REDIRECT);
+        return new Router(PagePath.HOME_PAGE, Router.Type.REDIRECT);
     }
 }

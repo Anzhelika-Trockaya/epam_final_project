@@ -32,11 +32,11 @@ public class AddPrescriptionCommand implements Command {
             long doctorId = (long) session.getAttribute(CURRENT_USER_ID);
             boolean isCreated = prescriptionService.create(doctorId, data);
             if (isCreated) {
-                router = new Router(PagePath.CUSTOMERS);
+                router = new Router(PagePath.CUSTOMERS_PAGE);
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.PRESCRIPTIONS_ADDED);
                 router.setTypeRedirect();
             } else {
-                router = new Router(PagePath.ADD_PRESCRIPTION);
+                router = new Router(PagePath.ADD_PRESCRIPTION_PAGE);
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.ADD_PRESCRIPTION_NOT_ADDED);
                 ContentFiller contentFiller = ContentFiller.getInstance();
                 contentFiller.addDataToRequest(request, data);

@@ -3,14 +3,11 @@ package com.epam.pharmacy.model.dao.impl;
 import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.MedicineFormDao;
-import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.entity.MedicineForm;
 import com.epam.pharmacy.model.mapper.impl.MedicineFormRowMapper;
-import com.epam.pharmacy.model.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

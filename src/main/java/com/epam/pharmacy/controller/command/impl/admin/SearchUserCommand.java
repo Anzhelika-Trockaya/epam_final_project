@@ -20,7 +20,6 @@ import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
-import static com.epam.pharmacy.controller.ParameterName.BIRTHDAY_DATE;
 
 public class SearchUserCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -36,12 +35,12 @@ public class SearchUserCommand implements Command {
         UserRole currentUserRole = (UserRole) session.getAttribute(CURRENT_USER_ROLE);
         if (UserRole.ADMIN == currentUserRole) {
             listAttributeName = USERS_LIST;
-            router = new Router(PagePath.USERS);
+            router = new Router(PagePath.USERS_PAGE);
         } else {
             listAttributeName = CUSTOMERS_LIST;
             paramsMap.put(ParameterName.USER_ROLE, "CUSTOMER");
             paramsMap.put(ParameterName.USER_STATE, "ACTIVE");
-            router = new Router(PagePath.CUSTOMERS);
+            router = new Router(PagePath.CUSTOMERS_PAGE);
         }
         try {
             List<User> users = userService.findByParams(new HashMap<>(paramsMap));

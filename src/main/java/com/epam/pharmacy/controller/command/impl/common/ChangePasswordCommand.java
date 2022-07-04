@@ -5,7 +5,6 @@ import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
-import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.model.service.ServiceProvider;
 import com.epam.pharmacy.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +14,6 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
@@ -28,7 +26,7 @@ public class ChangePasswordCommand implements Command {
         Map<String, String> passwordData = createPasswordDataMap(request);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
-        Router router = new Router(PagePath.USER);
+        Router router = new Router(PagePath.USER_PAGE);
         try {
             HttpSession session = request.getSession();
             long id = (long) session.getAttribute(CURRENT_USER_ID);

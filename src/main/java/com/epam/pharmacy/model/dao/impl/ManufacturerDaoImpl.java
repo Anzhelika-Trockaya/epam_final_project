@@ -5,11 +5,9 @@ import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.ManufacturerDao;
 import com.epam.pharmacy.model.entity.Manufacturer;
 import com.epam.pharmacy.model.mapper.impl.ManufacturerRowMapper;
-import com.epam.pharmacy.model.pool.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;

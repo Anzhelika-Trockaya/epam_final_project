@@ -30,7 +30,7 @@ public class EditInternationalNameCommand implements Command {
         Router router;
         try {
             Optional<InternationalMedicineName> internationalNameOptional = internationalNameService.update(id, name);
-            router = new Router(PagePath.INTERNATIONAL_NAMES);
+            router = new Router(PagePath.INTERNATIONAL_NAMES_PAGE);
             if (internationalNameOptional.isPresent()) {
                 HttpSession session = request.getSession();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, INTERNATIONAL_NAMES_EDITED);

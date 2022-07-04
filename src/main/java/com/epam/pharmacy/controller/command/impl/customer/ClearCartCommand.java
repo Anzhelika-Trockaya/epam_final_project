@@ -23,7 +23,7 @@ public class ClearCartCommand implements Command {
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
-        Router router = new Router(PagePath.CART);
+        Router router = new Router(PagePath.CART_PAGE);
         try {
             orderService.clearCart(customerId);
         } catch (ServiceException e) {

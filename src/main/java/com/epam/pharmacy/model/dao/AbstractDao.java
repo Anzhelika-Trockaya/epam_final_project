@@ -2,7 +2,6 @@ package com.epam.pharmacy.model.dao;
 
 import com.epam.pharmacy.model.entity.CustomEntity;
 import com.epam.pharmacy.exception.DaoException;
-import com.epam.pharmacy.model.entity.InternationalMedicineName;
 
 import java.sql.Connection;
 import java.util.List;

@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.mapper.impl;
 
-import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.Manufacturer;
 import com.epam.pharmacy.model.mapper.CustomRowMapper;
 import org.apache.logging.log4j.LogManager;
@@ -13,7 +12,6 @@ import java.util.Optional;
 import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_ID;
 import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_NAME;
 import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_COUNTRY;
-import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_ADDRESS;
 
 public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -30,7 +28,7 @@ public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
     }
 
     @Override
-    public Optional<Manufacturer> mapRow(ResultSet resultSet) throws DaoException {
+    public Optional<Manufacturer> mapRow(ResultSet resultSet) {
         Optional<Manufacturer> optionalManufacturer;
         try {
             long id = resultSet.getLong(MANUFACTURER_ID);

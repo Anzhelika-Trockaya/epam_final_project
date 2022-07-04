@@ -5,7 +5,7 @@ public class Router {
     private Type type = Type.FORWARD;
     public enum Type{
         FORWARD,
-        REDIRECT;
+        REDIRECT
     }
 
     public Router() {
