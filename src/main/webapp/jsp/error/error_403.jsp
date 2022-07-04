@@ -3,7 +3,7 @@
 <%@include file="../header/header.jsp" %>
 <html>
 <head>
-    <title>Error 404</title>
+    <title>Error 403</title>
     <c:set var="current_page" value="jsp/error/error_403.jsp" scope="session"/>
 </head>
 <body>
