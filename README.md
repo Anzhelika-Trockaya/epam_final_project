@@ -1,5 +1,5 @@
 <h1>Pharmacy</h1>
-<h4>The client selects the necessary drug from the list of available ones, and put it to the cart. The Customer pays for the Order. The pharmacist manages the list of medications. Some
+<h4>The client selects the necessary drug from the list of available ones, and put it to the cart. The Customer pays for the Order. The Pharmacist manages the list of medications. Some
 drugs require an electronic prescription, which can only be prescribed to the client by a Doctor. The Client can make a request to the Doctor to renew the prescription. The Admin can block/unblock and add users.</h4>
 <h2>Guest can:</h2>
 <ul>
