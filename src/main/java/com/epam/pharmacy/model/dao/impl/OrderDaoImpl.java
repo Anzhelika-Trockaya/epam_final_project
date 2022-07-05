@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,7 +53,16 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     private static final String SQL_SELECT_ORDER_POSITIONS =
             "SELECT order_id, medicine_id, order_medicine_quantity, prescription_id, order_medicine_price " +
                     "FROM m2m_order_medicine WHERE order_id = ?";
-    private static final String SQL_UPDATE_ORDER = "";//fixme
+    private static final String SQL_CREATE_ORDER =
+            "INSERT INTO orders (order_payment_date, order_state, customer_id, pharmacist_id, order_total_cost) " +
+                    "VALUES (?,?,?,?,?)";
+    private static final String SQL_DELETE_ORDER_BY_ORDER_ID =
+            "DELETE from orders WHERE order_id = ?";
+    private static final String SQL_SELECT_ALL_ORDERS =
+            "SELECT order_id, order_payment_date, order_state, customer_id, pharmacist_id, order_total_cost FROM orders";
+    private static final String SQL_UPDATE_ORDER =
+            "UPDATE orders SET order_payment_date = ?, order_state = ?, customer_id = ?, pharmacist_id = ?, " +
+                    "order_total_cost = ? WHERE order_id = ?";
     private static final String SQL_INSERT_ORDER_ID_MEDICINE_ID_PRESCRIPTION_ID_QUANTITY_INTO_M2M_ORDER_MEDICINE =
             "INSERT INTO m2m_order_medicine (order_id, medicine_id, prescription_id, order_medicine_quantity) " +
                     "VALUES(?,?,?,?)";
@@ -104,23 +114,64 @@ public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
 
     @Override
     public boolean create(Order order) throws DaoException {
-        return false;//fixme??????
+        try (PreparedStatement statement = connection.prepareStatement(SQL_CREATE_ORDER)) {
+            statement.setDate(1, Date.valueOf(order.getPaymentDate()));
+            statement.setString(2, order.getState().name());
+            statement.setLong(3, order.getCustomerId());
+            statement.setLong(4, order.getPharmacistId());
+            statement.setBigDecimal(5, order.getTotalCost());
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when create order." + order, e);
+            throw new DaoException("Exception when create order." + order, e);
+        }
     }
 
     @Override
     public boolean deleteById(Long id) throws DaoException {
-        return false;
+        try (PreparedStatement statement = connection.prepareStatement(SQL_DELETE_ORDER_BY_ORDER_ID)) {
+            statement.setLong(1, id);
+            return statement.executeUpdate() == ONE_UPDATED;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when delete order by id. id=" + id, e);
+            throw new DaoException("Exception when delete order by id. id=" + id, e);
+        }
     }
 
     @Override
     public List<Order> findAll() throws DaoException {
-        return null;
+        List<Order> orders = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_ALL_ORDERS);
+             ResultSet resultSet = statement.executeQuery()) {
+            OrderRowMapper mapper = OrderRowMapper.getInstance();
+            Optional<Order> currentOrderOptional;
+            while (resultSet.next()) {
+                currentOrderOptional = mapper.mapRow(resultSet);
+                currentOrderOptional.ifPresent(orders::add);
+            }
+            return orders;
+        } catch (SQLException e) {
+            LOGGER.error("Exception when find all orders.", e);
+            throw new DaoException("Exception when find all orders.", e);
+        }
     }
 
 
     @Override
     public Optional<Order> update(Order order) throws DaoException {
-        return null;//todo
+        Optional<Order> oldOrder = findById(order.getId());
+        try (PreparedStatement statement = connection.prepareStatement(SQL_UPDATE_ORDER)) {
+            statement.setDate(1, Date.valueOf(order.getPaymentDate()));
+            statement.setString(2, order.getState().name());
+            statement.setLong(3, order.getCustomerId());
+            statement.setLong(4, order.getPharmacistId());
+            statement.setBigDecimal(5, order.getTotalCost());
+            statement.setLong(6, order.getId());
+            return statement.executeUpdate() == ONE_UPDATED ? oldOrder : Optional.empty();
+        } catch (SQLException e) {
+            LOGGER.error("Exception when update order." + order, e);
+            throw new DaoException("Exception when update order." + order, e);
+        }
     }
 
     @Override
