@@ -11,39 +11,39 @@ import java.util.Optional;
  */
 public interface ManufacturerService {
     /**
-     * Create boolean.
+     * Creates a new manufacturer.
      *
      * @param name    the name
      * @param country the country
-     * @return the boolean
+     * @return the boolean {@code true} if created
      * @throws ServiceException the service exception
      */
     boolean create(String name, String country) throws ServiceException;
 
     /**
-     * Delete boolean.
+     * Delete the manufacturer.
      *
      * @param id the id
-     * @return the boolean
+     * @return the boolean {@code true} if deleted
      * @throws ServiceException the service exception
      */
     boolean delete(String id) throws ServiceException;
 
     /**
-     * Update optional.
+     * Updates manufacturer.
      *
      * @param id      the id
      * @param name    the name
      * @param country the country
-     * @return the optional
+     * @return the old manufacturer optional if updated and empty optional if not
      * @throws ServiceException the service exception
      */
     Optional<Manufacturer> update(String id, String name, String country) throws ServiceException;
 
     /**
-     * Find all list.
+     * Finds all manufacturers list.
      *
-     * @return the list
+     * @return the list of manufacturers
      * @throws ServiceException the service exception
      */
     List<Manufacturer> findAll() throws ServiceException;

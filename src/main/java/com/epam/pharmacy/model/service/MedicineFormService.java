@@ -11,7 +11,7 @@ import java.util.Optional;
  */
 public interface MedicineFormService {
     /**
-     * Create boolean.
+     * Creates a new medicine form.
      *
      * @param name the name
      * @param unit the unit
@@ -21,29 +21,29 @@ public interface MedicineFormService {
     boolean create(String name, String unit) throws ServiceException;
 
     /**
-     * Delete boolean.
+     * Deletes the medicine form, if it is not using in medicines.
      *
      * @param id the id
-     * @return the boolean
+     * @return the boolean {@code true} if deleted
      * @throws ServiceException the service exception
      */
     boolean delete(String id) throws ServiceException;
 
     /**
-     * Update optional.
+     * Updates medicine form.
      *
      * @param id   the id
      * @param name the name
      * @param unit the unit
-     * @return the optional
+     * @return the old medicine form optional if updated and empty option if not
      * @throws ServiceException the service exception
      */
     Optional<MedicineForm> update(String id, String name, String unit) throws ServiceException;
 
     /**
-     * Find all list.
+     * Finds all medicine forms list.
      *
-     * @return the list
+     * @return the list of medicine forms
      * @throws ServiceException the service exception
      */
     List<MedicineForm> findAll() throws ServiceException;
