@@ -1,13 +1,13 @@
 package com.epam.pharmacy.model.dao;
 
-import com.epam.pharmacy.model.entity.CustomEntity;
+import com.epam.pharmacy.model.entity.AbstractEntity;
 import com.epam.pharmacy.exception.DaoException;
 
 import java.sql.Connection;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractDao<T extends CustomEntity> {
+public abstract class AbstractDao<T extends AbstractEntity> {
     protected Connection connection;
 
     public abstract boolean create(T t) throws DaoException;
