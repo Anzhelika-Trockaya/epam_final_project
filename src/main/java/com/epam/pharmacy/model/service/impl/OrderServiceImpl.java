@@ -364,7 +364,7 @@ class OrderServiceImpl implements OrderService {
                     ", expectedTotalCost=" + expectedTotalCost, e);
             throw new ServiceException("Exception when make order. customerId=" + customerId +
                     ", expectedTotalCost=" + expectedTotalCost, e);
-        }//todo check it
+        }
     }
 
     @Override
