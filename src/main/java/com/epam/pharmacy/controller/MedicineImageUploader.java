@@ -18,6 +18,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.UUID;
 
+/**
+ * The type Medicine image uploader. Uploads the image to the server.
+ */
 public class MedicineImageUploader {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String PROPERTY_FILE_NAME = "imageUploader.properties";
@@ -26,7 +29,7 @@ public class MedicineImageUploader {
     private static final String EMPTY_STRING = "";
     private static MedicineImageUploader instance;
 
-    static{
+    static {
         Properties properties = new Properties();
         try (InputStream inputStream = MedicineImageUploader.class.getClassLoader().
                 getResourceAsStream(PROPERTY_FILE_NAME)) {
@@ -38,20 +41,20 @@ public class MedicineImageUploader {
         }
         UPLOAD_DIRECTORY = properties.getProperty(PATH_KEY);
         File directory = new File(UPLOAD_DIRECTORY);
-        if(!directory.exists()){
+        if (!directory.exists()) {
             try {
                 boolean created = directory.createNewFile();
-                if(!created){
+                if (!created) {
                     LOGGER.fatal("MedicineImageUploader image directory not created. " +
-                            "Directory path = '" + UPLOAD_DIRECTORY+"'");
+                            "Directory path = '" + UPLOAD_DIRECTORY + "'");
                     throw new ExceptionInInitializerError("MedicineImageUploader image directory not created. " +
-                            "Directory path = '" + UPLOAD_DIRECTORY+"'");
+                            "Directory path = '" + UPLOAD_DIRECTORY + "'");
                 }
             } catch (IOException e) {
-                LOGGER.fatal("MedicineImageUploader image directory not created."+
-                        "Directory path = '" + UPLOAD_DIRECTORY+"'", e);
-                throw new ExceptionInInitializerError("MedicineImageUploader image directory not created."+
-                        "Directory path = '" + UPLOAD_DIRECTORY+"'" + e.getMessage());
+                LOGGER.fatal("MedicineImageUploader image directory not created." +
+                        "Directory path = '" + UPLOAD_DIRECTORY + "'", e);
+                throw new ExceptionInInitializerError("MedicineImageUploader image directory not created." +
+                        "Directory path = '" + UPLOAD_DIRECTORY + "'" + e.getMessage());
             }
         }
     }
@@ -59,6 +62,11 @@ public class MedicineImageUploader {
     private MedicineImageUploader() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MedicineImageUploader getInstance() {
         if (instance == null) {
             instance = new MedicineImageUploader();
@@ -66,11 +74,18 @@ public class MedicineImageUploader {
         return instance;
     }
 
+    /**
+     * Upload image to the server.
+     *
+     * @param request the request
+     * @return the image path string if uploaded, and empty string if not
+     * @throws CommandException the command exception
+     */
     public String uploadImage(HttpServletRequest request) throws CommandException {
         try {
             Part part = request.getPart(ParameterName.IMAGE);
             String submittedFileName = part.getSubmittedFileName();
-            if(submittedFileName.isEmpty()){
+            if (submittedFileName.isEmpty()) {
                 request.setAttribute(AttributeName.INCORRECT_FILE, PropertyKey.ADDING_MEDICINE_INCORRECT_REQUIRED);
                 return EMPTY_STRING;
             }

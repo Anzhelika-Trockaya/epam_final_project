@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go balance filter. Fills page balance.jsp.
+ */
 @WebFilter(filterName = "GoBalanceFilter",urlPatterns = "/jsp/customer/balance.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoBalanceFilter implements Filter {

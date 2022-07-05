@@ -16,6 +16,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.ParameterName.FORM_ID;
 
+/**
+ * The type Delete medicine form command.
+ */
 public class DeleteMedicineFormCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

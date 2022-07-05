@@ -11,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.ParameterName.ORDER_ID;
 
+/**
+ * The type Go order page command.
+ */
 public class GoOrderPageCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

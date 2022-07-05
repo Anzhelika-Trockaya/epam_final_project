@@ -5,6 +5,9 @@ import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.Router;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * The type Default command.
+ */
 public class DefaultCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {

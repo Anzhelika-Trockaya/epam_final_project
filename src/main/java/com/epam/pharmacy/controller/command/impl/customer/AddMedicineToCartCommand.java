@@ -20,6 +20,9 @@ import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.controller.ParameterName.PRESCRIPTION_ID;
 
+/**
+ * The type Add medicine to cart command.
+ */
 public class AddMedicineToCartCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

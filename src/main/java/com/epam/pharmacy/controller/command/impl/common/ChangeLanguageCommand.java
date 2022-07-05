@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpSession;
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_PAGE;
 import static com.epam.pharmacy.controller.ParameterName.LANGUAGE;
 
+/**
+ * The type Change language command.
+ */
 public class ChangeLanguageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {

@@ -18,6 +18,9 @@ import java.math.BigDecimal;
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 import static com.epam.pharmacy.controller.AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE;
 
+/**
+ * The type Order command.
+ */
 public class OrderCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int COMPARE_RESULT_IF_ORDER_COST_IS_BIGGER_THAT_ACCOUNT_BALANCE = 1;

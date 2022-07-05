@@ -18,6 +18,9 @@ import java.util.Optional;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_EDITED;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_NOT_EDITED;
 
+/**
+ * The type Edit international name command.
+ */
 public class EditInternationalNameCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

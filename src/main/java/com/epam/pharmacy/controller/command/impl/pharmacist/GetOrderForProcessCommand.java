@@ -20,6 +20,9 @@ import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
 
+/**
+ * The type Get order for process command.
+ */
 public class GetOrderForProcessCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -14,6 +14,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 
+/**
+ * The type Clear cart command.
+ */
 public class ClearCartCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -18,6 +18,9 @@ import java.util.Map;
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
+/**
+ * The type Add prescription command.
+ */
 public class AddPrescriptionCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

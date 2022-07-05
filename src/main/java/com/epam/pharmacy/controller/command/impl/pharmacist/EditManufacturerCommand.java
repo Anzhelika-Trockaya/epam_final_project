@@ -17,6 +17,9 @@ import java.util.Optional;
 
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
+/**
+ * The type Edit manufacturer command.
+ */
 public class EditManufacturerCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

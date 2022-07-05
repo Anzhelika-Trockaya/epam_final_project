@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go customers filter. Fills page customers.jsp.
+ */
 @WebFilter(filterName = "GoCustomersFilter", urlPatterns = "/jsp/doctor/customers.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoCustomersFilter implements Filter {

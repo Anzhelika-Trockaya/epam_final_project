@@ -6,6 +6,9 @@ import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * The type Go prescriptions page command.
+ */
 public class GoPrescriptionsPageCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {

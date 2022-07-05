@@ -20,8 +20,7 @@ import static com.epam.pharmacy.controller.PagePath.ERROR_404_PAGE;
 import static com.epam.pharmacy.controller.ParameterName.COMMAND;
 
 /**
- * The type Command filter class determines what commands
- * the client can call.
+ * The type Command filter class determines what commands the client can call.
  */
 @WebFilter(filterName = "CommandFilter", urlPatterns = "/controller")
 public class CommandFilter implements Filter {

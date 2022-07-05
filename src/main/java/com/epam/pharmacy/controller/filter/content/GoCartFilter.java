@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go cart filter. Fills page cart.jsp.
+ */
 @WebFilter(filterName = "GoCartFilter", urlPatterns = "/jsp/customer/cart.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoCartFilter implements Filter {

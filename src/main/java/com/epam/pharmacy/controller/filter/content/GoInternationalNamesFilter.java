@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go international names filter. Fills page international_names.jsp.
+ */
 @WebFilter(filterName = "GoInternationalNamesFilter", urlPatterns = "/jsp/pharmacist/international_names.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoInternationalNamesFilter implements Filter {

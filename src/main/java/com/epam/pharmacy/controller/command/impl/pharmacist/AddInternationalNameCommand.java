@@ -16,6 +16,9 @@ import static com.epam.pharmacy.controller.ParameterName.NAME;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_ADDED;
 import static com.epam.pharmacy.controller.PropertyKey.INTERNATIONAL_NAMES_NOT_ADDED;
 
+/**
+ * The type Add international name command.
+ */
 public class AddInternationalNameCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

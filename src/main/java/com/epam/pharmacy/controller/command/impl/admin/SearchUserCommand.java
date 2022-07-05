@@ -27,6 +27,9 @@ import static com.epam.pharmacy.controller.ParameterName.USER_PATRONYMIC;
 import static com.epam.pharmacy.controller.ParameterName.USER_ROLE;
 import static com.epam.pharmacy.controller.ParameterName.USER_STATE;
 
+/**
+ * The type Search user command.
+ */
 public class SearchUserCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

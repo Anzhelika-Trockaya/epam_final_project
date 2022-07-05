@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go manufacturers filter. Fills page manufacturers.jsp.
+ */
 @WebFilter(filterName = "GoManufacturersFilter", urlPatterns = "/jsp/pharmacist/manufacturers.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoManufacturersFilter implements Filter {

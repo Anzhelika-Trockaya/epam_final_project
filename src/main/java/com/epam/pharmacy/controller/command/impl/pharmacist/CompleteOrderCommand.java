@@ -17,6 +17,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.ParameterName.ORDER_ID;
 
+/**
+ * The type Complete order command.
+ */
 public class CompleteOrderCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

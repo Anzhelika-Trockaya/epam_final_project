@@ -18,6 +18,9 @@ import org.apache.logging.log4j.Logger;
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
+/**
+ * The type Change medicine quantity in cart command.
+ */
 public class ChangeMedicineQuantityInCartCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

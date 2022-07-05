@@ -16,6 +16,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.ParameterName.MANUFACTURER_ID;
 
+/**
+ * The type Delete manufacturer command.
+ */
 public class DeleteManufacturerCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

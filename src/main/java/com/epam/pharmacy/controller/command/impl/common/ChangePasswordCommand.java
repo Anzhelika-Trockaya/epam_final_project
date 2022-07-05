@@ -18,6 +18,9 @@ import java.util.Map;
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
+/**
+ * The type Change password command.
+ */
 public class ChangePasswordCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

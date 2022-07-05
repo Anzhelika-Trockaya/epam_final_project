@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go adding medicine filter. Fills page adding_medicine.jsp.
+ */
 @WebFilter(filterName = "GoToAddingMedicineFilter", urlPatterns = "/jsp/pharmacist/adding_medicine.jsp",
 dispatcherTypes = DispatcherType.REQUEST)
 public class GoAddingMedicineFilter implements Filter {

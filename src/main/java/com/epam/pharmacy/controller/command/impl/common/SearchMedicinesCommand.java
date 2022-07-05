@@ -26,6 +26,9 @@ import static com.epam.pharmacy.controller.ParameterName.MEDICINE_FORM_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_INTERNATIONAL_NAME_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_NAME;
 
+/**
+ * The type Search medicines command.
+ */
 public class SearchMedicinesCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -26,6 +26,9 @@ import static com.epam.pharmacy.controller.ParameterName.USER_PATRONYMIC;
 import static com.epam.pharmacy.controller.ParameterName.USER_PHONE;
 import static com.epam.pharmacy.controller.ParameterName.USER_SEX;
 
+/**
+ * The type Edit user data command.
+ */
 public class EditUserDataCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

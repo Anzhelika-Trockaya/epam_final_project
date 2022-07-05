@@ -24,6 +24,9 @@ import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE;
 import static com.epam.pharmacy.controller.ParameterName.PRESCRIPTION_ID;
 
+/**
+ * The type Show medicines for prescription command.
+ */
 public class ShowMedicinesForPrescriptionCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ZERO_QUANTITY = 0;

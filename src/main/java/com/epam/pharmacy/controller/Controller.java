@@ -14,6 +14,10 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Controller. Manages clients requests, forms and sends responses.
+ * Override GET and POST methods.
+ */
 @WebServlet(name = "helloServlet", urlPatterns = {"/controller"})
 @MultipartConfig(fileSizeThreshold = 1024 * 1024,
         maxFileSize = 1024 * 1024 * 5,

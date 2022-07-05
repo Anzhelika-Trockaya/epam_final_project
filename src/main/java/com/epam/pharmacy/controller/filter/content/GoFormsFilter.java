@@ -10,6 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * The type Go forms filter. Fills page forms.jsp.
+ */
 @WebFilter(filterName = "GoFormsFilter", urlPatterns = "/jsp/pharmacist/forms.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoFormsFilter implements Filter {

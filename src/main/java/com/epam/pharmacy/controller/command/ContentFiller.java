@@ -26,14 +26,25 @@ import static com.epam.pharmacy.controller.AttributeName.MEDICINE;
 import static com.epam.pharmacy.controller.AttributeName.PRESCRIPTION_CUSTOMER_ID;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
+/**
+ * The type Content filler. Fills the request with content.
+ */
 public class ContentFiller {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ZERO_QUANTITY = 0;
+    /**
+     * The constant instance.
+     */
     public static ContentFiller instance;
 
     private ContentFiller() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static ContentFiller getInstance() {
         if (instance == null) {
             instance = new ContentFiller();
@@ -41,6 +52,12 @@ public class ContentFiller {
         return instance;
     }
 
+    /**
+     * Adds all medicine forms to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addForms(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         MedicineFormService formService = provider.getMedicineFormService();
@@ -53,6 +70,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds all international names to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addInternationalNames(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         InternationalNameService internationalNameService = provider.getInternationalNameService();
@@ -65,6 +88,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds available for current user medicines data map to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addMedicinesData(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         MedicineService medicineService = provider.getMedicineService();
@@ -92,6 +121,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds all manufacturers to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addManufacturers(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         ManufacturerService manufacturerService = provider.getManufacturerService();
@@ -104,6 +139,13 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds current customers cart positions with checking result as data map to request.
+     * Check if quantity is bigger than available quantity and check prescription. Adds check info to positions in map.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addCartContent(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
@@ -124,6 +166,12 @@ public class ContentFiller {
     }
 
 
+    /**
+     * Adds current user to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addCurrentUser(HttpServletRequest request) throws CommandException {
         HttpSession session = request.getSession();
         long currentUserId = (long) session.getAttribute(CURRENT_USER_ID);
@@ -143,6 +191,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Updates current user balance in session.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void updateBalanceInSession(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         UserService userService = provider.getUserService();
@@ -158,6 +212,12 @@ public class ContentFiller {
 
     }
 
+    /**
+     * Adds current user prescriptions to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addPrescriptions(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = provider.getPrescriptionService();
@@ -189,6 +249,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds prescription renewal requests to request.
+     *
+     * @param httpServletRequest the http servlet request
+     * @throws CommandException the command exception
+     */
     public void addPrescriptionRenewalRequests(HttpServletRequest httpServletRequest) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = provider.getPrescriptionService();
@@ -207,6 +273,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds users except current user to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addUsersExceptCurrent(HttpServletRequest request) throws CommandException {
         try {
             HttpSession session = request.getSession();
@@ -221,6 +293,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds active customers to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addActiveCustomers(HttpServletRequest request) throws CommandException {
         try {
             ServiceProvider provider = ServiceProvider.getInstance();
@@ -233,6 +311,13 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds current pharmacist orders with state to request.
+     *
+     * @param request the request
+     * @param state   the state
+     * @throws CommandException the command exception
+     */
     public void addCurrentPharmacistOrdersWithState(HttpServletRequest request,
                                                     Order.State state) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
@@ -249,6 +334,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds all current users orders to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addCurrentUserOrders(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
@@ -265,6 +356,12 @@ public class ContentFiller {
         }
     }
 
+    /**
+     * Adds customer personal data to request.
+     *
+     * @param request  the request
+     * @param customer the customer
+     */
     public void addCustomerPersonalData(HttpServletRequest request, User customer) {
         request.setAttribute(PRESCRIPTION_CUSTOMER_ID, customer.getId());
         request.setAttribute(CUSTOMER_LASTNAME, customer.getLastname());
@@ -274,6 +371,13 @@ public class ContentFiller {
         request.setAttribute(CUSTOMER_BIRTHDAY_DATE, customer.getBirthdayDate());
     }
 
+    /**
+     * Adds order content to session.
+     *
+     * @param session the session
+     * @param orderId the order id
+     * @throws CommandException the command exception
+     */
     public void addOrderContentToSession(HttpSession session, long orderId) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
@@ -304,12 +408,24 @@ public class ContentFiller {
     }
 
 
+    /**
+     * Adds data from map to request.
+     *
+     * @param request the request
+     * @param data    the data
+     */
     public void addDataToRequest(HttpServletRequest request, Map<String, String> data) {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             request.setAttribute(entry.getKey(), entry.getValue());
         }
     }
 
+    /**
+     * Add new orders quantity to request.
+     *
+     * @param request the request
+     * @throws CommandException the command exception
+     */
     public void addNewOrdersQuantity(HttpServletRequest request) throws CommandException {
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();

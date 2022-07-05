@@ -26,6 +26,9 @@ import static com.epam.pharmacy.controller.ParameterName.MEDICINE_NAME;
 import static com.epam.pharmacy.controller.PropertyKey.EDIT_MEDICINE_NOT_EDITED;
 import static com.epam.pharmacy.controller.PropertyKey.EDIT_MEDICINE_SUCCESSFUL_EDITED;
 
+/**
+ * The type Edit medicine command.
+ */
 public class EditMedicineCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

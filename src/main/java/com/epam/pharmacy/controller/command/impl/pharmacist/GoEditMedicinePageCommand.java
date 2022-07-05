@@ -18,6 +18,9 @@ import java.util.Optional;
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_ID;
 
+/**
+ * The type Go edit medicine page command.
+ */
 public class GoEditMedicinePageCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

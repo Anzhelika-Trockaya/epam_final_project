@@ -16,6 +16,9 @@ import static com.epam.pharmacy.controller.PropertyKey.MANUFACTURERS_ADDED;
 import static com.epam.pharmacy.controller.PropertyKey.MANUFACTURERS_NOT_ADDED;
 
 
+/**
+ * The type Add manufacturer command.
+ */
 public class AddManufacturerCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

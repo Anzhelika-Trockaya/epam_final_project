@@ -14,8 +14,7 @@ import java.util.Set;
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ROLE;
 
 /**
- * The type Page filter class determines what pages
- * the client can use.
+ * The type Page filter class determines what pages the client can use.
  */
 @WebFilter(filterName = "PageFilter", urlPatterns = "/jsp/*")
 public class PageFilter implements Filter {

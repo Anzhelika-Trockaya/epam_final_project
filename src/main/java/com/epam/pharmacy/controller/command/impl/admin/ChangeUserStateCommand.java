@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import static com.epam.pharmacy.controller.AttributeName.USER_ID;
 import static com.epam.pharmacy.controller.AttributeName.USER_STATE;
 
+/**
+ * The type Change user state command.
+ */
 public class ChangeUserStateCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

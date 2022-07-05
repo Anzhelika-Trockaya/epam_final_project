@@ -23,6 +23,9 @@ import static com.epam.pharmacy.controller.ParameterName.MEDICINE_FORM_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_INTERNATIONAL_NAME_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_NAME;
 
+/**
+ * The type Add medicine command.
+ */
 public class AddMedicineCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

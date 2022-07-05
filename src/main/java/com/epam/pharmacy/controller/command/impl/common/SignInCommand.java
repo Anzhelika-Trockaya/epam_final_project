@@ -17,6 +17,9 @@ import java.util.Optional;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 
+/**
+ * The type Sign in command.
+ */
 public class SignInCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final char DELIMITER = ' ';

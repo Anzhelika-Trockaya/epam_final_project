@@ -18,6 +18,9 @@ import java.util.Optional;
 import static com.epam.pharmacy.controller.PropertyKey.FORMS_EDITED;
 import static com.epam.pharmacy.controller.PropertyKey.FORMS_NOT_EDITED;
 
+/**
+ * The type Edit medicine form command.
+ */
 public class EditMedicineFormCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

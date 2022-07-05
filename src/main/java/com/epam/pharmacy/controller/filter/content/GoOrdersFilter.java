@@ -15,6 +15,9 @@ import java.io.IOException;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ROLE;
 
+/**
+ * The type Go orders filter. Fills page orders.jsp.
+ */
 @WebFilter(filterName = "GoOrdersFilter", urlPatterns = "/jsp/common/orders.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoOrdersFilter implements Filter {

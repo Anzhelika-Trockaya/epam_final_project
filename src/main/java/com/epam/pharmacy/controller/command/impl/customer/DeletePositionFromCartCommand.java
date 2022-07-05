@@ -16,6 +16,9 @@ import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_ID;
 import static com.epam.pharmacy.controller.ParameterName.PRESCRIPTION_ID;
 
+/**
+ * The type Delete position from cart command.
+ */
 public class DeletePositionFromCartCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -16,6 +16,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.ParameterName.INTERNATIONAL_NAME_ID;
 
+/**
+ * The type Delete international name command.
+ */
 public class DeleteInternationalNameCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

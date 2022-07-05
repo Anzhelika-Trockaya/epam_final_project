@@ -13,6 +13,9 @@ import java.io.IOException;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
 
+/**
+ * The type Go prescriptions filter. Fills page prescriptions.jsp.
+ */
 @WebFilter(filterName = "GoPrescriptionsFilter", urlPatterns = "/jsp/doctor/prescriptions.jsp",
         dispatcherTypes = DispatcherType.REQUEST)
 public class GoPrescriptionsFilter implements Filter {

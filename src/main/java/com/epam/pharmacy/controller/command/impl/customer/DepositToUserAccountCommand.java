@@ -13,6 +13,9 @@ import org.apache.logging.log4j.Logger;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
 
+/**
+ * The type Deposit to user account command.
+ */
 public class DepositToUserAccountCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

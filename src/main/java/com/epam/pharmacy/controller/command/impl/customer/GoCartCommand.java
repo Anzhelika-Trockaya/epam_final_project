@@ -7,6 +7,9 @@ import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import jakarta.servlet.http.HttpServletRequest;
 
+/**
+ * The type Go cart command.
+ */
 public class GoCartCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {

@@ -29,6 +29,9 @@ import static com.epam.pharmacy.controller.ParameterName.USER_PHONE;
 import static com.epam.pharmacy.controller.ParameterName.USER_ROLE;
 import static com.epam.pharmacy.controller.ParameterName.USER_SEX;
 
+/**
+ * The type Register command.
+ */
 public class RegisterCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -15,6 +15,9 @@ import org.apache.logging.log4j.Logger;
 import static com.epam.pharmacy.controller.PropertyKey.FORMS_ADDED;
 import static com.epam.pharmacy.controller.PropertyKey.FORMS_NOT_ADDED;
 
+/**
+ * The type Add medicine form command.
+ */
 public class AddMedicineFormCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpSession;
 
 import java.util.Enumeration;
 
+/**
+ * The type Logout command.
+ */
 public class LogoutCommand implements Command {
     @Override
     public Router execute(HttpServletRequest request) {

@@ -11,6 +11,9 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The type Request renewal prescription command.
+ */
 public class RequestRenewalPrescriptionCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

@@ -14,6 +14,9 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Optional;
 
+/**
+ * The type Go add prescription page command.
+ */
 public class GoAddPrescriptionPageCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
 

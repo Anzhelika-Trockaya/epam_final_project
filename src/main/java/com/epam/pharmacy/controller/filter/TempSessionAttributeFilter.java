@@ -8,6 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Enumeration;
 
+/**
+ * The type Temp session attribute filter. Moves temp session attributes to request.
+ */
 @WebFilter(filterName = "TempSessionAttributeFilter", urlPatterns = "/jsp/*", dispatcherTypes = DispatcherType.REQUEST)
 public class TempSessionAttributeFilter implements Filter {
     private static final String TEMP_ATTR_PREFIX = "temp_";
