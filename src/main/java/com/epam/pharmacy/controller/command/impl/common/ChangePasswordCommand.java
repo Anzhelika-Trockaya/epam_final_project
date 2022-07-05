@@ -3,6 +3,7 @@ package com.epam.pharmacy.controller.command.impl.common;
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.ContentFiller;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.ServiceProvider;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
@@ -23,7 +23,7 @@ public class ChangePasswordCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Map<String, String> passwordData = createPasswordDataMap(request);
+        Map<String, String> passwordData = ParamsMapCreator.create(request, OLD_PASSWORD, NEW_PASSWORD, REPEAT_PASSWORD);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
         Router router = new Router(PagePath.USER_PAGE);
@@ -44,15 +44,5 @@ public class ChangePasswordCommand implements Command {
             throw new CommandException("Exception in the ChangePasswordCommand", e);
         }
         return router;
-    }
-
-    public Map<String, String> createPasswordDataMap(HttpServletRequest request) {
-        Map<String, String> data = new HashMap<>();
-        String[] paramNames = new String[]{OLD_PASSWORD, NEW_PASSWORD, REPEAT_PASSWORD};
-        for (String paramName : paramNames) {
-            String value = request.getParameter(paramName);
-            data.put(paramName, value);
-        }
-        return data;
     }
 }

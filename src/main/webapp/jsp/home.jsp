@@ -9,11 +9,11 @@
     <c:set var="current_page" value="jsp/home.jsp" scope="session"/>
 </head>
 <body>
-<div>
-    <br/>
+<div class="home_info">
+    <br>
     <p><b><fmt:message key="home.text_one"/> </b></p>
     <p>
-        &#10004;<fmt:message key="home.text_two"/>
+        <fmt:message key="home.text_two"/>
     </p>
     <p>
         &#10004;<fmt:message key="home.text_three"/>
@@ -27,7 +27,7 @@
     <p>
         &#10004;<fmt:message key="home.text_six"/>
     </p>
-    <br/>
+    <br>
     <p><b><fmt:message key="home.text_seven"/> </b></p>
     <p>
         &#10004;<fmt:message key="home.text_eight"/>
@@ -44,7 +44,7 @@
     <p>
         &#10004;<fmt:message key="home.text_twelve"/>
     </p>
-    <br/>
+    <br>
     <p><b><fmt:message key="home.text_thirteen"/> </b></p>
 </div>
 </body>

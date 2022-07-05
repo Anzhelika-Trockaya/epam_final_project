@@ -25,6 +25,8 @@ public interface MedicineService {
 
     Map<Long, Map<String, Object>> findByPrescription(Prescription prescription) throws ServiceException;
 
+    Map<Long, Map<String, Object>> findAllAvailable() throws ServiceException;
+
     Map<Long, Map<String, Object>> findAllAvailableForCustomer(long customerId) throws ServiceException;
 
     Map<Long, Map<String, Object>> findByParamsForCustomer(long customerId, HashMap<String, String> stringStringHashMap) throws ServiceException;

@@ -38,6 +38,11 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                     "WHERE ords.customer_id = ? AND ords.order_state = 'CREATED' GROUP BY ord.medicine_id" +
                     ") ord ON m.medicine_id = ord.medicine_id " +
                     "WHERE m.medicine_total_packages - IFNULL(ord.ords_sum, 0) > 0";
+    private static final String SQL_SELECT_WITH_POSITIVE_TOTAL_PACKAGES =
+            "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
+                    "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
+                    "medicine_dosage_unit, medicine_need_prescription, medicine_manufacturer_id, " +
+                    "medicine_image_path FROM medicines WHERE medicine_total_packages > 0";
     private static final String SQL_SELECT_ALL_MEDICINES =
             "SELECT medicine_id, medicine_name, medicine_international_name_id, medicine_price, " +
                     "medicine_total_packages, medicine_number_in_package, medicine_form_id, medicine_dosage, " +
@@ -151,6 +156,24 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
         } catch (SQLException e) {
             LOGGER.error("Find all medicines exception.", e);
             throw new DaoException("Find all medicines exception.", e);
+        }
+        return medicines;
+    }
+
+    @Override
+    public List<Medicine> findWithPositiveTotalPackages() throws DaoException {
+        List<Medicine> medicines = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(SQL_SELECT_WITH_POSITIVE_TOTAL_PACKAGES);
+             ResultSet resultSet = statement.executeQuery()) {
+            MedicineRowMapper mapper = MedicineRowMapper.getInstance();
+            Optional<Medicine> currentMedicineOptional;
+            while (resultSet.next()) {
+                currentMedicineOptional = mapper.mapRow(resultSet);
+                currentMedicineOptional.ifPresent(medicines::add);
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Find medicines with positive total packages exception.", e);
+            throw new DaoException("Find medicines with positive total packages exception.", e);
         }
         return medicines;
     }

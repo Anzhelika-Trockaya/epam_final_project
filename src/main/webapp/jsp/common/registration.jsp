@@ -58,7 +58,7 @@
             </c:if>
             <br>
             <label for="role">${label_role}</label>
-            <select id="role" name="role" size="1">
+            <select id="role" name="user_role" size="1">
                 <option id="default_role" selected value="">-</option>
                 <option
                         <c:if test="${user_role eq 'ADMIN'}">selected</c:if> value="ADMIN">${title_admin}
@@ -79,31 +79,31 @@
             <c:if test="${not empty incorrect_role}">
                 <p class="incorrect_data_msg"><fmt:message key="${incorrect_role}"/></p>
             </c:if>
-            <br>
         </c:if>
+        <br>
         <label for="lastname">${label_lastname}</label>
-        <input type="text" id="lastname" name="lastname" value="${user_lastname}"/>
+        <input type="text" id="lastname" name="user_lastname" value="${user_lastname}"/>
         <p id="incorrect_lastname_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_lastname}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_lastname}"/></p>
         </c:if>
         <br>
         <label for="name">${label_name}</label>
-        <input type="text" id="name" name="name" value="${user_name}"/>
+        <input type="text" id="name" name="user_name" value="${user_name}"/>
         <p id="incorrect_name_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_name}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_name}"/></p>
         </c:if>
         <br>
         <label for="patronymic">${label_patronymic}</label>
-        <input type="text" id="patronymic" name="patronymic" value="${user_patronymic}"/>
+        <input type="text" id="patronymic" name="user_patronymic" value="${user_patronymic}"/>
         <p id="incorrect_patronymic_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_patronymic}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_patronymic}"/></p>
         </c:if>
         <br>
         <label for="sex">${label_sex}</label>
-        <select id="sex" name="sex" size="1">
+        <select id="sex" name="user_sex" size="1">
             <option id="default" selected value="">-</option>
             <option
                     <c:if test="${user_sex eq 'FEMALE'}">selected</c:if> value="FEMALE">${title_female}</option>
@@ -116,35 +116,35 @@
         </c:if>
         <br>
         <label for="birthday_date">${label_birthday_date}</label>
-        <input type="date" id="birthday_date" name="birthday_date" value="${user_birthday_date}">
+        <input type="date" id="birthday_date" name="user_birthday_date" value="${user_birthday_date}">
         <p id="incorrect_birthday_date_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_birthday_date}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_birthday_date}"/></p>
         </c:if>
         <br>
         <label for="phone">${label_phone}</label>
-        <input type="text" id="phone" name="phone" value="${not empty user_phone? user_phone:"+375"}">
+        <input type="text" id="phone" name="user_phone" value="${not empty user_phone? user_phone:"+375"}">
         <p id="incorrect_phone_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_phone}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_phone}"/></p>
         </c:if>
         <br>
         <label for="address">${label_address}</label>
-        <textarea id="address" name="address" style="width: 500px; height: 100px">${user_address}</textarea>
+        <textarea id="address" name="user_address" style="width: 500px; height: 100px">${user_address}</textarea>
         <p id="incorrect_address_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_address}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_address}"/></p>
         </c:if>
         <br>
         <label for="login">${label_login}</label>
-        <input type="text" id="login" name="login" value="${user_login}"/>
+        <input type="text" id="login" name="user_login" value="${user_login}"/>
         <p id="incorrect_login_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_login}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_login}"/></p>
         </c:if>
         <br>
         <label for="password">${label_password}</label>
-        <input type="password" id="password" name="password" value="${user_password}"/>
+        <input type="password" id="password" name="user_password" value="${user_password}"/>
         <p id="incorrect_password_msg" class="incorrect_data_msg"></p>
         <c:if test="${not empty incorrect_password}">
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_password}"/></p>
@@ -170,18 +170,18 @@
         const namePattern = /^[A-Za-zА-Яа-яёЁІіЎў][A-Za-zА-Яа-яёЁІіЎў-]{0,44}$/;
         const phonePattern = /^\+375(33|29|25|44)\d{7}$/;
         const addressPattern = /^[a-zA-Z0-9а-яА-ЯёЁўІіЎ\s/,_:;.'"-]+$/;
-        const loginInput = document.forms["registration_form"]["login"];
-        const passwordInput = document.forms["registration_form"]["password"];
-        const lastnameInput = document.forms["registration_form"]["lastname"];
-        const nameInput = document.forms["registration_form"]["name"];
-        const patronymicInput = document.forms["registration_form"]["patronymic"];
-        const sexInput = document.forms["registration_form"]["sex"];
-        const phoneInput = document.forms["registration_form"]["phone"];
-        const addressInput = document.forms["registration_form"]["address"];
-        const birthdayDateInput = document.forms["registration_form"]["birthday_date"];
+        const loginInput = document.forms["registration_form"]["user_login"];
+        const passwordInput = document.forms["registration_form"]["user_password"];
+        const lastnameInput = document.forms["registration_form"]["user_lastname"];
+        const nameInput = document.forms["registration_form"]["user_name"];
+        const patronymicInput = document.forms["registration_form"]["user_patronymic"];
+        const sexInput = document.forms["registration_form"]["user_sex"];
+        const phoneInput = document.forms["registration_form"]["user_phone"];
+        const addressInput = document.forms["registration_form"]["user_address"];
+        const birthdayDateInput = document.forms["registration_form"]["user_birthday_date"];
         let result = true;
         if (${current_user_role eq 'ADMIN'}) {
-            const roleInput = document.forms["registration_form"]["role"];
+            const roleInput = document.forms["registration_form"]["user_role"];
             if (!validateRequired(roleInput, "incorrect_role_msg", "${msg_text_required}")) {
                 result = false;
             }

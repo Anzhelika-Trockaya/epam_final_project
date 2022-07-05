@@ -1,12 +1,11 @@
 package com.epam.pharmacy.model.mapper;
 
-import com.epam.pharmacy.exception.DaoException;
-import com.epam.pharmacy.model.entity.CustomEntity;
+import com.epam.pharmacy.model.entity.AbstractEntity;
 
 import java.sql.ResultSet;
 import java.util.Optional;
 
-public interface CustomRowMapper<T extends CustomEntity> {
+public interface CustomRowMapper<T extends AbstractEntity> {
     /**
      * Map row optional.
      *

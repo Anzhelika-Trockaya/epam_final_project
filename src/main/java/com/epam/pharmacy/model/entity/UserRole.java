@@ -170,6 +170,7 @@ public enum UserRole implements Serializable {
             HOME_PAGE,
             SIGN_IN_PAGE,
             REGISTRATION_PAGE,
+            MEDICINES_PAGE,
             ERROR_403_PAGE,
             ERROR_404_PAGE,
             ERROR_500_PAGE)),
@@ -177,6 +178,7 @@ public enum UserRole implements Serializable {
                     CHANGE_LANGUAGE.name(),
                     DEFAULT.name(),
                     REGISTER.name(),
+                    SEARCH_MEDICINES.name(),
                     SIGN_IN.name()
             )));
     private final Set<String> availablePages;
@@ -188,7 +190,7 @@ public enum UserRole implements Serializable {
     }
 
     /**
-     * Get available pages set.
+     * Gets available pages set.
      *
      * @return the set
      */
@@ -197,7 +199,7 @@ public enum UserRole implements Serializable {
     }
 
     /**
-     * Get available commands set.
+     * Gets available commands set.
      *
      * @return the set
      */

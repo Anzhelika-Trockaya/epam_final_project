@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean changeState(String idString, String stateString) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        if (!validator.isCorrectState(stateString)) {
+        if (!validator.isCorrectUserState(stateString)) {
             return false;
         }
         UserDaoImpl userDao = new UserDaoImpl();

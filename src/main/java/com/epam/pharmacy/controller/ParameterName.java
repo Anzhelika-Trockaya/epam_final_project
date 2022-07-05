@@ -4,14 +4,8 @@ public final class ParameterName {
     public static final String LOGIN = "login";
     public static final String PASSWORD = "password";
     public static final String REPEAT_PASSWORD = "repeat_password";
-    public static final String LASTNAME = "lastname";
     public static final String NAME = "name";
-    public static final String PATRONYMIC = "patronymic";
     public static final String BIRTHDAY_DATE = "birthday_date";
-    public static final String SEX = "sex";
-    public static final String ROLE = "role";
-    public static final String PHONE = "phone";
-    public static final String ADDRESS = "address";
     public static final String LANGUAGE = "language";
     public static final String COMMAND = "command";
     public static final String INTERNATIONAL_NAME = "international_name";
@@ -27,7 +21,7 @@ public final class ParameterName {
     public static final String ORDER_MEDICINE_ID = "order_medicine_id";
     public static final String ORDER_MEDICINE_NUMBER = "order_medicine_number";
     public static final String IMAGE_PATH = "image_path";
-    public static final String INTERNATIONAL_NAME_ID="international_name_id";
+    public static final String INTERNATIONAL_NAME_ID = "international_name_id";
     public static final String FORM_UNIT = "form_unit";
     public static final String FORM_ID = "form_id";
     public static final String COUNTRY = "country";
@@ -55,6 +49,8 @@ public final class ParameterName {
     public static final String CUSTOMER_SEX = "customer_sex";
     public static final String SHOW_RENEWAL_REQUESTS = "show_renewal_requests";
     public static final String NEED_RENEWAL = "need_renewal";
+    public static final String USER_LOGIN = "user_login";
+    public static final String USER_PASSWORD = "user_password";
     public static final String USER_ROLE = "user_role";
     public static final String USER_LASTNAME = "user_lastname";
     public static final String USER_NAME = "user_name";
@@ -64,7 +60,6 @@ public final class ParameterName {
     public static final String USER_PHONE = "user_phone";
     public static final String USER_ADDRESS = "user_address";
     public static final String USER_STATE = "user_state";
-    public static final String STATE = "state";
     public static final String MEDICINE = "medicine";
     public static final String CHANGE_TOTAL_VALUE = "change_total_value";
     public static final String MEDICINE_NAME = "medicine_name";
@@ -78,14 +73,13 @@ public final class ParameterName {
     public static final String VALUE = "value";
     public static final String STATE_TO_SHOW = "state_to_show";
     public static final String POSITION = "position";
-    public static final String TEMP_ORDER="temp_order";
+    public static final String TEMP_ORDER = "temp_order";
     public static final String ORDER_ID = "order_id";
     public static final String USER_ID = "user_id";
     public static final String OLD_PASSWORD = "old_password";
     public static final String NEW_PASSWORD = "new_password";
     public static final String INCORRECT_OLD_PASSWORD = "incorrect_old_password";
     public static final String INCORRECT_NEW_PASSWORD = "incorrect_new_password";
-
 
     private ParameterName() {
     }

@@ -50,13 +50,13 @@
     </c:if>
     <form action="${context_path}/controller">
         <input type="hidden" name="command" value="search_user"/>
-        <input type="text" name="lastname" placeholder="${lastname_title}" value="${user_lastname}"/>
-        <input type="text" name="name" placeholder="${name_title}" value="${user_name}"/>
-        <input type="text" name="patronymic" placeholder="${patronymic_title}" value="${user_patronymic}"/>
-        <input type="date" name="birthday_date" placeholder="${birthday_title}" value="${user_birthday_date}"/>
+        <input type="text" name="user_lastname" placeholder="${lastname_title}" value="${user_lastname}"/>
+        <input type="text" name="user_name" placeholder="${name_title}" value="${user_name}"/>
+        <input type="text" name="user_patronymic" placeholder="${patronymic_title}" value="${user_patronymic}"/>
+        <input type="date" name="user_birthday_date" placeholder="${birthday_title}" value="${user_birthday_date}"/>
         <br><br>
         <label for="role">${role_title}</label>
-        <select id="role" name="role" size="1">
+        <select id="role" name="user_role" size="1">
             <option id="default_role" selected value="">-</option>
             <option
                     <c:if test="${user_role eq 'ADMIN'}">selected</c:if> value="ADMIN">${title_admin}
@@ -65,16 +65,14 @@
                     <c:if test="${user_role eq 'DOCTOR'}">selected</c:if> value="DOCTOR">${title_doctor}
             </option>
             <option
-                    <c:if test="${user_role eq 'PHARMACIST'}">selected</c:if>
-                    value="PHARMACIST">${title_pharmacist}
+                    <c:if test="${user_role eq 'PHARMACIST'}">selected</c:if> value="PHARMACIST">${title_pharmacist}
             </option>
             <option
-                    <c:if test="${user_role eq 'CUSTOMER'}">selected</c:if>
-                    value="CUSTOMER">${title_customer}
+                    <c:if test="${user_role eq 'CUSTOMER'}">selected</c:if> value="CUSTOMER">${title_customer}
             </option>
         </select>
         <label for="state">${state_title}</label>
-        <select id="state" name="state" size="1">
+        <select id="state" name="user_state" size="1">
             <option id="default_state" selected value="">-</option>
             <option
                     <c:if test="${user_state eq 'ACTIVE'}">selected</c:if> value="ACTIVE">${active_title}

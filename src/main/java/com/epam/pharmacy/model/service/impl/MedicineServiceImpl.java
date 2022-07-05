@@ -63,9 +63,9 @@ public class MedicineServiceImpl implements MedicineService {
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(medicineDao, internationalNameDao, manufacturerDao, formDao);
             Optional<Medicine> medicineOptional = medicineDao.findById(id);
-            if (!medicineOptional.isPresent()){
-                LOGGER.warn("Exception medicine with id=" + id+" not found");
-                throw new ServiceException("Exception medicine with id=" + id+" not found");
+            if (!medicineOptional.isPresent()) {
+                LOGGER.warn("Exception medicine with id=" + id + " not found");
+                throw new ServiceException("Exception medicine with id=" + id + " not found");
             }
             return buildMedicineDataMap(medicineOptional.get(), internationalNameDao, manufacturerDao, formDao);
         } catch (DaoException e) {
@@ -87,6 +87,22 @@ public class MedicineServiceImpl implements MedicineService {
         } catch (DaoException e) {
             LOGGER.error("Exception when find all medicines.", e);
             throw new ServiceException("Exception when find all medicines.", e);
+        }
+    }
+
+    @Override
+    public Map<Long, Map<String, Object>> findAllAvailable() throws ServiceException {
+        MedicineDaoImpl medicineDao = new MedicineDaoImpl();
+        InternationalMedicineNameDaoImpl internationalNameDao = new InternationalMedicineNameDaoImpl();
+        ManufacturerDaoImpl manufacturerDao = new ManufacturerDaoImpl();
+        MedicineFormDaoImpl formDao = new MedicineFormDaoImpl();
+        try (EntityTransaction transaction = new EntityTransaction()) {
+            transaction.beginWithAutoCommit(medicineDao, internationalNameDao, manufacturerDao, formDao);
+            List<Medicine> medicines = medicineDao.findWithPositiveTotalPackages();
+            return buildMedicinesDataMap(medicines, internationalNameDao, manufacturerDao, formDao);
+        } catch (DaoException e) {
+            LOGGER.error("Exception when find all available medicines.", e);
+            throw new ServiceException("Exception when find all available medicines.", e);
         }
     }
 
@@ -235,7 +251,7 @@ public class MedicineServiceImpl implements MedicineService {
         Map<Long, Map<String, Object>> resultMap = new HashMap<>();
         Map<String, Object> currentMedicineData;
         for (Medicine medicine : medicines) {
-            currentMedicineData=buildMedicineDataMap(medicine, internationalNameDao, manufacturerDao, formDao);
+            currentMedicineData = buildMedicineDataMap(medicine, internationalNameDao, manufacturerDao, formDao);
             resultMap.put(medicine.getId(), currentMedicineData);
         }
         return resultMap;
@@ -245,7 +261,7 @@ public class MedicineServiceImpl implements MedicineService {
                                                      InternationalMedicineNameDaoImpl internationalNameDao,
                                                      ManufacturerDaoImpl manufacturerDao,
                                                      MedicineFormDaoImpl formDao) throws DaoException, ServiceException {
-        Map<String, Object> medicineData=new HashMap<>();
+        Map<String, Object> medicineData = new HashMap<>();
         Optional<Manufacturer> manufacturerOptional = manufacturerDao.findById(medicine.getManufacturerId());
         Optional<MedicineForm> formOptional = formDao.findById(medicine.getFormId());
         Optional<InternationalMedicineName> internationalNameOptional =

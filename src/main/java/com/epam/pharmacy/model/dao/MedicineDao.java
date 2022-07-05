@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface MedicineDao {
 
+    List<Medicine> findWithPositiveTotalPackages() throws DaoException;
+
     List<Medicine> findAvailableForCustomer(long customerId) throws DaoException;
 
     List<Medicine> findByParams(Map<String, String> paramsMap) throws DaoException;

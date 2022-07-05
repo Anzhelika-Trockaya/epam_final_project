@@ -2,6 +2,9 @@ package com.epam.pharmacy.validator.impl;
 
 import com.epam.pharmacy.validator.FileValidator;
 
+/**
+ * The type FileValidatorImpl.
+ */
 public class FileValidatorImpl implements FileValidator {
     private static final String CONTENT_BMP = "image/bmp";
     private static final String CONTENT_PNG = "image/png";
@@ -16,6 +19,11 @@ public class FileValidatorImpl implements FileValidator {
     private FileValidatorImpl() {
     }
 
+    /**
+     * Get instance validator.
+     *
+     * @return the validator
+     */
     public static FileValidatorImpl getInstance() {
         if (instance == null) {
             instance = new FileValidatorImpl();

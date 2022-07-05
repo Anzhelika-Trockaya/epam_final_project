@@ -13,7 +13,9 @@ import static com.epam.pharmacy.controller.ParameterName.MEDICINE_NAME;
 import static com.epam.pharmacy.controller.ParameterName.USER_ADDRESS;
 import static com.epam.pharmacy.controller.ParameterName.USER_BIRTHDAY_DATE;
 import static com.epam.pharmacy.controller.ParameterName.USER_LASTNAME;
+import static com.epam.pharmacy.controller.ParameterName.USER_LOGIN;
 import static com.epam.pharmacy.controller.ParameterName.USER_NAME;
+import static com.epam.pharmacy.controller.ParameterName.USER_PASSWORD;
 import static com.epam.pharmacy.controller.ParameterName.USER_PATRONYMIC;
 import static com.epam.pharmacy.controller.ParameterName.USER_PHONE;
 import static com.epam.pharmacy.controller.ParameterName.USER_ROLE;
@@ -23,6 +25,9 @@ import static com.epam.pharmacy.controller.PropertyKey.*;
 import java.time.LocalDate;
 import java.util.Map;
 
+/**
+ * The type DataValidatorImpl.
+ */
 public class DataValidatorImpl implements DataValidator {
     private static DataValidatorImpl instance;
     private static final String ID_REGEX = "[1-9]\\d{0,18}";
@@ -51,6 +56,11 @@ public class DataValidatorImpl implements DataValidator {
     private DataValidatorImpl() {
     }
 
+    /**
+     * Get instance validator.
+     *
+     * @return the validator
+     */
     public static DataValidatorImpl getInstance() {
         if (instance == null) {
             instance = new DataValidatorImpl();
@@ -69,7 +79,7 @@ public class DataValidatorImpl implements DataValidator {
     }
 
     @Override
-    public boolean isCorrectName(String name) {
+    public boolean isCorrectUserName(String name) {
         return name != null && name.matches(USER_NAME_REGEX);
     }
 
@@ -156,15 +166,15 @@ public class DataValidatorImpl implements DataValidator {
         String sex = userData.get(USER_SEX);
         String phone = userData.get(USER_PHONE);
         String address = userData.get(USER_ADDRESS);
-        if (!isCorrectName(lastname)) {
+        if (!isCorrectUserName(lastname)) {
             result = false;
             userData.put(INCORRECT_LASTNAME, REGISTRATION_INCORRECT_LASTNAME);
         }
-        if (!isCorrectName(name)) {
+        if (!isCorrectUserName(name)) {
             result = false;
             userData.put(INCORRECT_NAME, REGISTRATION_INCORRECT_NAME);
         }
-        if (!isCorrectName(patronymic)) {
+        if (!isCorrectUserName(patronymic)) {
             result = false;
             userData.put(INCORRECT_PATRONYMIC, REGISTRATION_INCORRECT_PATRONYMIC);
         }
@@ -194,9 +204,9 @@ public class DataValidatorImpl implements DataValidator {
         String patronymic = paramsMap.get(USER_PATRONYMIC);
         String birthdayDate = paramsMap.get(USER_BIRTHDAY_DATE);
         return (!paramsMap.isEmpty()) &&
-                (lastname.isEmpty() || isCorrectName(lastname)) &&
-                (name.isEmpty() || isCorrectName(name)) &&
-                (patronymic.isEmpty() || isCorrectName(patronymic)) &&
+                (lastname.isEmpty() || isCorrectUserName(lastname)) &&
+                (name.isEmpty() || isCorrectUserName(name)) &&
+                (patronymic.isEmpty() || isCorrectUserName(patronymic)) &&
                 (birthdayDate.isEmpty() || isCorrectBirthdayDate(birthdayDate));
     }
 
@@ -222,7 +232,7 @@ public class DataValidatorImpl implements DataValidator {
     }
 
     @Override
-    public boolean isCorrectState(String state) {
+    public boolean isCorrectUserState(String state) {
         return state != null && state.matches(USER_STATE_REGEX);
     }
 
@@ -297,15 +307,15 @@ public class DataValidatorImpl implements DataValidator {
         String oldPassword = passwordData.get(OLD_PASSWORD);
         String newPassword = passwordData.get(NEW_PASSWORD);
         String passwordRepeat = passwordData.get(REPEAT_PASSWORD);
-        boolean result=true;
-        if(!isCorrectPassword(oldPassword)){
+        boolean result = true;
+        if (!isCorrectPassword(oldPassword)) {
             result = false;
             passwordData.put(ParameterName.INCORRECT_OLD_PASSWORD, ParameterName.INCORRECT_OLD_PASSWORD);
         }
-        if(!isCorrectPassword(newPassword)){
+        if (!isCorrectPassword(newPassword)) {
             result = false;
             passwordData.put(ParameterName.INCORRECT_NEW_PASSWORD, ParameterName.INCORRECT_NEW_PASSWORD);
-        }else {
+        } else {
             if (!newPassword.equals(passwordRepeat)) {
                 result = false;
                 passwordData.put(INCORRECT_REPEAT_PASSWORD, INCORRECT_REPEAT_PASSWORD);

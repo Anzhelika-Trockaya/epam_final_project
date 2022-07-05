@@ -3,6 +3,7 @@ package com.epam.pharmacy.controller.command.impl.pharmacist;
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.ContentFiller;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.MedicineService;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
@@ -28,7 +28,10 @@ public class AddMedicineCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Map<String, String> medicineData = createMedicineDataMap(request);
+        Map<String, String> medicineData = ParamsMapCreator.create(request, MEDICINE_ID, MEDICINE_NAME,
+                MEDICINE_INTERNATIONAL_NAME_ID, MEDICINE_MANUFACTURER_ID, MEDICINE_FORM_ID, MEDICINE_DOSAGE,
+                MEDICINE_DOSAGE_UNIT, MEDICINE_NEED_PRESCRIPTION, MEDICINE_NUMBER_IN_PACKAGE, MEDICINE_TOTAL_PACKAGES,
+                MEDICINE_PRICE);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         MedicineService medicineService = serviceProvider.getMedicineService();
         Router router;
@@ -54,32 +57,5 @@ public class AddMedicineCommand implements Command {
             throw new CommandException("Exception in the AddMedicineCommand", e);
         }
         return router;
-    }
-
-    public Map<String, String> createMedicineDataMap(HttpServletRequest request) {
-        Map<String, String> medicineData = new HashMap<>();
-        String id = request.getParameter(MEDICINE_ID);
-        medicineData.put(MEDICINE_ID, id);
-        String name = request.getParameter(NAME);
-        medicineData.put(MEDICINE_NAME, name);
-        String internationalNameId = request.getParameter(INTERNATIONAL_NAME);
-        medicineData.put(MEDICINE_INTERNATIONAL_NAME_ID, internationalNameId);
-        String manufacturerId = request.getParameter(MANUFACTURER);
-        medicineData.put(MEDICINE_MANUFACTURER_ID, manufacturerId);
-        String formId = request.getParameter(FORM);
-        medicineData.put(MEDICINE_FORM_ID, formId);
-        String dosage = request.getParameter(DOSAGE);
-        medicineData.put(MEDICINE_DOSAGE, dosage);
-        String dosageUnit = request.getParameter(DOSAGE_UNIT);
-        medicineData.put(MEDICINE_DOSAGE_UNIT, dosageUnit);
-        String needPrescription = request.getParameter(NEED_PRESCRIPTION);
-        medicineData.put(MEDICINE_NEED_PRESCRIPTION, needPrescription);
-        String numberInPackage = request.getParameter(NUMBER_IN_PACKAGE);
-        medicineData.put(MEDICINE_NUMBER_IN_PACKAGE, numberInPackage);
-        String totalPackages = request.getParameter(TOTAL_PACKAGES);
-        medicineData.put(MEDICINE_TOTAL_PACKAGES, totalPackages);
-        String price = request.getParameter(PRICE);
-        medicineData.put(MEDICINE_PRICE, price);
-        return medicineData;
     }
 }

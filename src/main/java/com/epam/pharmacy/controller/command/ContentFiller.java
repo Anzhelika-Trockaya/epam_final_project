@@ -71,11 +71,18 @@ public class ContentFiller {
         UserRole currentUserRole = (UserRole) session.getAttribute(CURRENT_USER_ROLE);
         try {
             Map<Long, Map<String, Object>> medicinesMap;
-            if (UserRole.CUSTOMER != currentUserRole) {
-                medicinesMap = medicineService.findAll();
-            } else {
-                long customerId = (long) session.getAttribute(CURRENT_USER_ID);
-                medicinesMap = medicineService.findAllAvailableForCustomer(customerId);
+            switch (currentUserRole) {
+                case CUSTOMER:
+                    long customerId = (long) session.getAttribute(CURRENT_USER_ID);
+                    medicinesMap = medicineService.findAllAvailableForCustomer(customerId);
+                    break;
+                case PHARMACIST:
+                case ADMIN:
+                    medicinesMap = medicineService.findAll();
+                    break;
+                default:
+                    medicinesMap = medicineService.findAllAvailable();
+                    break;
             }
             request.setAttribute(MEDICINES_DATA_MAP, medicinesMap);
         } catch (ServiceException e) {

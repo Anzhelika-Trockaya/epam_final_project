@@ -3,6 +3,7 @@ package com.epam.pharmacy.controller.command.impl.common;
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.ContentFiller;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.User;
@@ -13,7 +14,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -31,7 +31,8 @@ public class EditUserDataCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Map<String, String> userData = createUserDataMap(request);
+        Map<String, String> userData = ParamsMapCreator.create(request, USER_NAME, USER_LASTNAME,
+                USER_PATRONYMIC, USER_BIRTHDAY_DATE, USER_SEX, USER_PHONE, USER_ADDRESS);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
         Router router = new Router(PagePath.USER_PAGE);
@@ -55,16 +56,5 @@ public class EditUserDataCommand implements Command {
             throw new CommandException("Exception in the EditUserDataCommand", e);
         }
         return router;
-    }
-
-    public Map<String, String> createUserDataMap(HttpServletRequest request) {
-        Map<String, String> data = new HashMap<>();
-        String[] paramNames = new String[]{USER_NAME, USER_LASTNAME,
-                USER_PATRONYMIC, USER_BIRTHDAY_DATE, USER_SEX, USER_PHONE, USER_ADDRESS};
-        for (String paramName : paramNames) {
-            String value = request.getParameter(paramName);
-            data.put(paramName, value);
-        }
-        return data;
     }
 }

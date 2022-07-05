@@ -3,6 +3,7 @@ package com.epam.pharmacy.controller.command.impl.admin;
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.ContentFiller;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.User;
@@ -19,7 +20,12 @@ import java.util.List;
 import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.*;
-import static com.epam.pharmacy.controller.ParameterName.*;
+import static com.epam.pharmacy.controller.ParameterName.USER_BIRTHDAY_DATE;
+import static com.epam.pharmacy.controller.ParameterName.USER_LASTNAME;
+import static com.epam.pharmacy.controller.ParameterName.USER_NAME;
+import static com.epam.pharmacy.controller.ParameterName.USER_PATRONYMIC;
+import static com.epam.pharmacy.controller.ParameterName.USER_ROLE;
+import static com.epam.pharmacy.controller.ParameterName.USER_STATE;
 
 public class SearchUserCommand implements Command {
     private static final Logger LOGGER = LogManager.getLogger();
@@ -28,7 +34,8 @@ public class SearchUserCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         UserService userService = serviceProvider.getUserService();
-        Map<String, String> paramsMap = createSearchParamsMap(request);
+        Map<String, String> paramsMap = ParamsMapCreator.create(request, USER_ROLE, USER_NAME, USER_LASTNAME,
+                USER_PATRONYMIC, USER_BIRTHDAY_DATE, USER_STATE);
         HttpSession session = request.getSession();
         Router router;
         String listAttributeName;
@@ -52,22 +59,5 @@ public class SearchUserCommand implements Command {
             LOGGER.error("Exception in the SearchUserCommand", e);
             throw new CommandException("Exception in the SearchUserCommand", e);
         }
-    }
-
-    private Map<String, String> createSearchParamsMap(HttpServletRequest request) {
-        Map<String, String> params = new HashMap<>();
-        String lastname = request.getParameter(LASTNAME).trim();
-        params.put(ParameterName.USER_LASTNAME, lastname);
-        String name = request.getParameter(NAME).trim();
-        params.put(ParameterName.USER_NAME, name);
-        String patronymic = request.getParameter(PATRONYMIC).trim();
-        params.put(ParameterName.USER_PATRONYMIC, patronymic);
-        String birthdayDate = request.getParameter(BIRTHDAY_DATE);
-        params.put(ParameterName.USER_BIRTHDAY_DATE, birthdayDate);
-        String role = request.getParameter(ROLE);
-        params.put(ParameterName.USER_ROLE, role);
-        String state = request.getParameter(ParameterName.STATE);
-        params.put(ParameterName.USER_STATE, state);
-        return params;
     }
 }

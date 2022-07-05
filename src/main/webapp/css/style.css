@@ -187,3 +187,6 @@ tr:nth-child(even) {
     padding-left: 10px;
     padding-right: 10px;
 }
+.home_info p{
+    text-align: center;
+}

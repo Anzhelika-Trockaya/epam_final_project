@@ -10,6 +10,7 @@ import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.UserRole;
 import com.epam.pharmacy.model.service.MedicineService;
 import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -32,7 +33,7 @@ public class SearchMedicinesCommand implements Command {
     public Router execute(HttpServletRequest request) throws CommandException {
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         MedicineService medicineService = serviceProvider.getMedicineService();
-        Map<String, String> paramsMap = createSearchParamsMap(request, MEDICINE_NAME,
+        Map<String, String> paramsMap = ParamsMapCreator.create(request, MEDICINE_NAME,
                 MEDICINE_INTERNATIONAL_NAME_ID, MEDICINE_FORM_ID, MEDICINE_DOSAGE, MEDICINE_DOSAGE_UNIT);
         Router router = new Router(PagePath.MEDICINES_PAGE);
         try {
@@ -56,15 +57,5 @@ public class SearchMedicinesCommand implements Command {
             LOGGER.error("Exception in the SearchMedicineCommand", e);
             throw new CommandException("Exception in the SearchMedicineCommand", e);
         }
-    }
-
-    private Map<String, String> createSearchParamsMap(HttpServletRequest request, String... paramNames) {
-        Map<String, String> params = new HashMap<>();
-        String currentParamValue;
-        for (String paramName : paramNames) {
-            currentParamValue = request.getParameter(paramName);
-            params.put(paramName, currentParamValue);
-        }
-        return params;
     }
 }

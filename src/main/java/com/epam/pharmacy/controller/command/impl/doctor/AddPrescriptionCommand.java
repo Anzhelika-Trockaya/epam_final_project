@@ -3,6 +3,7 @@ package com.epam.pharmacy.controller.command.impl.doctor;
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.controller.command.ContentFiller;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.PrescriptionService;
@@ -12,7 +13,6 @@ import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.epam.pharmacy.controller.AttributeName.CURRENT_USER_ID;
@@ -23,7 +23,10 @@ public class AddPrescriptionCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        Map<String, String> data = createPrescriptionDataMap(request);
+        Map<String, String> data = ParamsMapCreator.create(request, PRESCRIPTION_INTERNATIONAL_NAME_ID,
+                PRESCRIPTION_CUSTOMER_ID, PRESCRIPTION_QUANTITY, PRESCRIPTION_VALIDITY, PRESCRIPTION_UNIT,
+                PRESCRIPTION_DOSAGE, PRESCRIPTION_DOSAGE_UNIT, CUSTOMER_LASTNAME, CUSTOMER_NAME, CUSTOMER_PATRONYMIC,
+                CUSTOMER_BIRTHDAY_DATE, CUSTOMER_SEX);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         PrescriptionService prescriptionService = serviceProvider.getPrescriptionService();
         Router router;
@@ -47,18 +50,5 @@ public class AddPrescriptionCommand implements Command {
             throw new CommandException("Exception in the AddPrescriptionCommand", e);
         }
         return router;
-    }
-
-    public Map<String, String> createPrescriptionDataMap(HttpServletRequest request) {
-        Map<String, String> data = new HashMap<>();
-        String[] paramNames = new String[]{PRESCRIPTION_INTERNATIONAL_NAME_ID, PRESCRIPTION_CUSTOMER_ID,
-                PRESCRIPTION_QUANTITY, PRESCRIPTION_VALIDITY, PRESCRIPTION_UNIT, PRESCRIPTION_DOSAGE,
-                PRESCRIPTION_DOSAGE_UNIT, CUSTOMER_LASTNAME, CUSTOMER_NAME, CUSTOMER_PATRONYMIC, CUSTOMER_BIRTHDAY_DATE,
-                CUSTOMER_SEX};
-        for (String paramName : paramNames) {
-            String value = request.getParameter(paramName);
-            data.put(paramName, value);
-        }
-        return data;
     }
 }

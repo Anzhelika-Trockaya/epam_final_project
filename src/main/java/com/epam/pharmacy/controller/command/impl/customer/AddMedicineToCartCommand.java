@@ -2,6 +2,7 @@ package com.epam.pharmacy.controller.command.impl.customer;
 
 import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.ParamsMapCreator;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Medicine;
@@ -30,10 +31,10 @@ public class AddMedicineToCartCommand implements Command {
         HttpSession session = request.getSession();
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         String medicineId = request.getParameter(ORDER_MEDICINE_ID);
-        String quantity = request.getParameter(ORDER_MEDICINE_NUMBER);
         Router router = new Router(PagePath.MEDICINES_PAGE);
         try {
-            Map<String, String> positionParams = createParamsMap(medicineId, quantity);
+            Map<String, String> positionParams = ParamsMapCreator.create(request,
+                    ORDER_MEDICINE_ID, ORDER_MEDICINE_NUMBER);
             Optional<Medicine> medicineOptional = medicineService.findById(medicineId);
             if (!medicineOptional.isPresent()) {
                 LOGGER.warn("Medicine with id=" + medicineId + " not found");
@@ -48,17 +49,17 @@ public class AddMedicineToCartCommand implements Command {
                 if(isAdded){
                     router.setPage(PagePath.PRESCRIPTIONS_PAGE);
                     router.setTypeRedirect();
-                    session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
+                    session.setAttribute(TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
                 } else{
-                    request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, positionParams.get(FAILED_CHANGE_MESSAGE));
+                    request.setAttribute(FAILED_CHANGE_MESSAGE, positionParams.get(FAILED_CHANGE_MESSAGE));
                 }
             } else {
                 boolean isAdded = orderService.addToCartWithoutPrescription(customerId, positionParams);
                 if (isAdded) {
-                    session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
+                    session.setAttribute(TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MEDICINES_ADDED_TO_CART);
                     router.setTypeRedirect();
                 } else {
-                    request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_NOT_ADDED_TO_CART);
+                    request.setAttribute(FAILED_CHANGE_MESSAGE, PropertyKey.MEDICINES_NOT_ADDED_TO_CART);
                 }
             }
 
@@ -67,12 +68,5 @@ public class AddMedicineToCartCommand implements Command {
             throw new CommandException("Exception in the AddMedicineToCartCommand", e);
         }
         return router;
-    }
-
-    private Map<String, String> createParamsMap(String medicineId, String quantity) {
-        Map<String, String> paramsMap = new HashMap<>();
-        paramsMap.put(ParameterName.MEDICINE_ID, medicineId);
-        paramsMap.put(ParameterName.QUANTITY, quantity);
-        return paramsMap;
     }
 }
