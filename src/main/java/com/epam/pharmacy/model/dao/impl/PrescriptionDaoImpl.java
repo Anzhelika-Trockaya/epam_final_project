@@ -24,6 +24,9 @@ import static com.epam.pharmacy.model.dao.ColumnName.USER_LASTNAME;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_NAME;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_PATRONYMIC;
 
+/**
+ * The type Prescription dao.
+ */
 public class PrescriptionDaoImpl extends AbstractDao<Prescription> implements PrescriptionDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;

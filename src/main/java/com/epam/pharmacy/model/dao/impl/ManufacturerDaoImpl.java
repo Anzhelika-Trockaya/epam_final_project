@@ -15,6 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Manufacturer dao.
+ */
 public class ManufacturerDaoImpl extends AbstractDao<Manufacturer> implements ManufacturerDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;

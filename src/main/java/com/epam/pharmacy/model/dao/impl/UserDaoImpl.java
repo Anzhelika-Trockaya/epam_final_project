@@ -20,6 +20,9 @@ import static com.epam.pharmacy.controller.AttributeName.USER_PASSWORD;
 import static com.epam.pharmacy.controller.ParameterName.*;
 import static com.epam.pharmacy.model.dao.ColumnName.USER_STATE;
 
+/**
+ * The type User dao.
+ */
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
@@ -245,6 +248,13 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
+    /**
+     * Find by params list.
+     *
+     * @param paramsMap the params map
+     * @return the list
+     * @throws DaoException the dao exception
+     */
     public List<User> findByParams(Map<String, String> paramsMap) throws DaoException {
         try (PreparedStatement statement = connection.
                 prepareStatement(SQL_SELECT_USER_BY_LASTNAME_NAME_PATRONYMIC_BIRTHDAY_DATE_USER_ROLE_USER_STATE)) {

@@ -8,27 +8,30 @@ import org.apache.logging.log4j.Logger;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * The type Entity transaction.
+ */
 public class EntityTransaction implements AutoCloseable {
     private static final Logger LOGGER = LogManager.getLogger();
     private Connection connection;
 
+    /**
+     * Begin.
+     *
+     * @param dao the dao
+     * @throws DaoException the dao exception
+     */
     public void begin(AbstractDao dao) throws DaoException {
         initConnection(false);
         dao.setConnection(connection);
     }
 
-    public void beginWithAutoCommit(AbstractDao dao) throws DaoException {
-        initConnection(true);
-        dao.setConnection(connection);
-    }
-
-    public void beginWithAutoCommit(AbstractDao... daos) throws DaoException {
-        initConnection(true);
-        for (AbstractDao dao : daos) {
-            dao.setConnection(connection);
-        }
-    }
-
+    /**
+     * Begin.
+     *
+     * @param daos the daos
+     * @throws DaoException the dao exception
+     */
     public void begin(AbstractDao... daos) throws DaoException {
         initConnection(false);
         for (AbstractDao dao : daos) {
@@ -36,12 +39,35 @@ public class EntityTransaction implements AutoCloseable {
         }
     }
 
-    @Override
-    public void close() {
-        end();
+    /**
+     * Begin with auto commit.
+     *
+     * @param dao the dao
+     * @throws DaoException the dao exception
+     */
+    public void beginWithAutoCommit(AbstractDao dao) throws DaoException {
+        initConnection(true);
+        dao.setConnection(connection);
     }
 
-    public void end() {
+    /**
+     * Begin with auto commit.
+     *
+     * @param daos the daos
+     * @throws DaoException the dao exception
+     */
+    public void beginWithAutoCommit(AbstractDao... daos) throws DaoException {
+        initConnection(true);
+        for (AbstractDao dao : daos) {
+            dao.setConnection(connection);
+        }
+    }
+
+    /**
+     * Close. Ends transaction and release connections.
+     */
+    @Override
+    public void close() {
         if (connection != null) {
             try {
                 if (!connection.getAutoCommit()) {
@@ -57,6 +83,12 @@ public class EntityTransaction implements AutoCloseable {
         }
     }
 
+    /**
+     * Sets auto commit.
+     *
+     * @param value the value
+     * @throws DaoException the dao exception
+     */
     public void setAutoCommit(boolean value) throws DaoException {
         try {
             if (connection.getAutoCommit() != value) {
@@ -68,6 +100,11 @@ public class EntityTransaction implements AutoCloseable {
         }
     }
 
+    /**
+     * Commit.
+     *
+     * @throws DaoException the dao exception
+     */
     public void commit() throws DaoException {
         try {
             connection.commit();
@@ -77,6 +114,9 @@ public class EntityTransaction implements AutoCloseable {
         }
     }
 
+    /**
+     * Rollback.
+     */
     public void rollback() {
         try {
             connection.rollback();

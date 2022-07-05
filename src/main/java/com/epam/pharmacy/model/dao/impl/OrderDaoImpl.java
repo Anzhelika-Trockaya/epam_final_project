@@ -19,6 +19,9 @@ import java.util.*;
 
 import static com.epam.pharmacy.model.dao.ColumnName.*;
 
+/**
+ * The type Order dao.
+ */
 public class OrderDaoImpl extends AbstractDao<Order> implements OrderDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final String SQL_INSERT_NEW_ORDER =

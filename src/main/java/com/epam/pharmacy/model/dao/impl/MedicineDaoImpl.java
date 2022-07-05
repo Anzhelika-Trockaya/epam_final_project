@@ -17,6 +17,9 @@ import java.util.*;
 
 import static com.epam.pharmacy.model.dao.ColumnName.*;
 
+/**
+ * The type Medicine dao.
+ */
 public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
