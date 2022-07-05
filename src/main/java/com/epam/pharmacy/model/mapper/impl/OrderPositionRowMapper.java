@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.mapper.impl;
 
-import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.ColumnName;
 import com.epam.pharmacy.model.entity.OrderPosition;
 import com.epam.pharmacy.model.mapper.CustomRowMapper;
@@ -14,6 +13,9 @@ import java.util.Optional;
 
 import static com.epam.pharmacy.model.dao.ColumnName.*;
 
+/**
+ * The type Order position row mapper.
+ */
 public class OrderPositionRowMapper implements CustomRowMapper<OrderPosition> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static OrderPositionRowMapper instance;
@@ -21,6 +23,11 @@ public class OrderPositionRowMapper implements CustomRowMapper<OrderPosition> {
     private OrderPositionRowMapper() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static OrderPositionRowMapper getInstance() {
         if (instance == null) {
             instance = new OrderPositionRowMapper();

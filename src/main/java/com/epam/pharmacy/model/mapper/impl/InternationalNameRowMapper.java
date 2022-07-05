@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.mapper.impl;
 
-import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.InternationalMedicineName;
 import com.epam.pharmacy.model.mapper.CustomRowMapper;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +12,9 @@ import java.util.Optional;
 import static com.epam.pharmacy.model.dao.ColumnName.INTERNATIONAL_MEDICINE_NAME;
 import static com.epam.pharmacy.model.dao.ColumnName.INTERNATIONAL_MEDICINE_NAME_ID;
 
+/**
+ * The type International name row mapper.
+ */
 public class InternationalNameRowMapper implements CustomRowMapper<InternationalMedicineName> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static InternationalNameRowMapper instance;
@@ -20,6 +22,11 @@ public class InternationalNameRowMapper implements CustomRowMapper<International
     private InternationalNameRowMapper() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static InternationalNameRowMapper getInstance() {
         if (instance == null) {
             instance = new InternationalNameRowMapper();

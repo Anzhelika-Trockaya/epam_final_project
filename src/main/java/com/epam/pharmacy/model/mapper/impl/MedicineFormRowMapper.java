@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.mapper.impl;
 
-import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.FormUnit;
 import com.epam.pharmacy.model.entity.MedicineForm;
 import com.epam.pharmacy.model.mapper.CustomRowMapper;
@@ -15,6 +14,9 @@ import static com.epam.pharmacy.model.dao.ColumnName.FORM_ID;
 import static com.epam.pharmacy.model.dao.ColumnName.FORM_NAME;
 import static com.epam.pharmacy.model.dao.ColumnName.FORM_UNIT;
 
+/**
+ * The type Medicine form row mapper.
+ */
 public class MedicineFormRowMapper implements CustomRowMapper<MedicineForm> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static MedicineFormRowMapper instance;
@@ -22,6 +24,11 @@ public class MedicineFormRowMapper implements CustomRowMapper<MedicineForm> {
     private MedicineFormRowMapper() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static MedicineFormRowMapper getInstance() {
         if (instance == null) {
             instance = new MedicineFormRowMapper();
@@ -36,7 +43,7 @@ public class MedicineFormRowMapper implements CustomRowMapper<MedicineForm> {
             long id = resultSet.getLong(FORM_ID);
             String name = resultSet.getString(FORM_NAME);
             String unitString = resultSet.getString(FORM_UNIT);
-            FormUnit unit=FormUnit.valueOf(unitString);
+            FormUnit unit = FormUnit.valueOf(unitString);
             MedicineForm form = new MedicineForm(id, name, unit);
             optionalForm = Optional.of(form);
         } catch (SQLException e) {

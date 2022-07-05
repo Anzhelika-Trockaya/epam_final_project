@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.mapper.impl;
 
-import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.User;
 import com.epam.pharmacy.model.entity.UserRole;
 import com.epam.pharmacy.model.mapper.CustomRowMapper;
@@ -15,6 +14,9 @@ import java.util.Optional;
 
 import static com.epam.pharmacy.model.dao.ColumnName.*;
 
+/**
+ * The type User row mapper.
+ */
 public class UserRowMapper implements CustomRowMapper<User> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static UserRowMapper instance;
@@ -22,6 +24,11 @@ public class UserRowMapper implements CustomRowMapper<User> {
     private UserRowMapper() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static UserRowMapper getInstance() {
         if (instance == null) {
             instance = new UserRowMapper();

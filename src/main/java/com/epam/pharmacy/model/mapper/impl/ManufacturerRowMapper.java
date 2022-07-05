@@ -13,6 +13,9 @@ import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_ID;
 import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_NAME;
 import static com.epam.pharmacy.model.dao.ColumnName.MANUFACTURER_COUNTRY;
 
+/**
+ * The type Manufacturer row mapper.
+ */
 public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static ManufacturerRowMapper instance;
@@ -20,6 +23,11 @@ public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
     private ManufacturerRowMapper() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static ManufacturerRowMapper getInstance() {
         if (instance == null) {
             instance = new ManufacturerRowMapper();
@@ -34,7 +42,7 @@ public class ManufacturerRowMapper implements CustomRowMapper<Manufacturer> {
             long id = resultSet.getLong(MANUFACTURER_ID);
             String name = resultSet.getString(MANUFACTURER_NAME);
             String country = resultSet.getString(MANUFACTURER_COUNTRY);
-            Manufacturer manufacturer=new Manufacturer(id, name, country);
+            Manufacturer manufacturer = new Manufacturer(id, name, country);
             optionalManufacturer = Optional.of(manufacturer);
         } catch (SQLException e) {
             LOGGER.warn("Exception when map manufacturer row. ", e);

@@ -1,6 +1,5 @@
 package com.epam.pharmacy.model.mapper.impl;
 
-import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.entity.DosageUnit;
 import com.epam.pharmacy.model.entity.FormUnit;
 import com.epam.pharmacy.model.entity.Prescription;
@@ -16,6 +15,9 @@ import java.util.Optional;
 
 import static com.epam.pharmacy.model.dao.ColumnName.*;
 
+/**
+ * The type Prescription row mapper.
+ */
 public class PrescriptionRowMapper implements CustomRowMapper<Prescription> {
     private static final Logger LOGGER = LogManager.getLogger();
     private static PrescriptionRowMapper instance;
@@ -23,6 +25,11 @@ public class PrescriptionRowMapper implements CustomRowMapper<Prescription> {
     private PrescriptionRowMapper() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static PrescriptionRowMapper getInstance() {
         if (instance == null) {
             instance = new PrescriptionRowMapper();
