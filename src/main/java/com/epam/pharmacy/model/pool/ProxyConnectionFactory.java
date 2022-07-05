@@ -10,6 +10,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * The type Proxy connection factory.
+ */
 class ProxyConnectionFactory {
     private static final Logger LOGGER = LogManager.getLogger();
     private static ProxyConnectionFactory instance;
@@ -41,6 +44,11 @@ class ProxyConnectionFactory {
     private ProxyConnectionFactory() {
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     static ProxyConnectionFactory getInstance() {
         if (instance == null) {
             instance = new ProxyConnectionFactory();
@@ -48,6 +56,12 @@ class ProxyConnectionFactory {
         return instance;
     }
 
+    /**
+     * Create proxy connection.
+     *
+     * @return the proxy connection
+     * @throws SQLException the sql exception
+     */
     ProxyConnection createProxyConnection() throws SQLException {
         Connection connection = DriverManager.getConnection(URL, properties);
         return new ProxyConnection(connection);

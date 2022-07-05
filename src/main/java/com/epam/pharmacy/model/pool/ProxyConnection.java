@@ -19,18 +19,36 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * The type Proxy connection.
+ */
 class ProxyConnection implements Connection {
     private final Connection connection;
 
+    /**
+     * Instantiates a new Proxy connection.
+     *
+     * @param connection the connection
+     */
     ProxyConnection(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Release connection.
+     *
+     * @throws SQLException the sql exception
+     */
     @Override
     public void close() {
         ConnectionPool.getInstance().releaseConnection(this);
     }
 
+    /**
+     * Close connection.
+     *
+     * @throws SQLException the sql exception
+     */
     void reallyClose() throws SQLException {
         connection.close();
     }

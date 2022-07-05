@@ -16,6 +16,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * The type Connection pool. Contains connections to the database.
+ */
 public class ConnectionPool {
     private static final Logger LOGGER = LogManager.getLogger();
     private static ConnectionPool instance;
@@ -69,6 +72,11 @@ public class ConnectionPool {
         }
     }
 
+    /**
+     * Gets instance.
+     *
+     * @return the instance
+     */
     public static ConnectionPool getInstance() {
         if (instance == null) {
             try {
@@ -84,6 +92,11 @@ public class ConnectionPool {
         return instance;
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     */
     public Connection getConnection() {
         ProxyConnection connection = null;
         try {
@@ -96,6 +109,12 @@ public class ConnectionPool {
         return connection;
     }
 
+    /**
+     * Releases connection.
+     *
+     * @param connection the connection
+     * @return the boolean
+     */
     public boolean releaseConnection(Connection connection) {
         boolean released;
         if (!(connection instanceof ProxyConnection) || !busyConnections.contains(connection)) {
@@ -112,6 +131,9 @@ public class ConnectionPool {
         return released;
     }
 
+    /**
+     * Destroys pool and deregister driver.
+     */
     public void destroyPool() {
         for (int i = 0; i < POOL_SIZE; i++) {
             try {
