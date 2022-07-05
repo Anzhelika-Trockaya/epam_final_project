@@ -14,12 +14,12 @@ import java.util.Optional;
  */
 public abstract class AbstractDao<T extends AbstractEntity> {
     /**
-     * The Connection.
+     * The database connection.
      */
     protected Connection connection;
 
     /**
-     * Create boolean.
+     * Creates new entity.
      *
      * @param t the t
      * @return {@code true} if created
@@ -28,7 +28,7 @@ public abstract class AbstractDao<T extends AbstractEntity> {
     public abstract boolean create(T t) throws DaoException;
 
     /**
-     * Delete by id boolean.
+     * Delete entity by id.
      *
      * @param id the id
      * @return {@code true} if deleted
@@ -37,7 +37,7 @@ public abstract class AbstractDao<T extends AbstractEntity> {
     public abstract boolean deleteById(Long id) throws DaoException;
 
     /**
-     * Find all list.
+     * Finds all entities list.
      *
      * @return the list
      * @throws DaoException the dao exception
@@ -45,19 +45,19 @@ public abstract class AbstractDao<T extends AbstractEntity> {
     public abstract List<T> findAll() throws DaoException;
 
     /**
-     * Find by id optional.
+     * Finds entity by id.
      *
      * @param id the id
-     * @return the optional
+     * @return the entity optional
      * @throws DaoException the dao exception
      */
     public abstract Optional<T> findById(long id) throws DaoException;
 
     /**
-     * Update optional.
+     * Updates entity.
      *
      * @param t the t
-     * @return the optional
+     * @return the entity with old data optional
      * @throws DaoException the dao exception
      */
     public abstract Optional<T> update(T t) throws DaoException;

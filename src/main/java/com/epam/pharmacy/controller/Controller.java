@@ -52,7 +52,6 @@ public class Controller extends HttpServlet {
                     break;
             }
         } catch (CommandException e) {
-            request.setAttribute(AttributeName.ERROR_MSG, e.getMessage());//todo
             request.getRequestDispatcher(PagePath.ERROR_500_PAGE).forward(request, response);
         }
     }
