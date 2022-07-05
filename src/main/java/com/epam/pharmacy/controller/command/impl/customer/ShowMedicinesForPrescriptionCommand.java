@@ -10,7 +10,7 @@ import com.epam.pharmacy.model.entity.Prescription;
 import com.epam.pharmacy.model.service.MedicineService;
 import com.epam.pharmacy.model.service.OrderService;
 import com.epam.pharmacy.model.service.PrescriptionService;
-import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.model.service.impl.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;

@@ -4,7 +4,7 @@ import com.epam.pharmacy.controller.*;
 import com.epam.pharmacy.controller.command.Command;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
-import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.model.service.impl.ServiceProvider;
 import com.epam.pharmacy.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;

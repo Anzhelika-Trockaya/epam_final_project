@@ -8,7 +8,7 @@ import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.Medicine;
 import com.epam.pharmacy.model.service.MedicineService;
 import com.epam.pharmacy.model.service.OrderService;
-import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.model.service.impl.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;

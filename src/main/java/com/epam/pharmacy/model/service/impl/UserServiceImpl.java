@@ -24,8 +24,14 @@ import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.NEW_PASSWORD;
 import static com.epam.pharmacy.controller.ParameterName.OLD_PASSWORD;
 
-public class UserServiceImpl implements UserService {
+/**
+ * The type User service.
+ */
+class UserServiceImpl implements UserService {
     private static final Logger LOGGER = LogManager.getLogger();
+    /**
+     * The constant LEGAL_AGE.
+     */
     public static final int LEGAL_AGE = 18;
     private static final String PERCENT = "%";
     private static final char DELIMITER = ' ';
@@ -208,7 +214,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public BigDecimal findAccountBalance(long customerId) throws ServiceException {
+    public BigDecimal findUserAccountBalance(long customerId) throws ServiceException {
         UserDaoImpl userDao = new UserDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
@@ -234,18 +240,6 @@ public class UserServiceImpl implements UserService {
                     ", value=" + value, e);
             throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId +
                     ", value=" + value, e);
-        }
-    }
-
-    @Override
-    public BigDecimal findUserBalance(long customerId) throws ServiceException {
-        UserDaoImpl userDao = new UserDaoImpl();
-        try (EntityTransaction transaction = new EntityTransaction()) {
-            transaction.beginWithAutoCommit(userDao);
-            return userDao.findAccountBalance(customerId);
-        } catch (DaoException e) {
-            LOGGER.error("Exception when find account balance. CustomerId=" + customerId, e);
-            throw new ServiceException("Exception when increase account balance. CustomerId=" + customerId, e);
         }
     }
 

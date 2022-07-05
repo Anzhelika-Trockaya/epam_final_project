@@ -21,7 +21,10 @@ import java.util.Optional;
 
 import static com.epam.pharmacy.controller.ParameterName.*;
 
-public class PrescriptionServiceImpl implements PrescriptionService {
+/**
+ * The type Prescription service.
+ */
+class PrescriptionServiceImpl implements PrescriptionService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int RENEWAL_MONTH_QUANTITY = 1;
 

@@ -13,7 +13,6 @@ import com.epam.pharmacy.model.entity.*;
 import com.epam.pharmacy.model.service.MedicineService;
 import com.epam.pharmacy.model.service.OrderService;
 import com.epam.pharmacy.model.service.PrescriptionService;
-import com.epam.pharmacy.model.service.ServiceProvider;
 import com.epam.pharmacy.util.CartPositionsInAscendingMedicineIdComparator;
 import com.epam.pharmacy.validator.DataValidator;
 import com.epam.pharmacy.validator.impl.DataValidatorImpl;
@@ -27,7 +26,10 @@ import java.util.*;
 import static com.epam.pharmacy.controller.AttributeName.FAILED_CHANGE_MESSAGE;
 import static com.epam.pharmacy.controller.ParameterName.*;
 
-public class OrderServiceImpl implements OrderService {
+/**
+ * The type Order service.
+ */
+class OrderServiceImpl implements OrderService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final long NOT_EXISTS_ID_VALUE = -1;
     private static final long PRESCRIPTION_ID_IF_DO_NOT_NEED = 0;
@@ -415,7 +417,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int findNewOrdersQuantity() throws ServiceException {
+    public int findPaidOrdersQuantity() throws ServiceException {
         OrderDaoImpl orderDao = new OrderDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(orderDao);

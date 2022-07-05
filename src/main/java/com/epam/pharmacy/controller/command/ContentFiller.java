@@ -6,6 +6,7 @@ import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.entity.*;
 import com.epam.pharmacy.model.service.*;
+import com.epam.pharmacy.model.service.impl.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
@@ -148,7 +149,7 @@ public class ContentFiller {
         HttpSession session = request.getSession();
         long customerId = (long) session.getAttribute(CURRENT_USER_ID);
         try {
-            BigDecimal actualBalance = userService.findAccountBalance(customerId);
+            BigDecimal actualBalance = userService.findUserAccountBalance(customerId);
             session.setAttribute(CURRENT_USER_BALANCE, actualBalance);
         } catch (ServiceException e) {
             LOGGER.error("Exception when update account balance in session. customerId=" + customerId, e);
@@ -313,7 +314,7 @@ public class ContentFiller {
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
         try {
-            int newOrdersQuantity = orderService.findNewOrdersQuantity();
+            int newOrdersQuantity = orderService.findPaidOrdersQuantity();
             request.setAttribute(AttributeName.NEW_ORDERS_QUANTITY, newOrdersQuantity);
         } catch (ServiceException e) {
             LOGGER.error("Exception when find new orders quantity.", e);

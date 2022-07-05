@@ -6,7 +6,7 @@ import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.OrderService;
-import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.model.service.impl.ServiceProvider;
 import com.epam.pharmacy.model.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -56,7 +56,7 @@ public class OrderCommand implements Command {
     private boolean isNotEnoughMoneyToOrder(long customerId, BigDecimal totalFromJsp) throws ServiceException {
         ServiceProvider provider = ServiceProvider.getInstance();
         UserService userService = provider.getUserService();
-        BigDecimal accountBalance = userService.findAccountBalance(customerId);
+        BigDecimal accountBalance = userService.findUserAccountBalance(customerId);
         return totalFromJsp.compareTo(accountBalance) == COMPARE_RESULT_IF_ORDER_COST_IS_BIGGER_THAT_ACCOUNT_BALANCE;
     }
 }

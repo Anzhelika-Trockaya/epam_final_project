@@ -16,7 +16,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public class ManufacturerServiceImpl implements ManufacturerService {
+/**
+ * The type Manufacturer service.
+ */
+class ManufacturerServiceImpl implements ManufacturerService {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override

@@ -16,7 +16,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public class InternationalNameServiceImpl implements InternationalNameService {
+/**
+ * The type International name service.
+ */
+class InternationalNameServiceImpl implements InternationalNameService {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override

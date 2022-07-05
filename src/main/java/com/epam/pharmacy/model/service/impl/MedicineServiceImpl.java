@@ -19,7 +19,10 @@ import java.util.*;
 import static com.epam.pharmacy.controller.AttributeName.*;
 import static com.epam.pharmacy.controller.ParameterName.MEDICINE_ID;
 
-public class MedicineServiceImpl implements MedicineService {
+/**
+ * The type Medicine service.
+ */
+class MedicineServiceImpl implements MedicineService {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int MAX_TOTAL_VALUE = 999_999_999;
     private static final String PERCENT = "%";

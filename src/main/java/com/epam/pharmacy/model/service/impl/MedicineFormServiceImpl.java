@@ -15,7 +15,10 @@ import org.apache.logging.log4j.Logger;
 import java.util.List;
 import java.util.Optional;
 
-public class MedicineFormServiceImpl implements MedicineFormService {
+/**
+ * The type Medicine form service.
+ */
+class MedicineFormServiceImpl implements MedicineFormService {
     private static final Logger LOGGER = LogManager.getLogger();
 
     @Override

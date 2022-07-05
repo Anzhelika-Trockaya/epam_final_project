@@ -6,7 +6,7 @@ import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.InternationalNameService;
-import com.epam.pharmacy.model.service.ServiceProvider;
+import com.epam.pharmacy.model.service.impl.ServiceProvider;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
