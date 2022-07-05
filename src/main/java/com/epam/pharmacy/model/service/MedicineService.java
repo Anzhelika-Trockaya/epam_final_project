@@ -13,100 +13,100 @@ import java.util.Optional;
  */
 public interface MedicineService {
     /**
-     * Create boolean.
+     * Create new medicine.
      *
      * @param medicineData the medicine data
-     * @return the boolean
+     * @return the boolean {@code true} if created
      * @throws ServiceException the service exception
      */
     boolean create(Map<String, String> medicineData) throws ServiceException;
 
     /**
-     * Find by id optional.
+     * Finds medicine by id.
      *
      * @param medicineIdString the medicine id string
-     * @return the optional
+     * @return the medicine optional
      * @throws ServiceException the service exception
      */
     Optional<Medicine> findById(String medicineIdString) throws ServiceException;
 
     /**
-     * Find medicine content by id map.
+     * Finds medicine content by id.
      *
      * @param id the id
-     * @return the map
+     * @return the medicine data map
      * @throws ServiceException the service exception
      */
     Map<String, Object> findMedicineContentById(long id) throws ServiceException;
 
     /**
-     * Find all map.
+     * Finds all medicines data map.
      *
-     * @return the map
+     * @return the data map of medicines
      * @throws ServiceException the service exception
      */
     Map<Long, Map<String, Object>> findAll() throws ServiceException;
 
     /**
-     * Update boolean.
+     * Updates medicine.
      *
      * @param medicineData the medicine data
-     * @return the boolean
+     * @return the boolean {@code true} if updated
      * @throws ServiceException the service exception
      */
     boolean update(Map<String, String> medicineData) throws ServiceException;
 
     /**
-     * Find total packages optional.
+     * Finds medicine total packages.
      *
      * @param id the id
-     * @return the optional
+     * @return the int optional. Returns empty optional if medicine not found
      * @throws ServiceException the service exception
      */
     Optional<Integer> findTotalPackages(long id) throws ServiceException;
 
     /**
-     * Find by params map.
+     * Finds medicines data map by params.
      *
      * @param paramsMap the params map
-     * @return the map
+     * @return the medicines data map
      * @throws ServiceException the service exception
      */
     Map<Long, Map<String, Object>> findByParams(Map<String, String> paramsMap) throws ServiceException;
 
     /**
-     * Find by prescription map.
+     * Finds medicines data map by prescription.
      *
      * @param prescription the prescription
-     * @return the map
+     * @return the medicines data map
      * @throws ServiceException the service exception
      */
     Map<Long, Map<String, Object>> findByPrescription(Prescription prescription) throws ServiceException;
 
     /**
-     * Find all available map.
+     * Find all medicines with positive total packages data map.
      *
-     * @return the map
+     * @return the medicines data map
      * @throws ServiceException the service exception
      */
     Map<Long, Map<String, Object>> findAllAvailable() throws ServiceException;
 
     /**
-     * Find all available for customer map.
+     * Finds the medicines data map with positive total packages, considering the quantity in the customers cart
      *
      * @param customerId the customer id
-     * @return the map
+     * @return the medicines data map
      * @throws ServiceException the service exception
      */
     Map<Long, Map<String, Object>> findAllAvailableForCustomer(long customerId) throws ServiceException;
 
     /**
-     * Find by params for customer map.
+     * Finds medicines data map by params with positive total packages, considering the quantity in the customers cart
      *
-     * @param customerId          the customer id
-     * @param stringStringHashMap the string string hash map
+     * @param customerId the customer id
+     * @param paramsMap  the params map
      * @return the map
      * @throws ServiceException the service exception
      */
-    Map<Long, Map<String, Object>> findByParamsForCustomer(long customerId, HashMap<String, String> stringStringHashMap) throws ServiceException;
+    Map<Long, Map<String, Object>> findByParamsForCustomer(long customerId, HashMap<String, String> paramsMap) throws ServiceException;
 }
