@@ -44,7 +44,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final String SQL_INSERT_USER =
             "INSERT INTO users (user_login, user_password, user_lastname, user_name, user_patronymic, " +
                     "user_birthday_date, user_sex, user_role, user_phone, user_address, user_state, " +
-                    "user_account_balance) VALUES (?,?,?,?,?,?,?,?,?,?,?, 300.00)";
+                    "user_account_balance) VALUES (?,?,?,?,?,?,?,?,?,?,?, 100.00)";
     private static final String SQL_UPDATE_USER_DATA =
             "UPDATE users SET user_lastname = ?, user_name = ?, user_patronymic = ?, user_birthday_date = ?, " +
                     "user_sex = ?, user_phone = ?, user_address = ? WHERE user_id = ?";
@@ -273,7 +273,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
-    private Optional<User> findUser(PreparedStatement statement) throws SQLException, DaoException {
+    private Optional<User> findUser(PreparedStatement statement) throws SQLException {
         try (ResultSet resultSet = statement.executeQuery()) {
             UserRowMapper mapper = UserRowMapper.getInstance();
             Optional<User> userOptional;
@@ -286,7 +286,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
-    private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException, DaoException {
+    private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException {
         List<User> users = new ArrayList<>();
         UserRowMapper mapper = UserRowMapper.getInstance();
         Optional<User> currentUserOptional;
