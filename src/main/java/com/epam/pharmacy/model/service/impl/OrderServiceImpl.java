@@ -296,8 +296,6 @@ class OrderServiceImpl implements OrderService {
                 for (OrderPosition position : positions) {
                     isUpdated = medicineDao.increaseTotalPackages(position.getMedicineId(), -position.getQuantity());
                     if (!isUpdated) {
-                        LOGGER.warn("Medicine total packages not updated. MedicineId=" + position.getMedicineId() +
-                                ", increase value=" + (-position.getQuantity()));
                         transaction.rollback();
                         return false;
                     }
@@ -317,7 +315,6 @@ class OrderServiceImpl implements OrderService {
                     }
                     if (position.getPrescriptionId() != PRESCRIPTION_ID_IF_DO_NOT_NEED) {
                         if (prescriptionIsInvalid(prescriptionDao, position.getPrescriptionId())) {
-                            LOGGER.warn("Prescription is invalid." + position);
                             transaction.rollback();
                             return false;
                         }
@@ -341,15 +338,13 @@ class OrderServiceImpl implements OrderService {
                     }
                     isUpdated = orderDao.makeOrderPaidAndUpdateTotalCostAndPaidDate(cartOrderId, totalCost);
                     if (!isUpdated) {
-                        LOGGER.warn("Not made order paid. cartOrderId=" + cartOrderId + " totalCost=" + totalCost);
+                        LOGGER.warn("The order is not made paid. cartOrderId=" + cartOrderId + " totalCost=" + totalCost);
                         transaction.rollback();
                         return false;
                     }
                     transaction.commit();
                     return true;
                 } else {
-                    LOGGER.warn("Expected total cost(" + expectedTotalCost +
-                            ") not equals Real total cost(" + totalCost + ")");
                     transaction.rollback();
                     return false;
                 }
