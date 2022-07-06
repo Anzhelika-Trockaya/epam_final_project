@@ -23,6 +23,7 @@ import static com.epam.pharmacy.controller.ParameterName.USER_SEX;
 import static com.epam.pharmacy.controller.PropertyKey.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 
 /**
@@ -88,7 +89,12 @@ public class DataValidatorImpl implements DataValidator {
         boolean result = false;
         if (birthdayDateString != null && birthdayDateString.matches(DATE_REGEX)) {
             LocalDate today = LocalDate.now();
-            LocalDate birthdayDate = LocalDate.parse(birthdayDateString);
+            LocalDate birthdayDate;
+            try {
+                birthdayDate = LocalDate.parse(birthdayDateString);
+            } catch(DateTimeParseException e){
+                return false;
+            }
             LocalDate birthdayThisYear = LocalDate.of(today.getYear(), birthdayDate.getMonth(), birthdayDate.getDayOfMonth());
             int age = today.getYear() - birthdayDate.getYear();
             if (birthdayThisYear.isAfter(today)) {
