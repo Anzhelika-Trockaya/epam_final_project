@@ -282,7 +282,7 @@ class MedicineServiceImpl implements MedicineService {
     }
 
     private Medicine buildMedicine(Map<String, String> medicineData) {
-        String name = medicineData.get(MEDICINE_NAME).trim().toUpperCase();
+        String name = medicineData.get(MEDICINE_NAME).toUpperCase();
         String internationalNameIdString = medicineData.get(MEDICINE_INTERNATIONAL_NAME_ID);
         long internationalNameId = Long.parseLong(internationalNameIdString);
         String manufacturerIdString = medicineData.get(MEDICINE_MANUFACTURER_ID);

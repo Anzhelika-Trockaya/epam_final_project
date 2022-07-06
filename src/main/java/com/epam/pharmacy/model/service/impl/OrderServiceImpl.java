@@ -39,11 +39,11 @@ class OrderServiceImpl implements OrderService {
     public boolean addToCartWithoutPrescription(long customerId,
                                                 Map<String, String> positionParams) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        String quantityString = positionParams.get(QUANTITY);
+        String quantityString = positionParams.get(ORDER_MEDICINE_NUMBER);
         if (!validator.isCorrectQuantity(quantityString)) {
             return false;
         }
-        String medicineIdString = positionParams.get(MEDICINE_ID);
+        String medicineIdString = positionParams.get(ORDER_MEDICINE_ID);
         int quantity = Integer.parseInt(quantityString);
         boolean result;
         OrderDaoImpl orderDao = new OrderDaoImpl();
@@ -88,11 +88,11 @@ class OrderServiceImpl implements OrderService {
     public boolean addToCartWithPrescription(long customerId,
                                              Map<String, String> positionParams) throws ServiceException {
         DataValidator validator = DataValidatorImpl.getInstance();
-        String quantityString = positionParams.get(QUANTITY);
+        String quantityString = positionParams.get(ORDER_MEDICINE_NUMBER);
         if (!validator.isCorrectQuantity(quantityString)) {
             return false;
         }
-        String medicineIdString = positionParams.get(MEDICINE_ID);
+        String medicineIdString = positionParams.get(ORDER_MEDICINE_ID);
         String prescriptionIdString = positionParams.get(PRESCRIPTION_ID);
         int quantity = Integer.parseInt(quantityString);
         boolean result;

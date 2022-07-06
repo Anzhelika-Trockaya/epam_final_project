@@ -34,10 +34,12 @@ public class OrderCommand implements Command {
         ServiceProvider provider = ServiceProvider.getInstance();
         OrderService orderService = provider.getOrderService();
         Router router = new Router(PagePath.CART_PAGE);
+        ContentFiller contentFiller = ContentFiller.getInstance();
         try {
             if (isNotEnoughMoneyToOrder(customerId, expectedTotalCost)) {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE,
                         PropertyKey.CART_NOT_ENOUGH_MONEY_IN_THE_ACCOUNT);
+                contentFiller.addCartContent(request);
                 return router;
             }
             boolean result = orderService.order(customerId, expectedTotalCost);
@@ -46,7 +48,6 @@ public class OrderCommand implements Command {
                 session.setAttribute(TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.CART_SUCCESSFULLY_ORDERED);
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.CART_FAILED_ORDER);
-                ContentFiller contentFiller = ContentFiller.getInstance();
                 contentFiller.addCartContent(request);
             }
         } catch (ServiceException e) {

@@ -380,6 +380,18 @@ public final class AttributeName {
      * The constant SHOW_CHANGE_PASSWORD_FORM.
      */
     public static final String SHOW_CHANGE_PASSWORD_FORM = "show_change_password_form";
+    /**
+     * The constant NAME.
+     */
+    public static final String NAME = "name";
+    /**
+     * The constant COUNTRY.
+     */
+    public static final String COUNTRY = "country";
+    /**
+     * The constant FORM_UNIT.
+     */
+    public static final String FORM_UNIT = "form_unit";
 
 
     private AttributeName() {

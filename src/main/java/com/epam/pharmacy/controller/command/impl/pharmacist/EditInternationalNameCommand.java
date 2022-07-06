@@ -26,7 +26,7 @@ public class EditInternationalNameCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(ParameterName.NAME);
+        String name = request.getParameter(ParameterName.NAME).trim();
         String id = request.getParameter(ParameterName.INTERNATIONAL_NAME_ID);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         InternationalNameService internationalNameService = serviceProvider.getInternationalNameService();

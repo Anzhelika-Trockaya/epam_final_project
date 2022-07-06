@@ -24,7 +24,7 @@ public class AddManufacturerCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(ParameterName.NAME);
+        String name = request.getParameter(ParameterName.NAME).trim();
         String country = request.getParameter(ParameterName.COUNTRY);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         ManufacturerService manufacturerService = serviceProvider.getManufacturerService();
@@ -38,6 +38,8 @@ public class AddManufacturerCommand implements Command {
                 router.setTypeRedirect();
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, MANUFACTURERS_NOT_ADDED);
+                request.setAttribute(AttributeName.NAME, name);
+                request.setAttribute(AttributeName.COUNTRY, country);
                 ContentFiller.getInstance().addManufacturers(request);
             }
         } catch (ServiceException e) {

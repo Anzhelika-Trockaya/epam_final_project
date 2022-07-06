@@ -44,13 +44,13 @@
             <form name="add_medicine_form_form" action="${context_path}/controller" method="post"
                   onsubmit="return validate(this, 'incorrect_name_msg', 'incorrect_unit_msg')">
                 <input type="hidden" name="command" value="add_medicine_form"/>
-                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_form_name}"/></td>
+                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_form_name}" value="${name}"/></td>
                 <td>
                     <select name="form_unit" size="1">
                         <option selected value="">-</option>
-                        <option value="PIECES">${pieces}</option>
-                        <option value="TABLES">${tables}</option>
-                        <option value="MILLILITERS">${ml}</option>
+                        <option value="PIECES" <c:if test="${form_unit eq 'PIECES'}">selected</c:if>>${pieces}</option>
+                        <option value="TABLES" <c:if test="${form_unit eq 'TABLES'}">selected</c:if>>${tables}</option>
+                        <option value="MILLILITERS" <c:if test="${form_unit eq 'MILLILITERS'}">selected</c:if>>${ml}</option>
                     </select>
                 </td>
                 <td><input type="submit" value="${add}"></td>

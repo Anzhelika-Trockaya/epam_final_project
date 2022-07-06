@@ -26,7 +26,7 @@ public class EditMedicineFormCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(ParameterName.NAME);
+        String name = request.getParameter(ParameterName.NAME).trim();
         String unit = request.getParameter(ParameterName.FORM_UNIT);
         String id = request.getParameter(ParameterName.FORM_ID);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();

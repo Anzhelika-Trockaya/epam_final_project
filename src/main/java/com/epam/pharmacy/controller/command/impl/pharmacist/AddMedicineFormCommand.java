@@ -23,7 +23,7 @@ public class AddMedicineFormCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(ParameterName.NAME);
+        String name = request.getParameter(ParameterName.NAME).trim();
         String unit = request.getParameter(ParameterName.FORM_UNIT);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         MedicineFormService formService = serviceProvider.getMedicineFormService();
@@ -38,6 +38,8 @@ public class AddMedicineFormCommand implements Command {
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, FORMS_NOT_ADDED);
                 ContentFiller.getInstance().addForms(request);
+                request.setAttribute(AttributeName.NAME, name);
+                request.setAttribute(AttributeName.FORM_UNIT, unit);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the AddMedicineFormCommand", e);

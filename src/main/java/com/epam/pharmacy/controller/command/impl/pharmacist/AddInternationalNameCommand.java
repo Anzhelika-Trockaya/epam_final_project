@@ -24,7 +24,7 @@ public class AddInternationalNameCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(NAME);
+        String name = request.getParameter(NAME).trim();
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         InternationalNameService internationalNameService = serviceProvider.getInternationalNameService();
         Router router;
@@ -38,6 +38,7 @@ public class AddInternationalNameCommand implements Command {
             } else {
                 request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, INTERNATIONAL_NAMES_NOT_ADDED);
                 ContentFiller.getInstance().addInternationalNames(request);
+                request.setAttribute(AttributeName.NAME, name);
             }
         } catch (ServiceException e) {
             LOGGER.error("Exception in the AddInternationalNameCommand", e);

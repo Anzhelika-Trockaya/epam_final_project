@@ -5,6 +5,7 @@ import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.PropertyKey;
 import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.InternationalNameService;
@@ -29,12 +30,15 @@ public class DeleteInternationalNameCommand implements Command {
         InternationalNameService internationalNameService = provider.getInternationalNameService();
         try {
             boolean deleted = internationalNameService.delete(idString);
-            Router router = new Router(PagePath.INTERNATIONAL_NAMES_PAGE, Router.Type.REDIRECT);
+            Router router = new Router(PagePath.INTERNATIONAL_NAMES_PAGE);
             HttpSession session = request.getSession();
             if (deleted) {
+                router.setTypeRedirect();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_DELETED);
             } else {
-                session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_NOT_DELETED);
+                request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.INTERNATIONAL_NAMES_NOT_DELETED);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addInternationalNames(request);
             }
             return router;
         } catch (ServiceException e) {

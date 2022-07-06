@@ -21,6 +21,9 @@ public class ParamsMapCreator {
         String currentParamValue;
         for (String paramName : paramNames) {
             currentParamValue = request.getParameter(paramName);
+            if (currentParamValue != null) {
+                currentParamValue = currentParamValue.trim();
+            }
             params.put(paramName, currentParamValue);
         }
         return params;

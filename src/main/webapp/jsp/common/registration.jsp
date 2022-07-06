@@ -22,7 +22,6 @@
 <fmt:message key="registration.phone" var="label_phone"/>
 <fmt:message key="registration.address" var="label_address"/>
 <fmt:message key="registration.repeat_password" var="label_repeat_password"/>
-<fmt:message key="registration.btn" var="register_btn_text"/>
 <fmt:message key="registration.incorrect_login" var="msg_text_incorrect_login"/>
 <fmt:message key="registration.incorrect_password" var="msg_text_incorrect_password"/>
 <fmt:message key="registration.incorrect_lastname" var="msg_text_incorrect_lastname"/>
@@ -33,6 +32,14 @@
 <fmt:message key="registration.required_field" var="msg_text_required"/>
 <fmt:message key="registration.incorrect_birthday_date" var="msg_text_incorrect_birthday_date"/>
 <fmt:message key="registration.incorrect_repeat_password" var="msg_text_incorrect_repeat_pass"/>
+<c:choose>
+    <c:when test="${current_user_role eq 'ADMIN'}">
+        <fmt:message key="action.add" var="submit_btn_text"/>
+    </c:when>
+    <c:otherwise>
+        <fmt:message key="registration.btn" var="submit_btn_text"/>
+    </c:otherwise>
+</c:choose>
 
 <html>
 <head>
@@ -157,7 +164,7 @@
             <p class="incorrect_data_msg"><fmt:message key="${incorrect_repeat_password}"/></p>
         </c:if>
         <br>
-        <input type="submit" name="sub" value="${register_btn_text}"/>
+        <input type="submit" name="sub" value="${submit_btn_text}"/>
         <br>
     </form>
 </div>

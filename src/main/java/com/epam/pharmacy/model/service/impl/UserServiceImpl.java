@@ -202,7 +202,7 @@ class UserServiceImpl implements UserService {
         if (!validator.isCorrectUserSearchParamsMap(paramsMap)) {
             return new ArrayList<>();
         }
-        replaceEmptyParamsByPercent(paramsMap);
+        replaceUserParamsBySqlRegexes(paramsMap);
         UserDaoImpl userDao = new UserDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
@@ -248,10 +248,10 @@ class UserServiceImpl implements UserService {
         UserDaoImpl userDao = new UserDaoImpl();
         try (EntityTransaction transaction = new EntityTransaction()) {
             transaction.beginWithAutoCommit(userDao);
-            Optional<User> optionalUser= userDao.findById(id);
-            if(!optionalUser.isPresent()){
-                LOGGER.warn("User with id="+id+" not found");
-                throw new ServiceException("User with id="+id+" not found");
+            Optional<User> optionalUser = userDao.findById(id);
+            if (!optionalUser.isPresent()) {
+                LOGGER.warn("User with id=" + id + " not found");
+                throw new ServiceException("User with id=" + id + " not found");
             }
             User user = optionalUser.get();
             StringBuilder fullNameBuilder = new StringBuilder(user.getLastname());
@@ -263,10 +263,25 @@ class UserServiceImpl implements UserService {
         }
     }
 
-    private void replaceEmptyParamsByPercent(Map<String, String> paramsMap) {
-        for (Map.Entry<String, String> entry : paramsMap.entrySet()) {
-            if (entry.getValue().isEmpty()) {
-                entry.setValue(PERCENT);
+    private void replaceUserParamsBySqlRegexes(Map<String, String> paramsMap) {
+        replaceParamsValuesByRegex(paramsMap, USER_LASTNAME, USER_NAME, USER_PATRONYMIC);
+        replaceEmptyParamsByPercent(paramsMap, USER_BIRTHDAY_DATE, USER_ROLE, USER_STATE);
+    }
+
+    private void replaceParamsValuesByRegex(Map<String, String> paramsMap, String... paramsNames) {
+        String paramValue;
+        String paramRegex;
+        for (String paramName : paramsNames) {
+            paramValue = paramsMap.get(paramName);
+            paramRegex = paramValue.isEmpty() ? PERCENT : PERCENT + paramValue + PERCENT;
+            paramsMap.put(paramName, paramRegex);
+        }
+    }
+
+    private void replaceEmptyParamsByPercent(Map<String, String> paramsMap, String... paramsNames) {
+        for (String paramName : paramsNames) {
+            if (paramsMap.get(paramName).isEmpty()) {
+                paramsMap.put(paramName, PERCENT);
             }
         }
     }

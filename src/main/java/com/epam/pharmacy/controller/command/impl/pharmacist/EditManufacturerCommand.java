@@ -25,8 +25,8 @@ public class EditManufacturerCommand implements Command {
 
     @Override
     public Router execute(HttpServletRequest request) throws CommandException {
-        String name = request.getParameter(ParameterName.NAME);
-        String country = request.getParameter(ParameterName.COUNTRY);
+        String name = request.getParameter(ParameterName.NAME).trim();
+        String country = request.getParameter(ParameterName.COUNTRY).trim();
         String id = request.getParameter(ParameterName.MANUFACTURER_ID);
         ServiceProvider serviceProvider = ServiceProvider.getInstance();
         ManufacturerService manufacturerService = serviceProvider.getManufacturerService();

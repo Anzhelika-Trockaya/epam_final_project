@@ -5,6 +5,7 @@ import com.epam.pharmacy.controller.PagePath;
 import com.epam.pharmacy.controller.PropertyKey;
 import com.epam.pharmacy.controller.Router;
 import com.epam.pharmacy.controller.command.Command;
+import com.epam.pharmacy.controller.command.ContentFiller;
 import com.epam.pharmacy.exception.CommandException;
 import com.epam.pharmacy.exception.ServiceException;
 import com.epam.pharmacy.model.service.ManufacturerService;
@@ -29,12 +30,15 @@ public class DeleteManufacturerCommand implements Command {
         ManufacturerService manufacturerService = provider.getManufacturerService();
         try {
             boolean deleted = manufacturerService.delete(idString);
-            Router router = new Router(PagePath.MANUFACTURERS_PAGE, Router.Type.REDIRECT);
+            Router router = new Router(PagePath.MANUFACTURERS_PAGE);
             HttpSession session = request.getSession();
             if (deleted) {
+                router.setTypeRedirect();
                 session.setAttribute(AttributeName.TEMP_SUCCESSFUL_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_DELETED);
             } else {
-                session.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_NOT_DELETED);
+                request.setAttribute(AttributeName.FAILED_CHANGE_MESSAGE, PropertyKey.MANUFACTURERS_NOT_DELETED);
+                ContentFiller contentFiller = ContentFiller.getInstance();
+                contentFiller.addManufacturers(request);
             }
             return router;
         } catch (ServiceException e) {

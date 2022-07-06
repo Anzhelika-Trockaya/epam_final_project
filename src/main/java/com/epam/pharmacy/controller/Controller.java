@@ -24,6 +24,7 @@ import java.io.IOException;
         maxRequestSize = 1024 * 1024 * 25)
 public class Controller extends HttpServlet {
     private static final Logger LOGGER = LogManager.getLogger();
+    private static final char DELIMITER = '/';
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -45,7 +46,7 @@ public class Controller extends HttpServlet {
                     request.getRequestDispatcher(router.getPage()).forward(request, response);
                     break;
                 case REDIRECT:
-                    response.sendRedirect(router.getPage());
+                    response.sendRedirect(request.getContextPath() + DELIMITER + router.getPage());
                     break;
                 default:
                     LOGGER.warn("Unknown Router type" + router.getType());

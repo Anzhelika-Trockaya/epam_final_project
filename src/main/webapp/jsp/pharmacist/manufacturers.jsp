@@ -43,8 +43,8 @@
                   onsubmit="return (validate(this['name'],'incorrect_name_msg') &&
                           validate(this['country'],'incorrect_country_msg'))">
                 <input type="hidden" name="command" value="add_manufacturer"/>
-                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_name}"/></td>
-                <td><input type="text" style="width: 400px" name="country" placeholder="${enter_country}"/></td>
+                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_name}" value="${name}"/></td>
+                <td><input type="text" style="width: 400px" name="country" placeholder="${enter_country}" value="${country}"/></td>
                 <td><input type="submit" value="${add}"></td>
                 <td></td>
             </form>

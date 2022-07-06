@@ -39,7 +39,7 @@
             <form name="add_intern_name_form" action="${context_path}/controller" method="post"
                   onsubmit="return validate(this['name'], 'incorrect_new_msg')">
                 <input type="hidden" name="command" value="add_international_name"/>
-                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_international_name}"/></td>
+                <td><input type="text" style="width: 400px" name="name" placeholder="${enter_international_name}" value="${name}"/></td>
                 <td><input type="submit" value="${add}"></td>
                 <td></td>
             </form>

@@ -53,10 +53,6 @@ public final class ParameterName {
      */
     public static final String MANUFACTURER = "manufacturer";
     /**
-     * The constant IMAGE.
-     */
-    public static final String IMAGE = "image";
-    /**
      * The constant ORDER_MEDICINE_ID.
      */
     public static final String ORDER_MEDICINE_ID = "order_medicine_id";

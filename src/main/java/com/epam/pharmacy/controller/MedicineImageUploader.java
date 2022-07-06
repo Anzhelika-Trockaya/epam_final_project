@@ -18,6 +18,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 import java.util.UUID;
 
+import static com.epam.pharmacy.controller.AttributeName.MEDICINE_IMAGE_LINK;
+
 /**
  * The type Medicine image uploader. Uploads the image to the server.
  */
@@ -83,7 +85,7 @@ public class MedicineImageUploader {
      */
     public String uploadImage(HttpServletRequest request) throws CommandException {
         try {
-            Part part = request.getPart(ParameterName.IMAGE);
+            Part part = request.getPart(MEDICINE_IMAGE_LINK);
             String submittedFileName = part.getSubmittedFileName();
             if (submittedFileName.isEmpty()) {
                 request.setAttribute(AttributeName.INCORRECT_FILE, PropertyKey.ADDING_MEDICINE_INCORRECT_REQUIRED);

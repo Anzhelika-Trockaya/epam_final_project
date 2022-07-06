@@ -208,7 +208,7 @@ public class MedicineDaoImpl extends AbstractDao<Medicine> implements MedicineDa
                 prepareStatement(SQL_SELECT_MEDICINES_BY_NAME_INTERNATIONAL_NAME_ID_FORM_ID_DOSAGE_DOSAGE_UNIT)) {
             String medicineName = paramsMap.get(MEDICINE_NAME);
             if (!medicineName.equals(PERCENT)) {
-                medicineName = PERCENT + medicineName.trim() + PERCENT;
+                medicineName = PERCENT + medicineName + PERCENT;
             }
             statement.setString(1, medicineName);
             statement.setString(2, paramsMap.get(MEDICINE_INTERNATIONAL_NAME_ID));

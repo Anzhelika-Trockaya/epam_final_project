@@ -47,7 +47,7 @@ public class DataValidatorImpl implements DataValidator {
     private static final String DOSAGE_UNIT_REGEX = "(MILLILITER|MILLIGRAM|GRAM|MICROGRAM|ME|NANOGRAM)";
     private static final String PRICE_REGEX = "\\d{1,20}(.\\d{2})?";
     private static final String INTERNATIONAL_NAME_REGEX = "[A-Z][a-zA-Z-\\s]{0,99}";
-    private static final String MANUFACTURER_NAME_REGEX = "[A-ZА-ЯЁІЎ][a-zA-Z0-9а-яА-ЯёЁіІўЎ/,_:;.'\"-&\\s]{0,44}";
+    private static final String MANUFACTURER_NAME_REGEX = "[A-ZА-ЯЁІЎ][a-zA-Z0-9а-яА-ЯёЁіІўЎ/,_:;.'\"&\\s-]{0,44}";
     private static final String COUNTRY_REGEX = "[A-ZА-ЯЁІЎ][a-zA-Zа-яА-ЯёЁіІўЎ.'\\s-]{0,44}";
     private static final String FORM_NAME_REGEX = "[a-zA-Zа-яА-ЯёЁіІўЎ/,_:;.'\"\\s-]{1,100}";
     private static final String FORM_UNIT_REGEX = "(PIECES|TABLES|MILLILITERS)";
