@@ -28,7 +28,7 @@ public abstract class AbstractDao<T extends AbstractEntity> {
     public abstract boolean create(T t) throws DaoException;
 
     /**
-     * Delete entity by id.
+     * Deletes entity by id.
      *
      * @param id the id
      * @return {@code true} if deleted

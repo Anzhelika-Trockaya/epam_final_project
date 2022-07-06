@@ -5,6 +5,7 @@ import com.epam.pharmacy.exception.DaoException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -86,4 +87,13 @@ public interface UserDao {
      * @throws DaoException the dao exception
      */
     boolean decreaseAccountBalance(long id, BigDecimal totalCost) throws DaoException;
+
+    /**
+     * Finds user by params.
+     *
+     * @param paramsMap the params map
+     * @return the list of users
+     * @throws DaoException the dao exception
+     */
+    List<User> findByParams(Map<String, String> paramsMap) throws DaoException;
 }

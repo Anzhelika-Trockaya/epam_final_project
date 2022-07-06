@@ -4,6 +4,7 @@ import com.epam.pharmacy.exception.DaoException;
 import com.epam.pharmacy.model.dao.AbstractDao;
 import com.epam.pharmacy.model.dao.UserDao;
 import com.epam.pharmacy.model.entity.User;
+import com.epam.pharmacy.model.entity.UserRole;
 import com.epam.pharmacy.model.mapper.impl.UserRowMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,8 @@ import static com.epam.pharmacy.model.dao.ColumnName.USER_STATE;
 public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final int ONE_UPDATED = 1;
+    private static final BigDecimal DEFAULT_CUSTOMER_BALANCE = new BigDecimal("100.00");
+    private static final BigDecimal DEFAULT_NOT_CUSTOMER_BALANCE = BigDecimal.ZERO;
     private static final String SQL_SELECT_ALL_USERS =
             "SELECT user_id, user_login, user_password, user_lastname, user_name, user_patronymic, user_birthday_date, " +
                     "user_sex, user_role, user_phone, user_address, user_state FROM users";
@@ -44,7 +47,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
     private static final String SQL_INSERT_USER =
             "INSERT INTO users (user_login, user_password, user_lastname, user_name, user_patronymic, " +
                     "user_birthday_date, user_sex, user_role, user_phone, user_address, user_state, " +
-                    "user_account_balance) VALUES (?,?,?,?,?,?,?,?,?,?,?, 100.00)";
+                    "user_account_balance) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
     private static final String SQL_UPDATE_USER_DATA =
             "UPDATE users SET user_lastname = ?, user_name = ?, user_patronymic = ?, user_birthday_date = ?, " +
                     "user_sex = ?, user_phone = ?, user_address = ? WHERE user_id = ?";
@@ -76,10 +79,13 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setString(9, user.getPhone());
             statement.setString(10, user.getAddress());
             statement.setString(11, user.getState().name());
+            BigDecimal balance = UserRole.CUSTOMER == user.getRole() ?
+                    DEFAULT_CUSTOMER_BALANCE : DEFAULT_NOT_CUSTOMER_BALANCE;
+            statement.setBigDecimal(12, balance);
             return statement.executeUpdate() == ONE_UPDATED;
         } catch (SQLException e) {
-            LOGGER.error("Adding user exception.", e);
-            throw new DaoException("Adding user exception.", e);
+            LOGGER.error("Adding user exception." + user, e);
+            throw new DaoException("Adding user exception." + user, e);
         }
     }
 
@@ -176,8 +182,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            LOGGER.error("Authentication exception.", e);
-            throw new DaoException("Authentication exception.", e);
+            LOGGER.error("Authentication exception. Login='" + login + "', password='" + password + "'", e);
+            throw new DaoException("Authentication exception. Login='" + login + "', password='" + password + "'", e);
         }
         return Optional.empty();
     }
@@ -188,8 +194,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setString(1, login);
             return findUser(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find user by id exception.", e);
-            throw new DaoException("Find user by id exception.", e);
+            LOGGER.error("Find user by login exception. Login='" + login + "'", e);
+            throw new DaoException("Find user by login exception. Login='" + login + "'", e);
         }
     }
 
@@ -199,8 +205,8 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
             statement.setLong(1, id);
             return findUser(statement);
         } catch (SQLException e) {
-            LOGGER.error("Find user by id exception.", e);
-            throw new DaoException("Find user by id exception.", e);
+            LOGGER.error("Find user by id exception. Id=" + id, e);
+            throw new DaoException("Find user by id exception. Id=" + id, e);
         }
     }
 
@@ -248,13 +254,7 @@ public class UserDaoImpl extends AbstractDao<User> implements UserDao {
         }
     }
 
-    /**
-     * Find by params list.
-     *
-     * @param paramsMap the params map
-     * @return the list
-     * @throws DaoException the dao exception
-     */
+    @Override
     public List<User> findByParams(Map<String, String> paramsMap) throws DaoException {
         try (PreparedStatement statement = connection.
                 prepareStatement(SQL_SELECT_USER_BY_LASTNAME_NAME_PATRONYMIC_BIRTHDAY_DATE_USER_ROLE_USER_STATE)) {
